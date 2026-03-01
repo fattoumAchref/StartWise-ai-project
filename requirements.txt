@@ -1,0 +1,13 @@
+playwright
+beautifulsoup4
+httpx
+pydantic
+pandas
+chromadb
+sentence-transformers
+celery
+redis
+python-dotenv
+pytest
+pytest-asyncio
+feedparser
