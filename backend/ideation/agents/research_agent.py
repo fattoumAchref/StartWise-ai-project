@@ -1,9 +1,15 @@
 import os
 
 import uvicorn
-from google.adk.a2a.utils.agent_to_a2a import to_a2a
 from google.adk.agents.llm_agent import LlmAgent
 from google.adk.tools import google_search
+
+try:
+    from google.adk.a2a.utils.agent_to_a2a import to_a2a
+except ModuleNotFoundError as exc:
+    raise RuntimeError(
+        "Missing A2A dependency. Install with: pip install \"a2a-sdk[http-server]\""
+    ) from exc
 
 from .helpers import setup_env
 

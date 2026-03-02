@@ -15,6 +15,16 @@ def _load_env_file(path: Path) -> None:
 
 def setup_env() -> None:
     _load_env_file(Path(__file__).resolve().parents[2] / ".env")
+
+    # Force AI Studio mode unless explicitly overridden.
+    os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "false")
+
+    # Allow either key name in .env and normalize for SDK compatibility.
+    if os.getenv("GOOGLE_API_KEY") and not os.getenv("GEMINI_API_KEY"):
+        os.environ.setdefault("GEMINI_API_KEY", os.getenv("GOOGLE_API_KEY", ""))
+    if os.getenv("GEMINI_API_KEY") and not os.getenv("GOOGLE_API_KEY"):
+        os.environ.setdefault("GOOGLE_API_KEY", os.getenv("GEMINI_API_KEY", ""))
+
     # Shared defaults for local development.
     os.environ.setdefault("AGENT_HOST", "0.0.0.0")
     os.environ.setdefault("QUESTION_AGENT_PORT", "8101")
