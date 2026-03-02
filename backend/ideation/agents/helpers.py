@@ -30,6 +30,7 @@ def setup_env() -> None:
     os.environ.setdefault("QUESTION_AGENT_PORT", "8101")
     os.environ.setdefault("RESEARCH_AGENT_PORT", "8102")
     os.environ.setdefault("FORMULATOR_AGENT_PORT", "8103")
-    os.environ.setdefault("QUESTION_AGENT_MODEL", "gemini-2.5-pro")
-    os.environ.setdefault("RESEARCH_AGENT_MODEL", "gemini-2.5-pro")
-    os.environ.setdefault("FORMULATOR_AGENT_MODEL", "gemini-2.5-pro")
+    # Use a generally available, lower-cost default model for AI Studio keys.
+    os.environ.setdefault("QUESTION_AGENT_MODEL", "gemini-2.0-flash")
+    os.environ.setdefault("RESEARCH_AGENT_MODEL", "gemini-2.0-flash")
+    os.environ.setdefault("FORMULATOR_AGENT_MODEL", "gemini-2.0-flash")

@@ -78,12 +78,15 @@ class A2AClient:
         if isinstance(error, dict):
             message = error.get("message", "Unknown A2A JSON-RPC error")
             code = error.get("code")
+            self._raise_if_quota_or_rate_limit(str(message))
             raise RuntimeError(f"A2A error code={code}: {message}")
 
         result = payload.get("result", payload)
         texts = self._extract_text_parts(result)
         if texts:
-            return "\n".join(texts)
+            joined = "\n".join(texts)
+            self._raise_if_quota_or_rate_limit(joined)
+            return joined
         return json.dumps(result, ensure_ascii=True)
 
     def _extract_stream_text(self, raw_data: str) -> str:
@@ -99,7 +102,9 @@ class A2AClient:
             result = payload.get("result", payload)
             texts = self._extract_text_parts(result)
             if texts:
-                return "\n".join(texts)
+                joined = "\n".join(texts)
+                self._raise_if_quota_or_rate_limit(joined)
+                return joined
         return ""
 
     def _extract_text_parts(self, value: object) -> list[str]:
@@ -152,3 +157,17 @@ class A2AClient:
             if text not in deduped:
                 deduped.append(text)
         return deduped
+
+    def _raise_if_quota_or_rate_limit(self, text: str) -> None:
+        lower = text.lower()
+        markers = (
+            "resource_exhausted",
+            "quota exceeded",
+            "rate-limits",
+            "rate limit",
+            "error code 429",
+            "429 resource_exhausted",
+            "generativelanguage.googleapis.com",
+        )
+        if any(marker in lower for marker in markers):
+            raise RuntimeError("Gemini quota/rate limit reached")
