@@ -15,7 +15,7 @@ The core flow is sequential and adaptive: each next question is generated based 
 
 ## Architecture
 
-![Startwise Architecture](docs/architecture.jpg)
+![Startwise Architecture](docs/architecture.png)
 
 ## Tech Stack
 
