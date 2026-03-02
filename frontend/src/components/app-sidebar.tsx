@@ -60,11 +60,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       
       // Check actual data existence to override status if needed
       if (typeof window !== 'undefined') {
-        const financialData = localStorage.getItem('brandorb_financial_data');
-        const marketData = localStorage.getItem('brandorb_market_data');
-        const swotData = localStorage.getItem('brandorb_swot_data');
-        const bmcData = localStorage.getItem('brandorb_bmc_data');
-        const brandIdentityData = localStorage.getItem('brandorb_brand_identity_data');
+        const financialData = localStorage.getItem('startwise_financial_data');
+        const marketData = localStorage.getItem('startwise_market_data');
+        const swotData = localStorage.getItem('startwise_swot_data');
+        const bmcData = localStorage.getItem('startwise_bmc_data');
+        const brandIdentityData = localStorage.getItem('startwise_brand_identity_data');
         
         // Update status based on actual data
         const dataBasedStatus = { ...status };
@@ -214,7 +214,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   ) : (
                     <Image
                       src={resolvedTheme === 'dark' ? '/logo/dark.svg' : '/logo/white.svg'}
-                      alt="BrandOrb AI"
+                      alt="Startwise"
                       width={138}
                       height={36}
                       className="h-9 w-[138px] object-contain"
@@ -232,8 +232,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border/50 p-2">
         <NavUser user={{
-          name: "BrandOrb User",
-          email: "user@brandorb.ai",
+          name: "Startwise User",
+          email: "user@startwise.ai",
           avatar: "/avatars/user.jpg",
         }} />
       </SidebarFooter>

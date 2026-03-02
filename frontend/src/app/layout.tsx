@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
-  title: "BrandOrb AI - AI-Powered Brand Strategy Platform",
+  title: "Startwise - AI-Powered Brand Strategy Platform",
   description:
     "Transform your business ideas into comprehensive brand strategies with AI-powered insights and market analysis.",
 };
@@ -28,7 +28,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange={false}
-          storageKey="brandorb-theme"
+          storageKey="startwise-theme"
         >
           {children}
           <Toaster />

@@ -187,8 +187,8 @@ export default function IdeationPage() {
   const [retryLoading, setRetryLoading] = useState(false);
   const router = useRouter();
 
-  const savedSummary = typeof window !== 'undefined' ? localStorage.getItem('brandorb_summary') : null;
-  const savedBusinessIdea = typeof window !== 'undefined' ? localStorage.getItem('brandorb_business_idea') : null;
+  const savedSummary = typeof window !== 'undefined' ? localStorage.getItem('startwise_summary') : null;
+  const savedBusinessIdea = typeof window !== 'undefined' ? localStorage.getItem('startwise_business_idea') : null;
   const hasRealData = savedSummary && savedBusinessIdea;
 
   useEffect(() => { 
@@ -197,10 +197,10 @@ export default function IdeationPage() {
     // Check if validation has already been done by checking if all 3 steps are completed
     if (typeof window !== 'undefined') {
       // Check if all 3 steps have been completed successfully
-      const financialData = localStorage.getItem('brandorb_financial_data');
-      const marketData = localStorage.getItem('brandorb_market_data');
-      const swotData = localStorage.getItem('brandorb_swot_data');
-      const bmcData = localStorage.getItem('brandorb_bmc_data');
+      const financialData = localStorage.getItem('startwise_financial_data');
+      const marketData = localStorage.getItem('startwise_market_data');
+      const swotData = localStorage.getItem('startwise_swot_data');
+      const bmcData = localStorage.getItem('startwise_bmc_data');
       
       console.log('Validation check:', {
         financialData: !!financialData,
@@ -218,10 +218,10 @@ export default function IdeationPage() {
       console.log('Validate button should be visible:', !allStepsCompleted && savedSummary && savedBusinessIdea);
       
       // Also check legacy session storage for backward compatibility
-      const legacyValidated = sessionStorage.getItem('brandorb_validated') === 'true';
+      const legacyValidated = sessionStorage.getItem('startwise_validated') === 'true';
       if (legacyValidated && !allStepsCompleted) {
         // Legacy validation flag exists but data is missing - reset the flag
-        sessionStorage.removeItem('brandorb_validated');
+        sessionStorage.removeItem('startwise_validated');
       }
       
       // Check for existing image from multiple sources in priority order
@@ -254,7 +254,7 @@ export default function IdeationPage() {
           
           // 2. Third priority: Check if run-all included image data
           try {
-            const runAllData = localStorage.getItem('brandorb_run_state') || localStorage.getItem('brandorb_run_data');
+            const runAllData = localStorage.getItem('startwise_run_state') || localStorage.getItem('startwise_run_data');
             if (runAllData) {
               const parsedData = JSON.parse(runAllData);
               
@@ -299,7 +299,7 @@ export default function IdeationPage() {
           }
           
           // 3. Fourth priority: Legacy - check old business-idea-based cache
-          const legacyImageKey = `brandorb_image_${savedBusinessIdea}`;
+          const legacyImageKey = `startwise_image_${savedBusinessIdea}`;
           const legacyCachedImage = localStorage.getItem(legacyImageKey);
           if (legacyCachedImage && !backgroundImage) {
             setBackgroundImage(legacyCachedImage);
@@ -402,16 +402,16 @@ export default function IdeationPage() {
       
       // Listen for changes in localStorage to detect validation completion
       const handleStorageChange = () => {
-        const financialData = localStorage.getItem('brandorb_financial_data');
-        const marketData = localStorage.getItem('brandorb_market_data');
-        const swotData = localStorage.getItem('brandorb_swot_data');
-        const bmcData = localStorage.getItem('brandorb_bmc_data');
+        const financialData = localStorage.getItem('startwise_financial_data');
+        const marketData = localStorage.getItem('startwise_market_data');
+        const swotData = localStorage.getItem('startwise_swot_data');
+        const bmcData = localStorage.getItem('startwise_bmc_data');
         
         const allStepsCompleted = financialData && marketData && swotData && bmcData;
         if (allStepsCompleted && !validated) {
           console.log('Validation completed detected via localStorage');
           setValidated(true);
-          sessionStorage.setItem('brandorb_validated', 'true');
+          sessionStorage.setItem('startwise_validated', 'true');
         }
       };
       
@@ -475,13 +475,13 @@ export default function IdeationPage() {
 
   const clearValidationData = useCallback(() => {
     // Clear all validation-related data for testing
-    localStorage.removeItem('brandorb_financial_data');
-    localStorage.removeItem('brandorb_market_data');
-    localStorage.removeItem('brandorb_swot_data');
-    localStorage.removeItem('brandorb_bmc_data');
-    localStorage.removeItem('brandorb_run_data');
-    localStorage.removeItem('brandorb_run_state');
-    sessionStorage.removeItem('brandorb_validated');
+    localStorage.removeItem('startwise_financial_data');
+    localStorage.removeItem('startwise_market_data');
+    localStorage.removeItem('startwise_swot_data');
+    localStorage.removeItem('startwise_bmc_data');
+    localStorage.removeItem('startwise_run_data');
+    localStorage.removeItem('startwise_run_state');
+    sessionStorage.removeItem('startwise_validated');
     setValidated(false);
     console.log('Validation data cleared');
   }, []);
@@ -491,7 +491,7 @@ export default function IdeationPage() {
     console.log('All validation steps completed!');
     setValidated(true);
     // Optionally set a flag in sessionStorage for persistence
-    sessionStorage.setItem('brandorb_validated', 'true');
+    sessionStorage.setItem('startwise_validated', 'true');
   }, []);
 
   const blocks = useMemo(() => (savedSummary ? parseSummaryToBlocks(savedSummary) : []), [savedSummary]);

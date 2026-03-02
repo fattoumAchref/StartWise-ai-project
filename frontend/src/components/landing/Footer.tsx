@@ -33,10 +33,10 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { name: "Twitter", href: "https://twitter.com/brandorb", icon: Twitter },
-  { name: "LinkedIn", href: "https://linkedin.com/company/brandorb", icon: Linkedin },
-  { name: "GitHub", href: "https://github.com/brandorb", icon: Github },
-  { name: "Email", href: "mailto:hello@brandorb.ai", icon: Mail }
+  { name: "Twitter", href: "https://twitter.com/startwise", icon: Twitter },
+  { name: "LinkedIn", href: "https://linkedin.com/company/startwise", icon: Linkedin },
+  { name: "GitHub", href: "https://github.com/startwise", icon: Github },
+  { name: "Email", href: "mailto:hello@startwise.ai", icon: Mail }
 ];
 
 export default function Footer() {
@@ -56,7 +56,7 @@ export default function Footer() {
                 <div className="relative h-12 w-auto">
                   <Image
                   src="/logo/white.svg"
-                  alt="BrandOrb AI"
+                  alt="Startwise"
                   height={60}
                   width={210}
                   className="h-12 w-auto dark:hidden"
@@ -64,7 +64,7 @@ export default function Footer() {
                   />
                   <Image
                   src="/logo/dark.svg"
-                  alt="BrandOrb AI"
+                  alt="Startwise"
                   height={60}
                   width={210}
                   className="h-12 w-auto hidden dark:block"
@@ -158,7 +158,7 @@ export default function Footer() {
           viewport={{ once: true }}
         >
           <p className="text-gray-300 text-sm mb-4 md:mb-0">
-            © 2025 BrandOrb AI. All rights reserved.
+            © 2025 Startwise. All rights reserved.
           </p>
           <div className="flex flex-wrap gap-6 text-sm">
             <Link href="/privacy" className="text-gray-300 hover:text-white transition-colors duration-200">

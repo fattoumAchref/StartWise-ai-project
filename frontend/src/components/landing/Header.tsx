@@ -47,7 +47,7 @@ export default function Header() {
                 ) : (
                   <Image
                     src={resolvedTheme === 'dark' ? '/logo/dark.svg' : '/logo/white.svg'}
-                    alt="BrandOrb AI"
+                    alt="Startwise"
                     width={138}
                     height={36}
                     className="h-9 w-[138px] object-contain"
@@ -82,10 +82,10 @@ export default function Header() {
                 onClick={() => {
                   // Clear all onboarding/session data
                   if (typeof window !== 'undefined') {
-                    localStorage.removeItem('brandorb_session_id');
-                    localStorage.removeItem('brandorb_summary');
-                    localStorage.removeItem('brandorb_business_idea');
-                    localStorage.removeItem('brandorb_dashboard_timestamp');
+                    localStorage.removeItem('startwise_session_id');
+                    localStorage.removeItem('startwise_summary');
+                    localStorage.removeItem('startwise_business_idea');
+                    localStorage.removeItem('startwise_dashboard_timestamp');
                   }
                   // Force reload to onboarding with reset param
                   window.location.href = '/onboarding?reset=true';

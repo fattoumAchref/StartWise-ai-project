@@ -18,7 +18,7 @@ export interface WorkflowStatus {
 export async function getWorkflowStatus(): Promise<WorkflowStatus> {
   // Get from localStorage or default to initial state
   if (typeof window !== 'undefined') {
-    const saved = localStorage.getItem('brandorb_workflow_status');
+    const saved = localStorage.getItem('startwise_workflow_status');
     if (saved) {
       return JSON.parse(saved);
     }
@@ -37,9 +37,9 @@ export async function getWorkflowStatus(): Promise<WorkflowStatus> {
 
 export function updateWorkflowStatus(status: Partial<WorkflowStatus>): void {
   if (typeof window !== 'undefined') {
-    const current = JSON.parse(localStorage.getItem('brandorb_workflow_status') || '{}');
+    const current = JSON.parse(localStorage.getItem('startwise_workflow_status') || '{}');
     const updated = { ...current, ...status };
-    localStorage.setItem('brandorb_workflow_status', JSON.stringify(updated));
+    localStorage.setItem('startwise_workflow_status', JSON.stringify(updated));
     
     // Dispatch custom event to notify components
     window.dispatchEvent(new CustomEvent('workflowUpdated'));
@@ -48,12 +48,12 @@ export function updateWorkflowStatus(status: Partial<WorkflowStatus>): void {
 
 export function markStepAsCompleted(step: keyof WorkflowStatus): void {
   if (typeof window !== 'undefined') {
-    const current = JSON.parse(localStorage.getItem('brandorb_workflow_status') || '{}');
+    const current = JSON.parse(localStorage.getItem('startwise_workflow_status') || '{}');
     
     // Only mark as completed if it's currently available
     if (current[step] === 'available') {
       current[step] = 'completed';
-      localStorage.setItem('brandorb_workflow_status', JSON.stringify(current));
+      localStorage.setItem('startwise_workflow_status', JSON.stringify(current));
       
       // Dispatch custom event to notify components
       window.dispatchEvent(new CustomEvent('workflowUpdated'));
@@ -611,7 +611,7 @@ export function generateSummaryHash(businessIdea: string, businessSummary: strin
 // Get image cache key based on summary hash
 export function getImageCacheKey(businessIdea: string, businessSummary: string): string {
   const summaryHash = generateSummaryHash(businessIdea, businessSummary);
-  return `brandorb_image_${summaryHash}`;
+  return `startwise_image_${summaryHash}`;
 }
 
 export async function downloadImageAsBase64(imageUrl: string): Promise<string> {

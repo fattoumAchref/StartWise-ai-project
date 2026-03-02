@@ -78,7 +78,7 @@ export default function Features() {
           </motion.div>
           
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-surface mb-6">
-            Why Choose <span className="gradient-text">BrandOrb AI</span>?
+            Why Choose <span className="gradient-text">Startwise</span>?
           </h2>
           <p className="text-lg md:text-xl text-surface-muted max-w-3xl mx-auto leading-relaxed">
             Discover how our AI-powered platform transforms the way you develop and launch products with cutting-edge technology.

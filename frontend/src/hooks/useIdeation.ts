@@ -15,7 +15,7 @@ import {
 
 // Generate a unique session ID
 const generateSessionId = (): string => {
-  return 'brandorb-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+  return 'startwise-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
 };
 
 // Helper function to generate a comprehensive business plan summary
@@ -158,9 +158,9 @@ export function useIdeation({
 
   // Initialize from localStorage if available
   useEffect(() => {
-    const savedSessionId = localStorage.getItem('brandorb_session_id');
-    const savedBusinessIdea = localStorage.getItem('brandorb_business_idea');
-    const savedSummary = localStorage.getItem('brandorb_summary');
+    const savedSessionId = localStorage.getItem('startwise_session_id');
+    const savedBusinessIdea = localStorage.getItem('startwise_business_idea');
+    const savedSummary = localStorage.getItem('startwise_summary');
 
     console.log('Initializing from localStorage:', {
       savedSessionId,
@@ -200,8 +200,8 @@ export function useIdeation({
 
       // Set session ID and save to localStorage
       setSessionId(response.session_id);
-      localStorage.setItem('brandorb_session_id', response.session_id);
-      localStorage.setItem('brandorb_business_idea', businessIdea);
+      localStorage.setItem('startwise_session_id', response.session_id);
+      localStorage.setItem('startwise_business_idea', businessIdea);
 
       const convertedQuestions = convertQuestions(response.questions);
       setQuestions(convertedQuestions);
@@ -211,7 +211,7 @@ export function useIdeation({
       if (convertedQuestions.length === 0) {
         setIsComplete(true);
         setFinalSummary('Session completed');
-        localStorage.setItem('brandorb_summary', 'Session completed');
+        localStorage.setItem('startwise_summary', 'Session completed');
         onComplete?.('Session completed');
       }
     } catch (err) {
@@ -461,9 +461,9 @@ export function useIdeation({
       IdeationAgentService.deleteSession(sessionId).catch(console.error);
     }
     // Remove from localStorage
-    localStorage.removeItem('brandorb_session_id');
-    localStorage.removeItem('brandorb_business_idea');
-    localStorage.removeItem('brandorb_summary');
+    localStorage.removeItem('startwise_session_id');
+    localStorage.removeItem('startwise_business_idea');
+    localStorage.removeItem('startwise_summary');
     setBusinessIdea('');
     setSessionId(null);
     setQuestions([]);
@@ -493,7 +493,7 @@ export function useIdeation({
       console.log('Summary with image response:', response);
 
       setFinalSummary(response.summary);
-      localStorage.setItem('brandorb_summary', response.summary);
+      localStorage.setItem('startwise_summary', response.summary);
 
       if (onComplete) {
         onComplete(response.summary);

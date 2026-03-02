@@ -13,7 +13,7 @@ export function ThemeProvider({
       defaultTheme="system"
       enableSystem
       disableTransitionOnChange={false} // Enable transitions for smoother theme switching
-      storageKey="brandorb-theme"
+      storageKey="startwise-theme"
       themes={['light', 'dark', 'system']}
       {...props}
     >

@@ -88,10 +88,10 @@ export default function OnboardingPage() {
       resetOnboarding();
       setShowDashboard(false);
       setShowLoadingScreen(false);
-      localStorage.removeItem('brandorb_session_id');
-      localStorage.removeItem('brandorb_summary');
-      localStorage.removeItem('brandorb_business_idea');
-      localStorage.removeItem('brandorb_dashboard_timestamp');
+      localStorage.removeItem('startwise_session_id');
+      localStorage.removeItem('startwise_summary');
+      localStorage.removeItem('startwise_business_idea');
+      localStorage.removeItem('startwise_dashboard_timestamp');
       // Clean up URL
       window.history.replaceState({}, '', '/onboarding');
     }
@@ -112,10 +112,10 @@ export default function OnboardingPage() {
           
           // Store completion data in localStorage
           if (sessionId && finalSummary && businessIdea) {
-            localStorage.setItem('brandorb_session_id', sessionId);
-            localStorage.setItem('brandorb_summary', finalSummary);
-            localStorage.setItem('brandorb_business_idea', businessIdea);
-            localStorage.setItem('brandorb_dashboard_timestamp', new Date().toISOString());
+            localStorage.setItem('startwise_session_id', sessionId);
+            localStorage.setItem('startwise_summary', finalSummary);
+            localStorage.setItem('startwise_business_idea', businessIdea);
+            localStorage.setItem('startwise_dashboard_timestamp', new Date().toISOString());
           }
           
           // Redirect to main dashboard

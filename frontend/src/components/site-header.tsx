@@ -8,8 +8,8 @@ import DarkModeToggle from "./ui/DarkModeToggle";
 
 export function SiteHeader() {
   // Example: get status from localStorage (or context/provider in real app)
-  const savedSummary = typeof window !== 'undefined' ? localStorage.getItem('brandorb_summary') : null;
-  const savedBusinessIdea = typeof window !== 'undefined' ? localStorage.getItem('brandorb_business_idea') : null;
+  const savedSummary = typeof window !== 'undefined' ? localStorage.getItem('startwise_summary') : null;
+  const savedBusinessIdea = typeof window !== 'undefined' ? localStorage.getItem('startwise_business_idea') : null;
   const hasRealData = savedSummary && savedBusinessIdea;
 
   return (
