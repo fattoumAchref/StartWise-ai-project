@@ -1,0 +1,931 @@
+name,sector,confidence,has_startup_act_label,year_founded,label_date,website
+Nqollek Haja,logistics,high,True,,,https://nqollek.tn/
+KICK LIGHT,cleantech,high,True,,,http://red-up.com/
+El Fallega,food,high,True,,,https://elfallega.com/
+TAWA Digital Talents,edtech,high,True,,,https://www.tawa.digital/
+Smart Ecowico Technology,cleantech,medium,True,,,https://ecowico.tn/
+myCarCare,healthtech,medium,True,,,https://www.mycarcare.app/
+My Enlightened Mind,other,low,True,,,http://www.lisatoys.com/
+SESAMm,fintech,high,True,,,http://www.sesamm.com/
+Lakadimia,edtech,medium,True,,,https://lakadimia.online/
+ARTY COLLECTION,artisanat,high,True,,,https://artycollection.com/
+Deliv's,logistics,high,True,,,https://delivs.tn/
+TELA,ecommerce,high,True,,,https://tela.tn/
+Bionics,healthtech,high,True,,,http://www.neo-bionics.com/
+SOFI,tech,medium,True,,,http://www.sofisoft.tn/
+Pivlo,fintech,high,True,,,http://www.pivlo.io/
+BIESSA AUTO,marketplace,high,True,,,http://www.biessaauto.tn/
+cercina.ai,tech,high,True,,,https://startup.gov.tn/en/www.cercina.ai
+CargoWeen,logistics,high,True,,,https://startup.gov.tn/en/null
+Laevitas,healthtech,medium,True,,,http://www.laevitas.ch/
+BIONESSANCE,cleantech,medium,True,,,https://bionessance.com/
+RAIS / SMART QUALITY GATE,tech,medium,True,,,https://www.smartqualitygate.com/
+AUZY,tech,medium,True,,,https://auzyhelp.com/
+Taw Taw Group,logistics,medium,True,,,https://tawtawdelivery.com/
+EMNA HUSSEIN,ecommerce,high,True,,,https://emnahussein.com/
+Above Creation,tech,high,True,,,https://www.abovecreation.tn/
+Relead,saas,medium,True,,,https://relead.tn/
+CAMPUSNA,edtech,high,True,,,http://www.campusna.com/
+Minwin,tech,low,True,,,http://www.minwin.io/
+Skills21,edtech,high,True,,,http://www.getskills21.com/
+Festin/Vetcare,agritech,medium,True,,,https://www.instagram.com/festinpetfood/
+Cooptatio,logistics,medium,True,,,https://www.cooptatio.fr/
+I POMM,other,low,True,,,https://startup.gov.tn/en/null
+Wildkard,fintech,low,True,,,https://startup.gov.tn/en/www.wildkard.tn
+JoodLab,healthtech,medium,True,,,http://joodlab.com/
+Apprentus Tunisie,edtech,high,True,,,https://www.apprentus.com/
+Jemolio,marketplace,medium,True,,,https://startup.gov.tn/en/www.jemolio.com
+Agritable,agritech,medium,True,,,https://www.agritable.tn/
+Enova Robotics,tech,high,True,,,https://www.enovarobotics.eu/
+Inspiring Technologies,tech,medium,True,,,http://inspiretech.io/
+Rayhane,food,high,True,,,http://www.rayhane.tn/
+auto-plus,marketplace,high,True,,,https://www.auto-plus.tn/
+Pixii Motors,cleantech,high,True,,,https://startup.gov.tn/en/www.pixiimotors.com
+Odacel,tech,high,True,,,http://atseeone.com/
+Xtendplex,saas,medium,True,,,https://www.xtendplex.com/
+byessa.com,fintech,medium,True,,,https://www.byessa.com/
+Digihunt,tech,medium,True,,,https://startup.gov.tn/en/www.digihunt.net
+almourabi e-learning,edtech,high,True,,,http://almourabi.com/
+Bartita,edtech,medium,True,,,https://sites.google.com/view/kidzoolink
+Actifs Précieux Apex S.A,fintech,high,True,,,https://www.actifsprecieux.com/
+Fluoink Nanotechnologies,cleantech,medium,True,,,https://barkallaholfaa.wixsite.com/website
+Handmade Tunisia,artisanat,medium,True,,,https://www.handmadetunisia.com/
+OTO TRAVEL,travel,high,True,,,http://www.oto.tn/
+DeVolution studio,tech,medium,True,,,http://www.devolution-studio.com/
+TIRA ROBOTS,tech,high,True,,,http://www.tirarobots.com/
+Kabylis,ecommerce,high,True,,,https://kabylis.tn/
+Industry X.0,tech,high,True,,,https://www.industryx0.pro/
+MOOVOBRAIN,edtech,high,True,,,https://www.gewinner.tn/
+Tunisia Baits,retail,high,True,,,https://www.tunisiabaits.com/
+IJA SOLUTION,tech,low,True,,,http://www.ijasolution.com/
+NEXTPROTEIN TUNISIA,agritech,high,True,,,https://www.nextprotein.co/
+Drest.tn,ecommerce,high,True,,,https://www.drest.tn/
+JPARTNERS TUNISIE,other,low,True,,,https://startup.gov.tn/en/null
+7keema,healthtech,medium,True,,,https://7keema.com/
+Tadreex,edtech,medium,True,,,https://startup.gov.tn/en/null
+Gelivro,logistics,medium,True,,,https://gelivro.com/
+Shotime,marketplace,medium,True,,,http://www.shoti.me/
+ProvenMed,healthtech,medium,True,,,http://www.provenmed.com/
+Farm Trust,agritech,medium,True,,,http://www.farm-trust.com/
+GoMyCode,edtech,medium,True,,,https://www.gomycode.tn/
+WeRebase,tech,high,True,,,https://www.werebase.com/
+Arkan,fintech,high,True,,,https://arkan.tn/
+Rivezli.tn,marketplace,medium,True,,,https://rivezli.tn/
+WorkPoint / X-Point,saas,medium,True,,,http://www.workpoint.tn/
+Bridges S.A,fintech,medium,True,,,http://bridges.tn/
+kids protect,healthtech,medium,True,,,https://startup.gov.tn/en/null
+khalta,ecommerce,medium,True,,,http://www.khaltastore.com/
+FeedIn Green,cleantech,high,True,,,https://startup.gov.tn/en/www.feedin.com
+Kyto-Prod,tech,medium,True,,,https://startup.gov.tn/en/null
+Vivia Clinical Network,healthtech,high,True,,,https://www.vivianet.com/
+Digital Health Services & Solutions,healthtech,high,True,,,http://www.dh-ss.com/
+REBOOTKAMP,edtech,medium,True,,,http://rbk.org/
+Power solution,cleantech,medium,True,,,https://www.facebook.com/bluepsol
+Think-it,tech,medium,True,,,https://think-it.io/
+INSTAWARE,tech,medium,True,,,http://www.instaware.tn/
+iFarming Solutions,agritech,medium,True,,,https://ifarming-solutions.com/
+Access Aligner,healthtech,high,True,,,http://www.accessaligner.com/
+CrocoCoder,edtech,medium,True,,,http://www.crococoder.tn/
+Myflix,tech,medium,True,,,https://myflix.solutions-mtech.com/
+NACHD-IT,tech,medium,True,,,http://www.nachd-it.com/
+Expy.ai,saas,high,True,,,https://expy.ai/
+Chosa,tech,medium,True,,,https://www2.chosa.net/
+Relead,saas,high,True,,,https://relead.tn/
+Tsiwrat Stock,ecommerce,high,True,,,http://www.tsiwratstock.com/
+Wheelz,logistics,high,True,,,http://profit.gtt-launchpad.com/
+HUBS TRAVEL,travel,medium,True,,,https://startup.gov.tn/en/hub-travel.com
+GrowApp,agritech,medium,True,,,http://growapp.digital/
+Dataperformers,tech,high,True,,,http://www.dataperformers.com/
+Fidness,fintech,medium,True,,,https://fidness.net/#/
+IDEAL CONCEPTION,tech,high,True,,,https://www.idealconception.com/
+Salaire.tn,fintech,high,True,,,http://salaire.tn/
+Koofin.co,fintech,high,True,,,https://koofin.co/
+DIGITIN,tech,medium,True,,,http://www.digitin.net/
+Vizmerald,tech,low,True,,,https://www.vizmerald.com/
+La relation client à l’ère du digital,saas,medium,True,,,http://www.gomybiz.co/
+MCOM,ecommerce,medium,True,,,http://www.mcom.tn/
+InstaDeep,tech,high,True,,,https://www.instadeep.com/
+Eventizer,tech,medium,True,,,https://www.eventizer.io/
+Avidea,tech,low,True,,,http://www.avidea.tn/
+Seabex,logistics,high,True,,,https://www.seabex.com/
+TAOO,tech,high,True,,,https://www.taoo.ai/
+HISTORIAR,tech,medium,True,,,http://histori-ar.com/
+MicroAcess,tech,medium,True,,,http://microacess.com/
+Elevage des abeilles pour la collecte de leurs venins pour des fins cosmétiques et thérapeutiques,healthtech,medium,True,,,https://startup.gov.tn/en/null
+KNSD,tech,low,True,,,https://www.knsd.digital/
+Gloristory,other,low,True,,,https://startup.gov.tn/en/null
+Domoticaza,tech,medium,True,,,https://iotics.tn/
+NeuroData,tech,high,True,,,https://neurodata-tunisia.com/
+Insight+,tech,medium,True,,,https://startup.gov.tn/en/null
+Coinsence,fintech,high,True,,,http://coinsence.com/
+Digital2Value,saas,medium,True,,,http://digital2value.com/
+Expensya,fintech,high,True,,,https://www.expensya.com/
+Eva Dam Technology,cleantech,medium,True,,,http://www.evadam.io/
+MEDILSYS,healthtech,medium,True,,,http://medilsys.com/
+CUIDA,healthtech,high,True,,,https://www.cuida.tn/
+Dlilek,ecommerce,high,True,,,http://www.dlilek.tn/
+WanToTrip,travel,medium,True,,,http://www.wantotrip.net/
+VDOC,healthtech,high,True,,,http://www.vdocapp.com/
+Mouqawel,logistics,high,True,,,https://mouqawel.tn/
+Dracoss,tech,high,True,,,http://dracoss.tn/
+COGNITION,healthtech,medium,True,,,https://www.e-health.tn/
+eDream Commerce,ecommerce,high,True,,,http://www.edream.tn/
+Papritech,cleantech,medium,True,,,http://www.papritech.com/
+AVOPRO,agritech,medium,True,,,http://www.avopro.tn/
+Relead,saas,high,True,,,https://relead.tn/
+INNOFAB,tech,medium,True,,,http://innofab.tn/
+ODIX,tech,high,True,,,http://odix.io/
+iwassel,logistics,high,True,,,http://www.iwassel.tn/
+Xgenbox,tech,low,True,,,http://www.xgenbox.com/
+DABCHY,ecommerce,high,True,,,https://www.dabchy.com/
+Creometry,tech,medium,True,,,https://www.creometry.com/
+Makrem Manufacturing,other,medium,True,,,https://startup.gov.tn/en/null
+d-talk,tech,low,True,,,https://d-talk.co/
+BeNeutron,tech,medium,True,,,https://beneutron.com/
+AbrarCom Analytics,tech,medium,True,,,https://startup.gov.tn/en/null
+Oleomar,agritech,medium,True,,,https://startup.gov.tn/en/null
+FlowsMaster,tech,medium,True,,,http://www.techinnovlabs.com/
+moudda.com,fintech,medium,True,,,https://www.moudda.com/
+Swanina,ecommerce,high,True,,,http://www.swanina.tn/
+Smart For Green: Farm and Forest Fire Protection,agritech,medium,True,,,https://www.smartforgreen.com/
+Z healthcare,healthtech,medium,True,,,http://zcare.tn/
+WaterSec,cleantech,medium,True,,,http://www.water-sec.com/
+FelCloud,saas,high,True,,,https://felcloud.tn/
+VME Internationale,tech,low,True,,,http://www.syndic.digital/
+Prefabulous,cleantech,high,True,,,https://www.prefa-bulous.com/
+Smarketyrs,ecommerce,medium,True,,,https://www.smarketyrs.com/
+Hello Dati,tech,medium,True,,,https://hellodati.com/
+PROTABAR,food,high,True,,,https://protabar.com/
+KAPTY,fintech,high,True,,,https://www.kapty.net/
+Ijeni,marketplace,medium,True,,,https://ijeni.tn/
+QualiFour,tech,medium,True,,,https://startup.gov.tn/en/null
+RGPD Tunisie,tech,medium,True,,,https://rgpd-tunisie.tn/
+Medquick,healthtech,medium,True,,,http://www.medquick.tn/
+Bon'Heure,food,medium,True,,,http://www.b-heure.com/
+ROAMSMART,travel,high,True,,,https://roam-smart.com/
+Hanoutify,ecommerce,high,True,,,http://www.dokken.io/
+Vitah,saas,medium,True,,,https://vitah.tech/
+Ostool,saas,medium,True,,,https://ostool.tn/
+WeCode Land,edtech,medium,True,,,https://www.wecode.land/
+NetConf,tech,medium,True,,,https://startup.gov.tn/en/null
+Data For Brands,tech,high,True,,,http://www.dataforbrands.com/
+Klink,logistics,medium,True,,,http://www.klink.tn/
+MedCREtech,healthtech,medium,True,,,https://www.medcretech.com/
+GENI,tech,medium,True,,,http://www.flahtik.com/
+seekmake,marketplace,medium,True,,,http://www.seekmake.com/
+Keto Life Style,healthtech,medium,True,,,https://startup.gov.tn/en/null
+Asklepios,healthtech,high,True,,,https://www.asklepios.io/
+LA FIBRE ARTISANALE,artisanat,high,True,,,https://www.lalistetunisienne.tn/
+Smart House Tunisia,tech,medium,True,,,http://www.domhome.tn/
+AZÄ,artisanat,high,True,,,http://www.maison-aza.com/
+xscan,tech,medium,True,,,https://xscan.me/
+UCOD,tech,medium,True,,,https://ucod.io/
+NG Technologies,tech,medium,True,,,https://www.ng-sign.com/
+QUERMES,ecommerce,high,True,,,http://www.quermes.net/
+Galactech,tech,medium,True,,,https://www.galactechstudio.com/
+TUNISIE MATÉRIEL ROULANT,logistics,high,True,,,https://www.tmr.tn/
+Paypos Tunisie,fintech,medium,True,,,http://paypos.tn/
+FranchiseLab,marketplace,high,True,,,https://startup.gov.tn/en/www.franchiselab.net
+Line Analyzer,tech,medium,True,,,https://lineanalyzer.tn/
+JuniorsCV,edtech,medium,True,,,http://www.juniorscv.com/
+Grün Skincare,healthtech,high,True,,,https://startup.gov.tn/en/www.grun.tn
+ALGAEPOOL,cleantech,high,True,,,http://www.algaepool.com/
+HERUNDO,fintech,medium,True,,,https://www.herundo.com/
+kiddo,edtech,medium,True,,,https://startup.gov.tn/en/null
+Vynd,saas,high,True,,,https://www.vynd.com/
+K2LIS,tech,medium,True,,,https://startup.gov.tn/en/null
+Ste Tildah,ecommerce,high,True,,,http://www.majenna.com/
+GARANTY,fintech,high,True,,,http://beta.garanty.tn/
+TakiAcademy,edtech,medium,True,,,https://www.takiacademy.com/
+TransFacile,logistics,low,True,,,https://startup.gov.tn/en/null
+Fidelicia,fintech,medium,True,,,https://fidelicia.com/
+EZZAYRA SOLUTIONS,tech,low,True,,,http://www.ezzayra.com/
+Reevalo,tech,low,True,,,http://www.reevalo.com/
+DentaMeet,healthtech,high,True,,,https://app.dentameet.tn/%20et%20https://dentameet.tn/
+COLLARY,tech,medium,True,,,http://dev.collary.s-man.cloud/auth/login
+Doqtoor,healthtech,high,True,,,https://www.doqtoor.com/
+Black Dune Studio,tech,high,True,,,http://www.blackdunestudio.com/
+Société Saghroun.com,ecommerce,high,True,,,https://www.saghroun.com/
+SEA DESIGN LAB/OUTA,tech,high,True,,,https://www.seadesignlab.com/
+Novel-Ti,tech,medium,True,,,https://www.novelti.com.tn/
+Ste Magicube Industrie,cleantech,high,True,,,https://magicube.tn/
+Xchange,fintech,high,True,,,https://xchange.com.tn/
+KOOL,food,high,True,,,http://www.kool.com.tn/
+SPOFUN,tech,medium,True,,,https://startup.gov.tn/en/www.spofun.tn
+Finansya Ecosystem,fintech,high,True,,,https://finansya.com/
+ORcompost,agritech,high,True,,,https://orcompost.odoo.com/
+Be Smart Travel,travel,medium,True,,,https://besmart.travel/
+DEEP FLOWS,tech,medium,True,,,https://deepflows.co/
+GoFields,agritech,high,True,,,http://www.gofields.tn/
+Unify,tech,low,True,,,https://unify.tn/
+Womia,healthtech,medium,True,,,https://startup.gov.tn/en/www.womia.io
+Smart Factory,tech,high,True,,,http://www.sfr-tunisie.com/
+Fluoink Nanotechnologies,cleantech,medium,True,,,https://barkallaholfaa.wixsite.com/website
+Alfikr,tech,high,True,,,http://www.justpublish.net/
+Educanet Tunisia,edtech,medium,True,,,https://www.educanet.tn/
+Guepard,tech,medium,True,,,https://guepard.run/
+Dentic,healthtech,high,True,,,http://dentic.tn/
+Time and Money Tracker,fintech,high,True,,,http://www.tmt-software.com/
+El Food Lab,agritech,medium,True,,,http://www.elfoodlab.tn/
+Liberrex,fintech,medium,True,,,https://www.liberrex.com/
+She Shares,ecommerce,medium,True,,,http://www.sheshares.store/
+Datavora,tech,medium,True,,,https://datavora.com/
+ECG Lab,healthtech,high,True,,,https://ecglab.net/
+lexi,edtech,medium,True,,,http://www.lexi.tn/
+Tap4glam,ecommerce,high,True,,,http://www.tap4glam.com/
+FOUTA TUNISIA,artisanat,medium,True,,,https://www.foutatunisia.com/
+Lavocato,food,high,True,,,https://www.lavocato.tn/
+FI THNITI,fintech,high,True,,,http://www.fithniti.city/
+CYNOIA,tech,medium,True,,,http://cynoia.com/
+Scientiworld,edtech,medium,True,,,https://startup.gov.tn/en/scientiworld.com
+BADDAL,marketplace,high,True,,,https://baddal.tn/
+Cognira Tunisia,saas,high,True,,,http://www.cognira.com/
+ELBIO,agritech,medium,True,,,http://www.elbio.tn/
+SQOIN,fintech,high,True,,,http://sqoin.us/coin/
+MAZED,marketplace,medium,True,,,http://auctionit4her.com/
+SIMARL,tech,medium,True,,,https://soft-justice.com.tn/
+faavly,marketplace,medium,True,,,http://www.faavly.com/
+ZAYOLI,fintech,low,True,,,https://startup.gov.tn/en/www.zayoli.com
+MK Talent,other,low,True,,,https://startup.gov.tn/en/null
+IHSCEN for Startups,other,high,True,,,https://startup.gov.tn/en/www.facebook.com/ihscenforstartups
+FARKITO,fintech,low,True,,,https://www.farkito.com/
+Grabingo,ecommerce,medium,True,,,http://www.grabingo.app/
+anavid,tech,medium,True,,,https://www.anavid.co/
+WAMIA,fintech,high,True,,,https://www.wamia.tn/
+SMARTBAT,cleantech,high,True,,,https://smartbat.tn/
+Jeeby - دجيبي,fintech,high,True,,,https://www.jeeby.app/
+ADIOM,agritech,high,True,,,http://www.guidephytosanitaire.tn/
+VENARI SECURITY TUNISIA,tech,high,True,,,https://venarisecurity.com/
+Freelancy,marketplace,high,True,,,https://freelancy.co/
+9arini.tn,marketplace,medium,True,,,https://www.9arini.tn/
+WONDER WORK,tech,high,True,,,https://www.wonderwork.tn/
+iSporit,healthtech,medium,True,,,https://www.isporit.com/
+Revampr,fintech,medium,True,,,https://revampr.com/
+Gark,tech,medium,True,,,http://www.gark.tn/
+SHYK,fintech,medium,True,,,https://shyk.fr/
+wammya,food,high,True,,,http://www.wammya.com/
+Rouet,logistics,medium,True,,,http://www.rouet.tn/
+KB2I,tech,low,True,,,http://www.kb2i.com/
+STARK,saas,high,True,,,https://stark-erp.com/
+NATDYES,artisanat,medium,True,,,https://startup.gov.tn/en/null
+SEA DESIGN LAB/OUTA,tech,high,True,,,https://www.seadesignlab.com/
+Shopy Science,ecommerce,medium,True,,,http://shopy-science.io/
+Kiwi Stock Light,fintech,medium,True,,,http://stock.kiwisoftwares.net/
+Optypro.net,saas,medium,True,,,https://optypro.net/
+GETPAY,fintech,high,True,,,http://www.astontechnologies.tn/
+South fruits Agri,agritech,high,True,,,https://startup.gov.tn/en/www.south-fruits.com
+SWIPACE,fintech,medium,True,,,http://www.swipace.com/
+Tunarco,fintech,low,True,,,https://tunarco.com/
+Vsober,healthtech,medium,True,,,http://vsober.fr/
+AROM R SARL,cleantech,medium,True,,,http://www.arom-air.com/
+PSYNARIOS,healthtech,high,True,,,https://www.psynarios.com/
+Ailine Pro,tech,high,True,,,https://startup.gov.tn/en/www.ailine.pro
+ECHO,logistics,high,True,,,http://www.echo.aero/
+Armani Arabic Academy,edtech,medium,True,,,https://www.armaniarabicacademy.com/
+Save Your Wardrobe,ecommerce,high,True,,,https://www.saveyourwardrobe.com/
+Lisssen,tech,low,True,,,https://lisssen.com/
+Kindeal,marketplace,medium,True,,,https://kindeal.app/
+IsOne Hr,saas,high,True,,,https://isonehr.com/
+DaryDar,marketplace,medium,True,,,http://www.darydar.tn/
+Tadeco It,cleantech,medium,True,,,https://www.tadeco-group.tn/
+DATASCAI,tech,high,True,,,https://www.datascai.com/
+RGPD Tunisie,tech,medium,True,,,https://rgpd-tunisie.tn/
+SLAMA DATTES,food,high,True,,,http://www.slamadattes.com/
+Split,fintech,medium,True,,,https://startup.gov.tn/en/null
+Neopolis Development,tech,medium,True,,,https://www.neopolis-dev.com/
+AIO Events,tech,medium,True,,,https://aio.events/
+Elokencia,other,low,True,,,https://startup.gov.tn/en/null
+Secret Sucré Kids,food,high,True,,,https://secretsucre.com/
+Soul & Planet,ecommerce,high,True,,,https://www.soulandplanet.tn/
+Pulpetech,cleantech,medium,True,,,http://www.pulpetech.com/
+datavision,tech,high,True,,,http://www.datavision.company/
+IDWEY,logistics,high,True,,,https://idwey.tn/
+DCX,logistics,high,True,,,http://www.dcx.tn/
+WeaveLines Studio / Damdoum,tech,medium,True,,,https://damdoum.app/
+Datagram,tech,high,True,,,http://www.datagram.ai/
+Optimalogistic,logistics,medium,True,,,http://www.optimalogistic.com/
+HAKIM TECHNOLOGIES,tech,high,True,,,http://www.hakim-technologies.tn/
+Ba9chich,food,medium,True,,,http://ba9chich.com/
+Ahmini,ecommerce,high,True,,,http://www.ahmini.net/
+Les Ateliers de Yallaa,artisanat,high,True,,,http://www.yallaa.tn/
+NATULYN,cleantech,medium,True,,,http://www.natulyn.com/
+DIDA MIND,edtech,medium,True,,,https://www.didamind.com/
+"CC - Colombus Capital, The Infinite Trust",fintech,high,True,,,https://startup.gov.tn/en/www.colombus-capital.com
+ellz and beyond Tunisie,ecommerce,high,True,,,http://www.ellz.net/
+taderok,ecommerce,high,True,,,http://www.taderok.com/
+QUIZ MENTOR,edtech,high,True,,,https://quizmentor.net/
+KidzRise,edtech,high,True,,,https://www.kidzrise.com/
+ZIGOFILTRE,cleantech,medium,True,,,https://startup.gov.tn/en/null
+ClickBus,travel,high,True,,,http://www.clickbus.tn/
+Controlmed,healthtech,medium,True,,,https://controlmed2.cms.webnode.fr/
+Réseau social medical : Saheelha,healthtech,high,True,,,http://www.saheelha.com/
+Supremcloud,tech,high,True,,,https://suprem.ai/
+DRIVOXE.,logistics,high,True,,,https://startup.gov.tn/en/drivoxe.com
+HAT Information Security Corporate,tech,high,True,,,https://startup.gov.tn/en/hat-training.com
+Z-Partners,fintech,medium,True,,,https://www.capxvalue.com/
+Smart Med SA,healthtech,medium,True,,,http://www.med.tn/
+SMART LOGGER,logistics,high,True,,,http://www.smartlogger.tn/
+Epilert,healthtech,high,True,,,http://epilert.io/
+Chill&Lit,ecommerce,high,True,,,https://chillandlit.tn/
+Luceor Labs,tech,medium,True,,,http://www.luceor-labs.com/
+RESRV,other,low,True,,,https://startup.gov.tn/en/null
+Shwoppy,marketplace,medium,True,,,http://www.shwoppy.com/
+FACTOORYA,marketplace,medium,True,,,http://www.factoorya.com/
+Healthcare Anywhere,healthtech,high,True,,,https://startup.gov.tn/en/null
+ShippingLog,logistics,medium,True,,,https://www.shippinglog.tn/
+FININFO SOLUTIONS,fintech,high,True,,,https://fininfosolutions.com/
+UNIK CHIK,ecommerce,high,True,,,http://www.unikchic.com/
+DigiMove,logistics,medium,True,,,https://startup.gov.tn/en/null
+appro.tn,fintech,high,True,,,https://www.appro.tn/
+bqube,tech,medium,True,,,https://www.bqubeits.com/
+FreeOui,tech,high,True,,,http://www.freeoui.com/
+NovaTEK Solution,tech,medium,True,,,http://novatek-solutions.com/
+khallasli,ecommerce,medium,True,,,https://www.khallasli.com/
+Kumulus,cleantech,medium,True,,,http://www.kumuluswater.com/
+DATAERA,tech,high,True,,,https://www.data-era.co/
+SAQARA INTERNATIONAL,ecommerce,high,True,,,https://www.saqara.com/
+ORcompost,agritech,high,True,,,https://orcompost.odoo.com/
+Bepeep Health,healthtech,high,True,,,https://startup.gov.tn/en/null
+Drone Bee Solution,agritech,high,True,,,https://startup.gov.tn/en/null
+ZID.tn,ecommerce,high,True,,,https://zid.tn/
+Mymall.tn,ecommerce,high,True,,,http://www.mymall.tn/
+Marcus studio,tech,medium,True,,,https://mrcus-studio.com/
+BYEISSA,ecommerce,high,True,,,https://byeissa.com/
+UTIK,logistics,high,True,,,http://www.utik.co/
+Go Staff,tech,medium,True,,,http://www.gostaff.io/
+Gigsdesk,marketplace,high,True,,,https://www.gigsdesk.com/
+STRIKE MOTOTRS,marketplace,high,True,,,http://www.strikemotors.com/
+Deli Solutions,food,high,True,,,https://www.monresto.net/
+fixiha.tn,marketplace,medium,True,,,https://www.fixiha.tn/
+EGAMarketplace,ecommerce,medium,True,,,https://egamarketplace.com/
+ROBOGRAF,tech,medium,True,,,http://www.robograf.me/
+iMMOTECH,tech,medium,True,,,https://immotech.app/en/products
+Tunisiabiotech,healthtech,high,True,,,http://www.tunisiabiotech.com/
+Menutium,food,high,True,,,https://menutium.com/
+Panne.auto,marketplace,medium,True,,,https://startup.gov.tn/en/null
+Technologia Academy,edtech,high,True,,,https://startup.gov.tn/en/null
+أقضيلي,fintech,high,True,,,https://aqdhili.tn/
+LASERSEVEN,tech,medium,True,,,https://laserseven.io/
+CBM-EE,fintech,medium,True,,,https://ahyini.com/
+Business Computer Services,tech,medium,True,,,https://startup.gov.tn/en/null
+ProsperUs,fintech,high,True,,,http://www.prosperus.tech/
+Le Comet,logistics,high,True,,,http://www.comet.tn/
+DrillSERV,tech,high,True,,,http://www.drillserv-tunisia.com.tn/
+Etakwin,logistics,medium,True,,,http://etakwin.com/
+Poly,tech,medium,True,,,https://super-poly.vercel.app/
+Go To Match,marketplace,medium,True,,,https://gotomatch.tn/
+WattyGo : Founisseur 100% Tunisien de solutions intelligentes de recharge pour Véhicules Electriques,cleantech,high,True,,,https://startup.gov.tn/en/www.wattygo.com
+Consulti,tech,medium,True,,,http://www.consulti.tn/
+DeepAI,tech,high,True,,,https://deepai.tn/
+Class Quiz,edtech,high,True,,,https://www.classquiz.tn/
+Irbe7,ecommerce,high,True,,,https://startup.gov.tn/en/www.irbe7.com
+Be bouncy,other,low,True,,,https://startup.gov.tn/en/null
+Firnas Engineering,tech,medium,True,,,http://firnas.tn/
+Shadoc,tech,low,True,,,http://shadoc.io/
+FAZA,fintech,high,True,,,http://www.faza.tn/
+Tuni'AR,tech,medium,True,,,http://tuniar.tn/
+affipro,fintech,medium,True,,,http://affipro.tn/
+CIVILAB,cleantech,medium,True,,,https://startup.gov.tn/en/civilab.co
+sellya.net,ecommerce,medium,True,,,https://startup.gov.tn/en/sellya.net
+Care-Up,healthtech,high,True,,,https://startup.gov.tn/en/null
+Smart City,tech,medium,True,,,http://wow-soft.com/
+Autoween,marketplace,medium,True,,,https://autoween.tn/
+Waf Waf House,food,high,True,,,https://www.wafwafhouse.com/
+OREADZ,edtech,high,True,,,https://oreadz.com/
+Clic to know,edtech,medium,True,,,https://startup.gov.tn/en/null
+EDUC'ART,edtech,medium,True,,,http://www.educart.tn/
+Travaris,travel,high,True,,,https://travaris.app/
+PALMOTEK.COM,tech,medium,True,,,https://www.palmotek.com/
+Randev,healthtech,high,True,,,https://startup.gov.tn/en/app.randev.io
+Societe Tunisian Online Teachers,edtech,high,True,,,http://www.tot.com.tn/
+Koors,tech,medium,True,,,https://koors.io/
+ArtForNess,ecommerce,high,True,,,https://www.artforness.com/
+PEAK Technologies SARL,tech,medium,True,,,https://www.peak-cs.com/
+Linkedfishers/Hookedup,marketplace,medium,True,,,http://linkedfishers.com/
+Konnect,tech,medium,True,,,https://konnect.network/
+Buzzbip,logistics,high,True,,,https://www.buzzbip.com/
+KHEER,fintech,low,True,,,http://www.aptyx.io/
+JUNIOR NETWORK,tech,high,True,,,https://www.aliendimension.com/
+Rednaks – Fenix,tech,medium,True,,,http://%20www.thefenix.io/
+SKANIT,tech,medium,True,,,https://skanit.net/
+Paymee,fintech,medium,True,,,https://www.paymee.tn/
+TechAccessibility,tech,high,True,,,http://www.techaccessibility.com/
+study.tn,edtech,high,True,,,https://www.study.tn/
+Logis Technologies,logistics,medium,True,,,http://www.logis.tn/
+autoecoleplus.tn,cleantech,medium,True,,,https://autoecoleplus.tn/
+KTN,logistics,medium,True,,,http://ktntraffic.wixsite.com/website
+HSWARE,saas,low,True,,,https://startup.gov.tn/en/www.coadis.com
+Lemarché.tn,marketplace,high,True,,,http://lemarche.tn/
+OCTOMIRO,tech,high,True,,,https://startup.gov.tn/en/www.octomiro.ai
+Tinith,tech,medium,True,,,http://www.tinith.com/
+Smart Racing Hub,tech,high,True,,,https://tunisiafitnessgames.com/
+SOAR,edtech,high,True,,,http://www.soar.tn/
+Digibrain,tech,high,True,,,http://www.digibrainagency.com/
+Neoshop,ecommerce,medium,True,,,http://www.neoshop.tn/
+Market360Degrees,marketplace,medium,True,,,https://startup.gov.tn/en/null
+Dorry,food,high,True,,,http://dorry.tn/
+Meeda smart table,cleantech,high,True,,,https://www.kickstarter.com/projects/meeda/meeda-a-cooler-in-a-smart-table-suitable-for-indoor-outdoor
+Quantylix Risk & Data,fintech,high,True,,,http://www.quantylix.com/
+Cagnotte Fid,fintech,high,True,,,https://cagnottafid.tn/
+Tunrooms/SV Tech SARL,travel,high,True,,,https://www.tunrooms.com/
+Meditech,healthtech,medium,True,,,https://sites.google.com/view/anath-health-care
+ilboursa.com,fintech,high,True,,,https://www.ilboursa.com/
+Imaginario AI,tech,high,True,,,https://imaginario.ai/
+AirGraph,tech,medium,True,,,https://startup.gov.tn/en/www.one-drone.fr
+Talifouni+,marketplace,medium,True,,,https://talifouni.com/
+SunAir Fountain® : Générateur d’eau de boisson atmosphérique par le solaire,cleantech,high,True,,,https://www.agua-de-sol.com/
+Picstore,ecommerce,medium,True,,,https://www.picstore.tn/
+Limonade Technologies,tech,high,True,,,http://limonade.tn/
+Coachini,edtech,medium,True,,,https://startup.gov.tn/en/www.coachini.net
+D-WEE,other,low,True,,,https://startup.gov.tn/en/null
+Smart Mobility,tech,high,True,,,https://www.smartmobility-solutions.com/
+NextAV,tech,medium,True,,,http://www.nextav-aero.com/
+BioAgrihelpers (BAH),agritech,medium,True,,,http://www.bioagrihelper.com/
+Tynass,ecommerce,high,True,,,https://tynass.com/
+Journey رحلة كتاب,edtech,medium,True,,,https://www.thejourney.space/
+Pas Comme Eux,other,high,True,,,https://startup.gov.tn/en/www.pascommeeux.com
+Catrim,tech,medium,True,,,http://www.catrimtech.com/
+Eat & Fit,food,high,True,,,https://startup.gov.tn/en/www.eatfit.tn
+D-carte,logistics,medium,True,,,https://startup.gov.tn/en/Dcartesolutions.com
+OPTOSCOPIA Intelligent Diagnostic Analyzers,healthtech,high,True,,,https://startup.gov.tn/en/www.optoscopia.com
+profils.tn,tech,high,True,,,http://www.profils.tn/
+TRUE DELTA,fintech,medium,True,,,http://truedelta.co/
+ALMOURAFEK,other,low,True,,,https://startup.gov.tn/en/null
+Slidzo,saas,medium,True,,,https://slidzo.com/
+Skazy Tunisia,saas,high,True,,,https://optimal-rh.com/
+HYDROPEN TECHNOLOGIE,cleantech,medium,True,,,https://startup.gov.tn/en/null
+Chantier,logistics,medium,True,,,http://www.chantier.tn/
+DataSense,tech,high,True,,,https://datasense.tk/
+On hand Apps,tech,medium,True,,,http://www.onhandapps.com/
+Food4Future,food,high,True,,,https://startup.gov.tn/en/null
+Autorent,logistics,high,True,,,https://autorent.tn/
+Tryppy,travel,medium,True,,,https://startup.gov.tn/en/null
+Universa Blockchain,fintech,high,True,,,http://www.universacommunity.com/
+CHMISA,other,low,True,,,https://startup.gov.tn/en/null
+BSmart SARL,tech,medium,True,,,http://www.bsmartdoc.com/
+Servini,tech,medium,True,,,https://srvni.com/
+Beego,tech,medium,True,,,https://startup.gov.tn/en/null
+Bouquiniste.tn,ecommerce,high,True,,,https://www.bouquiniste.tn/
+Miral Things,tech,medium,True,,,https://www.miral-technology.com/
+Riblum,tech,high,True,,,http://www.riblum.com/
+TransIN / SmartIN,logistics,high,True,,,http://www.smartin.com.tn/
+LUNAR EPS,tech,medium,True,,,https://startup.gov.tn/en/null
+BipEvents,other,high,True,,,https://bip.events/
+MYCLINIC.TN,healthtech,medium,True,,,https://www.myclinic.tn/MYCLINIC%20%20(CABINET:%20YTB%20%20%7C%20%20UTILISATEUR:%20DOCTEUR%20%20%7C%20%20MOT%20DE%20PASSE:%20D)
+LKESSA,tech,high,True,,,https://www.filemail.com/d/asrvidehsfrlndx
+GLOLIX TUNISIA,logistics,high,True,,,http://glolix.com/
+ILEY'COM,tech,medium,True,,,https://ileycom.com/
+WIN NOW,fintech,high,True,,,https://winnow.tn/
+Takwinland,agritech,high,True,,,http://www.takwinland.com/
+Videsys,tech,medium,True,,,https://www.videsys.com/
+Société DOM Services,cleantech,medium,True,,,https://www.dom2030.com/
+SMARTY,logistics,high,True,,,https://www.smarty.tn/
+Abneam,saas,medium,True,,,https://abneam.com/
+Flexiolar,edtech,medium,True,,,https://sites.google.com/view/flexiolar/
+Co-Solar,cleantech,medium,True,,,https://www.co-solar.com/
+Ernest,other,low,True,,,https://startup.gov.tn/en/null
+Compaktor,logistics,medium,True,,,http://www.maps-it.com/
+Pura solutions,cleantech,medium,True,,,http://www.pura-tech.com/
+LORE AND HEART,ecommerce,high,True,,,https://loreandheart.com/
+Karriery,edtech,medium,True,,,https://www.karriery.com/
+Wanavaa,travel,medium,True,,,http://www.wanavaa.com/
+MOEZ JOMAA,tech,high,True,,,https://startup.gov.tn/en/www.gotoinfinite.com
+Save The Plate,food,high,True,,,https://savetheplate.ccdev.space/
+Sprindt,logistics,medium,True,,,http://sprindt.com/
+Winshot,tech,low,True,,,http://www.winshot.net/
+CLEDISS,cleantech,low,True,,,http://www.nomadis.online/
+Iowaves,tech,medium,True,,,http://www.iowaves.com/
+SkilinK AI,saas,high,True,,,https://skilink.ai/
+4InA Technologie,tech,medium,True,,,https://4inatechnologie.wixsite.com/4ina-technologie
+Xgenbox,tech,low,True,,,http://www.xgenbox.com/
+X-Mall,ecommerce,high,True,,,https://startup.gov.tn/en/www.x-mall.tn
+AquaDeep,cleantech,medium,True,,,https://aquadeep.org/
+Speedy ERP,saas,high,True,,,https://speedy-erp.app/sign-in
+Idaraty.tn,saas,medium,True,,,https://idaraty.tn/?from=label-startup
+Paygrant,fintech,high,True,,,https://startup.gov.tn/en/null
+branper,fintech,high,True,,,https://branper.com/
+BankeID,fintech,high,True,,,https://www.tido.tn/
+HOMEJEK,logistics,high,True,,,https://www.homejek.com/
+Hayat Tech,tech,high,True,,,http://www.hayat-tech.com/
+Lamma,logistics,high,True,,,http://www.lamma.city/
+SupplyzPro,logistics,high,True,,,https://supplyzpro.com/fr
+Allô Réparateur,logistics,medium,True,,,http://www.allo-reparateur.tn/
+Autoprix.tn,ecommerce,high,True,,,http://www.autoprix.tn/
+eDonec,saas,medium,True,,,http://www.edonec.com/
+Vital Tools,saas,high,True,,,https://electron-erp.netlify.app/
+Canadin,healthtech,medium,True,,,https://canadin-app.com/
+UpKurs,edtech,high,True,,,http://www.upkurs.com/
+Bouita,marketplace,medium,True,,,https://www.bouita.com/
+X-P-R,logistics,medium,True,,,http://www.xpr.com.tn/
+GoPayzi,fintech,medium,True,,,https://gopayzi.com/
+Next Gen Corp,tech,high,True,,,https://ngcorp.tn/
+Wefix,tech,medium,True,,,http://www.wefix.tn/
+NetShareK Network Share Knowledge,edtech,medium,True,,,https://www.netsharek.tn/
+VIRGIN,cleantech,high,True,,,http://blasterozone.tn/
+SENIATNA,healthtech,high,True,,,http://www.seniatna.com/
+ACRIDIDEA,agritech,medium,True,,,https://www.acrididea.com/
+Tanit.ai,tech,high,True,,,https://tanitai.azurewebsites.net/%20%20%20Mail:%20kais.zhioua@gmail.com%20Pswd:%20Tanit@2023
+OXAHOST,tech,high,True,,,https://www.oxahost.tn/
+3S : Software and Security Solutions,tech,high,True,,,http://www.sss.com.tn/
+MTCE,tech,low,True,,,http://www.certely.com/
+invented technology,tech,high,True,,,http://www.invented-technology.com/
+Rhintos Games,tech,medium,True,,,https://startup.gov.tn/en/null
+SmartQ,logistics,high,True,,,https://smartq.tn/
+SECURAS,tech,medium,True,,,https://securas.fr/
+Seemba Gaming,tech,high,True,,,https://www.seemba.com/
+FINWEDGE MEA,fintech,high,True,,,https://startup.gov.tn/en/null
+Toumi Electronics,tech,high,True,,,https://www.toumi-electronics.com/
+School Upgrader,edtech,medium,True,,,https://schoolupgrader.com/
+elbusines.com,ecommerce,high,True,,,https://elbusines.com/
+DEFENDR,tech,high,True,,,https://defendr.gg/
+Pwn & Patch,tech,high,True,,,https://www.pwnandpatch.com/
+FINRA Ltd,fintech,high,True,,,https://startup.gov.tn/en/null
+LES SOUKS.COM SARL,marketplace,high,True,,,https://lessouks.com/
+Qartaj,ecommerce,high,True,,,http://qartaj.com/
+فريد حول العالم,travel,high,True,,,http://www.feridaroundtheworld.com/
+Smelsy.com,food,medium,True,,,https://startup.gov.tn/en/null
+SamRise,saas,high,True,,,https://www.samrise.cloud/
+KDM,other,low,True,,,https://startup.gov.tn/en/null
+iCompass,tech,medium,True,,,https://www.icompass.tn/
+Examido,edtech,high,True,,,https://www.examido.com/
+EDATA Warehouse,tech,medium,True,,,https://startup.gov.tn/en/www.edata-warehouse.com
+ETNAFES,travel,high,True,,,http://www.etnafes.com/
+Barbecha,ecommerce,medium,True,,,https://barbecha.shop/
+INOTEK ENGINEERING,tech,medium,True,,,https://www.inotek.tn/
+WeMove,logistics,high,True,,,http::/www.wemove.tn
+ZATEX,tech,medium,True,,,http://m2m-group.tech/
+Société Souk El-Ghorba,marketplace,medium,True,,,http://www.souk-elghorba.com/
+United VITO,logistics,medium,True,,,https://vito.com.tn/
+Services voitures épaves (SVE),marketplace,medium,True,,,https://startup.gov.tn/en/null
+Replic-A,tech,medium,True,,,https://replic-a.com/
+Makerfy,marketplace,medium,True,,,https://www.makerfy.tn/
+Gifty,ecommerce,medium,True,,,https://startup.gov.tn/en/gifty.tn
+TechAbility,tech,high,True,,,https://www.techability.tn/
+ESKY PROFESSIONAL SERVICES,tech,medium,True,,,https://startup.gov.tn/en/null
+WASSALNI EXPRESS,logistics,high,True,,,https://wassali-express.tn/
+arsela,other,low,True,,,https://startup.gov.tn/en/null
+Pure Beauty Labs,healthtech,medium,True,,,http://www.purebeauty.tn/
+Coaching Foot,edtech,medium,True,,,http://www.coaching-foot.com/
+Ma Formation Privée,edtech,high,True,,,https://maformation-privee.com/
+TŪNIQ,cleantech,medium,True,,,http://tuniqoasis.com/
+SMEK'S,tech,high,True,,,http://www.smeks.net/
+DourbIA,healthtech,high,True,,,https://www.facebook.com/Dourbia.GuideMe
+laboratoire sci,healthtech,medium,True,,,https://www.facebook.com/Entycosmetique
+Arcana Soft,saas,medium,True,,,https://www.arcana-soft.com/
+Digimoov,logistics,high,True,,,http://www.digimoov.fr/
+Sala7li,ecommerce,high,True,,,http://sala7li.tn/
+SF Technologies,tech,high,True,,,https://www.sobflous.tn/
+POLYSMART,tech,medium,True,,,https://startup.gov.tn/en/null
+LR Move,logistics,high,True,,,https://lrmove.net/
+Doctolys,healthtech,high,True,,,https://startup.gov.tn/en/www.doctolys.com
+Tagamuta Valley,travel,high,True,,,https://tagamuta-valley.com/
+WARENA,edtech,high,True,,,https://warena.org/
+ARCHIVART,tech,high,True,,,http://archivart.co/
+Amiral,tech,low,True,,,http://www.amiral.io/
+VastLight Interactive,tech,medium,True,,,https://www.vastlight-platform.com/
+GATE INDUSTRIELLE,tech,medium,True,,,https://startup.gov.tn/en/null
+We-Settle,fintech,high,True,,,https://we-settle.com/
+Tashfeen,tech,high,True,,,https://tashfeen.tech/
+smic,fintech,high,True,,,https://startup.gov.tn/en/www.smic-world.com
+PreempTix,tech,medium,True,,,https://startup.gov.tn/en/null
+Ahkili,healthtech,medium,True,,,https://startup.gov.tn/en/null
+Coart Container Creatif,artisanat,medium,True,,,https://coartsfax.wordpress.com/
+Tiktak PRO,logistics,high,True,,,http://tiktakpro.tn/
+ESAT,tech,medium,True,,,https://www.esat.tn/
+Lightency,cleantech,medium,True,,,http://lightency.io/
+Doctolys,healthtech,high,True,,,https://startup.gov.tn/en/www.doctolys.com
+Smart and Clean,cleantech,medium,True,,,https://startup.gov.tn/en/null
+Shipzzer,logistics,medium,True,,,https://shipzzer.com/
+SmarDac,tech,medium,True,,,https://smardac.com/
+Kartago Dattes Snacks,food,high,True,,,http://www.kartagodattes.tn/
+Orthlane,fintech,low,True,,,https://www.orthlane.com/
+Mon Ingénieur Express,logistics,high,True,,,https://moningenieur.express/
+Décotis,cleantech,medium,True,,,http://www.decotis.tn/
+KWIN.,other,low,True,,,https://startup.gov.tn/en/null
+Fasteas,food,high,True,,,https://fasteas.com/
+Tchou-Tchou Your school bus tracking App,tech,medium,True,,,https://startup.gov.tn/en/null
+TuniBoat,travel,high,True,,,http://tuniboat.com/
+PAYDAY TAKAFUL,fintech,high,True,,,https://app.pdtakaful.com/login
+fripeji.tn,ecommerce,high,True,,,https://fripeji.tn/
+Coursesgolf,edtech,medium,True,,,http://www.coursesgolf.net/
+Tomobile Store,ecommerce,medium,True,,,https://tomobile.store/
+BUS SOFTWARE,tech,medium,True,,,https://www.winicari.tn/
+Bi'nergy,cleantech,high,True,,,https://startup.gov.tn/en/www.binergy.com.tn
+Exacctly,saas,medium,True,,,http://www.datasphera.com/
+Advantry X,tech,high,True,,,https://www.advantryx.com/
+Meducol,healthtech,medium,True,,,https://meducol.com/
+WildyNess,ecommerce,high,True,,,https://wildyness.com/
+Wassaloo,logistics,medium,True,,,https://wassaloo.tn/
+The Package Center,logistics,high,True,,,https://www.packagecenter.com/
+Gloristory,other,low,True,,,https://startup.gov.tn/en/null
+e-Scola,edtech,high,True,,,http://www.e-scola.fr/
+Kamioun,marketplace,medium,True,,,http://www.kamioun.com/
+SAFESPHERE,tech,medium,True,,,https://safesphere.net/
+Medikadvisor,healthtech,medium,True,,,https://www.medikadvisor.com/
+Digital work solutions,saas,medium,True,,,https://startup.gov.tn/en/null
+Owlinks Technologies Co,tech,medium,True,,,https://startup.gov.tn/en/www.owlinks-technologies.com
+SOLIXY,cleantech,medium,True,,,http://www.solixy.com/
+Pedalo,logistics,medium,True,,,https://startup.gov.tn/en/www.pedalo.tn
+FoundPad,tech,medium,True,,,https://foundpad.com/
+Improve Software TN,saas,high,True,,,http://www.improve-software.com/
+IMPACT NUTRITION,healthtech,high,True,,,https://www.impactnutrition.com.tn/
+Saydalid,healthtech,medium,True,,,https://www.saydalid.com/
+BioIntrants Technologie,healthtech,medium,True,,,https://www.switchmed.eu/
+Elco Solutions,tech,medium,True,,,https://www.elco-solutions.de/
+YAGRI,agritech,medium,True,,,https://yagri.app/
+Be Wireless Solutions,tech,medium,True,,,https://startup.gov.tn/en/null
+Atome Academy,edtech,high,True,,,https://startup.gov.tn/en/www.atome.tn
+Trivaw,travel,high,True,,,https://trivaw.net/
+Arsek Dripbox,agritech,medium,True,,,http://www.arsek-dripbox.com/
+WaveOn,tech,medium,True,,,https://startup.gov.tn/en/null
+Urban green,agritech,medium,True,,,https://www.facebook.com/urbangreen.tn
+FABSKILL,edtech,high,True,,,https://www.fabskill.com/
+Tunisie Aquaponie,agritech,high,True,,,http://www.tunisie-aquaponie.com/
+Deepnrise,tech,high,True,,,https://startup.gov.tn/en/www.deepnrise.com
+Mass SA,saas,high,True,,,https://www.mass-analytics.com/
+Wimbee,ecommerce,medium,True,,,http://www.wimbeeproduct.com/
+Go Online Africa,tech,medium,True,,,https://www.go-online-africa.com/
+Footlink.tn,marketplace,medium,True,,,https://footlink.tn/
+Kinko,travel,medium,True,,,https://kinkobooking.com/
+DLSgaming,tech,high,True,,,https://dlsgaming.com/home
+Ticketchainer,travel,high,True,,,https://www.ticketchainer.com/
+WeGestU,logistics,medium,True,,,https://startup.gov.tn/en/wegestu.com
+Connecteur bipolaire à serrage indépendant (CB-SI),tech,high,True,,,https://startup.gov.tn/en/null
+Rooly,logistics,high,True,,,https://rooly.tn/
+Athena-IO,saas,medium,True,,,https://on-board.co/
+XQuant Software,tech,high,True,,,https://www.xquant-ai.com/
+iCan-C,edtech,high,True,,,https://startup.gov.tn/en/database#
+Symmetryk,healthtech,medium,True,,,http://www.nostatikmedia.com/
+HALONURSERY,agritech,high,True,,,https://startup.gov.tn/en/null
+Khobzti,food,high,True,,,https://makhbazti.com/
+Link 2 Grow Network,marketplace,high,True,,,https://startup.gov.tn/en/www.wefranchiz.com
+Resa Privee,travel,low,True,,,http://www.tunisie.co/
+DEDALE SOLUTIONS,tech,medium,True,,,http://dedale-solutions.com/
+Legaltech,tech,high,True,,,https://app.legaltech.tn/
+Kinko,travel,medium,True,,,https://kinkobooking.com/
+Shape,saas,medium,True,,,https://theshapers.co/
+G.A.J,ecommerce,high,True,,,https://www.gajtunisie.com/
+STE Kaoun,fintech,high,True,,,https://www.kaoun.com/
+SCIENCIA,edtech,medium,True,,,http://www.sciencia.tn/
+Expy.ai,saas,high,True,,,https://expy.ai/
+GDTC,edtech,high,True,,,https://www.gdtc.ac/
+Nkawroo,ecommerce,high,True,,,https://www.nkawroo.com/
+LIFEYE,healthtech,high,True,,,https://www.lifeye.io/
+RSE Time,tech,high,True,,,https://www.rsetime.com/
+cookit,food,high,True,,,https://cookit.tn/
+Coloc'Qui,logistics,medium,True,,,https://colocqui.tn/
+IRIS Technologies,agritech,high,True,,,https://www.smartbeekeeper.com/
+Karhabti.app,fintech,high,True,,,https://karhabti.app/
+wireless services,tech,medium,True,,,https://www.wiser-tunisie.com/
+ACRIDIDEA,agritech,medium,True,,,https://www.acrididea.com/
+rahba.tn,marketplace,medium,True,,,http://www.rahba.tn/
+Pedago,edtech,high,True,,,https://pedago.ai/
+WaterSpirit,cleantech,medium,True,,,http://www.waterspirit.com.tn/
+Tajrabti,marketplace,medium,True,,,https://www.tajrabti.com/
+CAIRUS BUSINESS GROUP,tech,medium,True,,,https://www.cairus-business.com/#Service
+Dopawin,ecommerce,medium,True,,,https://startup.gov.tn/en/www.dopawin.tn
+IrWise,tech,medium,True,,,https://startup.gov.tn/en/www.irwise.io
+Taxiora,logistics,high,True,,,https://www.taxiora.tn/
+Empowair,cleantech,high,True,,,https://startup.gov.tn/en/www.empowair.com
+Société NSIJA,agritech,high,True,,,http://www.nsija.com/
+Vectors Software,tech,high,True,,,https://covectors.io/
+SAMM TEST & AUTOMATION,tech,high,True,,,http://www.samm-automation.com/
+VAKAY,retail,high,True,,,https://www.vakayeyewear.com/
+HyO-Tec,cleantech,medium,True,,,https://startup.gov.tn/en/www.hyo-tec.com
+Ms. Marion,ecommerce,high,True,,,https://www.ms-marion.com/
+Edutest,edtech,medium,True,,,http://www.edutest.tn/
+Evolutik,saas,medium,True,,,https://www.evolutik.com/
+Wattnow,cleantech,high,True,,,https://www.wattnow.io/
+Leadership 4.0,logistics,medium,True,,,https://leadershipquatrepointzero.sitec4consulting.com/
+Autoshop.tn,marketplace,high,True,,,http://www.etl-technology.com/
+Sentinel Data,tech,medium,True,,,http://sentinel.com.tn/
+SESIT,tech,medium,True,,,http://www.sesit.tn/
+Smart Detection,tech,low,True,,,https://startup.gov.tn/en/null
+Celebrioo,marketplace,medium,True,,,http://www.celebrioo.com/
+Couscous Connection,food,high,True,,,http://www.couscous-connection.com/
+Scaylab,saas,medium,True,,,https://www.scaylab.fr/
+B2B Tunisia,marketplace,medium,True,,,http://www.b2b.tn/
+Livrina,fintech,low,True,,,https://livrina.com/
+Jhimi Pour Les Elévateurs Légers,logistics,medium,True,,,https://startup.gov.tn/en/null
+ai diagnosis vision,healthtech,high,True,,,http://aidgvision.com/
+GROW IT YOURSELF,agritech,high,True,,,http://www.growit-yourself.com/
+Analytix-YS,tech,medium,True,,,http://analytix.beatstamp.fr/
+groupado,ecommerce,high,True,,,http://www.groupado.tn/
+RoboCare,healthtech,medium,True,,,http://www.robocare.tn/
+Healthy & Bnin,healthtech,medium,True,,,http://healthyandbnin.com/
+medtrip,healthtech,medium,True,,,http://www.medtrip.tn/
+Takwira,logistics,medium,True,,,https://bit.ly/38vVraq
+MineClap,tech,low,True,,,http://www.mineclap.com/
+Lanterns,tech,high,True,,,https://www.lanterns-studios.com/
+KADRA NOVA - KN كائن,tech,high,True,,,https://kadranova.com/
+JURIDOC,tech,medium,True,,,http://www.juridoc.tn/
+The Landlord,tech,medium,True,,,https://www.thelandlord.tn/
+VISTASY,healthtech,medium,True,,,http://vistasy.clinic/
+Deepvolt,cleantech,high,True,,,https://deepvolt.io/
+wiTrade,fintech,medium,True,,,https://startup.gov.tn/en/null
+HealUp,healthtech,high,True,,,https://www.gethealup.com/
+DIGITAL CITY INNOVATION,tech,medium,True,,,https://startup.gov.tn/en/null
+Animadop,other,high,True,,,https://animadop.tn/
+Contratou,marketplace,medium,True,,,http://contratou.tn/
+Expert Team Tunisie,tech,high,True,,,https://www.expertunisie.com/
+HOPE HORIZON,healthtech,low,True,,,http://www.anna.tn/
+StreetCarHub,marketplace,high,True,,,https://startup.gov.tn/en/null
+DRYSEK,fintech,low,True,,,https://www.facebook.com/drysek/
+SWIVER,saas,high,True,,,https://www.swiver.io/
+METHANIA INDUSTRIES,cleantech,high,True,,,https://www.methania.com/
+OFFENSYLAB,tech,medium,True,,,https://startup.gov.tn/en/www.offensylab.io
+BaBa Ali,food,high,True,,,https://baba-ali.tn/
+Tinest,ecommerce,medium,True,,,http://tinest.tn/
+Viventis,healthtech,high,True,,,http://www.viventis.tn/
+BE-SIYESSAH,marketplace,high,True,,,https://startup.gov.tn/en/besiyessah.tn
+Vintage Bae Studio,artisanat,high,True,,,https://startup.gov.tn/en/www.vintagebaestudio.tn
+Machmoom,logistics,medium,True,,,https://machmoom.com/index.php
+EVOCRAFT,tech,medium,True,,,https://startup.gov.tn/en/null
+CodePro Qr,tech,medium,True,,,https://smartingserve.com/
+AMBITION STUDY,edtech,high,True,,,https://startup.gov.tn/en/www.successtudy.net
+Tabaani,marketplace,medium,True,,,https://startup.gov.tn/en/tabaani.co
+Facstore,ecommerce,medium,True,,,http://www.my-facstore.com/
+Avempace,tech,high,True,,,http://www.avempace-wireless.com/
+Finispia,fintech,high,True,,,https://finispia.com/
+sportopia,ecommerce,high,True,,,http://www.thesportopia.com/
+DIMAZINA,food,high,True,,,http://www.dima-zina.com/
+Birou,ecommerce,high,True,,,https://birou.tn/
+Soledu,edtech,medium,True,,,https://sol-edu.org/
+Innovega,tech,medium,True,,,https://startup.gov.tn/en/null
+ContyFind,marketplace,medium,True,,,https://startup.gov.tn/en/www.contyfind.com
+Drop'n Go,logistics,high,True,,,https://startup.gov.tn/en/dropngo.tn
+Société STBI,tech,medium,True,,,https://www.stbi-tunisia.com/
+Domicilier.tn,logistics,medium,True,,,http://www.domicilier.tn/
+Foodealz,agritech,medium,True,,,http://www.foodealz.com/
+Makroudh Kairouan à Domicile,food,high,True,,,http://www.makroudhkairouan.tn/
+Mve,ecommerce,high,True,,,htp://mve.tn
+HelpyGo,tech,low,True,,,https://helpygo.tunealgo.com/
+robotdot,tech,low,True,,,https://www.youtube.com/watch?v=Rsmz_QYibdc
+ASEPTIKA LAB,healthtech,high,True,,,http://www.aseptika-lab.com/
+energy expert team company,cleantech,medium,True,,,https://startup.gov.tn/en/null
+WARM,food,medium,True,,,http://warm.tn/
+bmoov,fintech,high,True,,,http://www.bmoov.co/
+NewGen,tech,medium,True,,,https://www.newgen-studio.com/
+ONWIREWAY,logistics,medium,True,,,https://startup.gov.tn/en/null
+Vitalight LAB,healthtech,high,True,,,http://algovita.tn/
+Digital Catering Solution,food,high,True,,,http://catering.dcsolution.ovh/
+EasyBank,fintech,medium,True,,,https://app.easybank.tn/
+Bako Motors,marketplace,high,True,,,http://www.bakomotors.com/
+DOMODAR,logistics,medium,True,,,https://www.domodar.net/
+SAFOZI SARL,food,medium,True,,,http://www.safozi.com/
+Fivepoints,tech,medium,True,,,http://www.fivepoints.tn/
+RENTAL RIDE,travel,high,True,,,https://www.rental-ride.com/
+Maginater,tech,high,True,,,https://startup.gov.tn/en/www.maginater.com
+WAY CARE,healthtech,medium,True,,,https://www.xelero.io/
+Kidsbook,edtech,high,True,,,http://kidsbooksolution.com/
+WareCom,cleantech,medium,True,,,http://www.warecom.tn/
+Linkivia,saas,medium,True,,,https://linkivia.com/
+Hand & Crafts,artisanat,medium,True,,,http://www.handandcrafts.com/
+SoK'ari,healthtech,medium,True,,,https://www.sokaricare.com/
+Tledger,fintech,high,True,,,http://www.tledger.tech/
+Dyxis Cloud Provider,tech,high,True,,,http://www.dyxis.com/
+Provectus Technology,tech,high,True,,,https://www.provectus-technology.com/
+TOLLXPRESS,logistics,high,True,,,https://startup.gov.tn/en/www.tollxpress.fr
+UniQ Soft Technology,tech,high,True,,,https://www.uniqfst.com/
+MajestEYE,healthtech,high,True,,,https://www.majesteye.com/
+elprojet,tech,medium,True,,,http://www.elprojet.tn/
+Idara Tn,tech,high,True,,,https://idara.tn/
+floraison natural beauty,retail,high,True,,,https://tn.floraisonnaturalbeauty.com/
+Comporoll,tech,medium,True,,,https://startup.gov.tn/en/null
+NEPTUNE MOSAIC,cleantech,medium,True,,,http://www.neptunemosaic.com/
+international business space,tech,low,True,,,http://www.ib-space.com/
+Atome Edtech,edtech,high,True,,,https://startup.gov.tn/en/www.atome.tn
+Lait Espoir,food,high,True,,,http://www.laitespoir.com/
+Taysir Solutions Tunisia,tech,medium,True,,,https://www.taysirsolutions.com/
+Smart Farm,agritech,medium,True,,,https://smart-farm.sspro.tn/
+Bitaqa,fintech,high,True,,,https://bitaqa.tn/
+ALIDADE,tech,low,True,,,https://startup.gov.tn/en/www..alidade.tn
+Fisco,fintech,medium,True,,,https://startup.gov.tn/en/null
+FBS COMPANY,retail,high,True,,,http://www.fierce-sportswear.com/
+TOLEDO,tech,high,True,,,http://techangela.com/
+FlexyFleet,logistics,medium,True,,,https://startup.gov.tn/en/null
+Uvey,tech,high,True,,,https://www.uvey.ai/
+ZOLFA,tech,high,True,,,http://zolfa.epizy.com/
+Teskerti.tn,marketplace,medium,True,,,https://www.teskerti.tn/
+NIWEES,fintech,low,True,,,http://www.niwees.com/
+Voltat Technologies,tech,medium,True,,,https://voltat.co/
+Carwell,tech,high,True,,,https://sysicsstudio.com/
+AMAL XR,tech,medium,True,,,https://startup.gov.tn/en/www.amalxr.com
+L G P,other,low,True,,,https://startup.gov.tn/en/null
+Arion,tech,high,True,,,http://arion-tech.com/
+MSS GROUP,other,low,True,,,https://startup.gov.tn/en/null
+CREATIVE CULINARY,food,high,True,,,https://www.tawtaw.co/
+Surfin,tech,high,True,,,http://www.incept.tn/
+WKF par FLEXITEK,tech,medium,True,,,https://wkf.flexi-tek.com/
+officent,tech,medium,True,,,https://www.officent.co/
+YASSIR,logistics,high,True,,,http://www.yassir.tn/
+la ferme urbaine,agritech,high,True,,,http://www.hydroponie.tn/
+XLAiner,logistics,high,True,,,https://startup.gov.tn/en/www.xlainer.com
+AvoConsulte,healthtech,medium,True,,,https://avoconsulte.com/
+Tekum,tech,high,True,,,http://bird-notes.com/
+PROSERVY,saas,medium,True,,,http://proservy.com/
+Thnity,tech,low,True,,,https://thnity.com/
+Bookingtodo,travel,medium,True,,,http://www.bookingtodo.net/
+Historio,edtech,medium,True,,,http://www.historioo.com/
+Pet Pals,tech,high,True,,,https://playpals.io/
+Goupsup,other,high,True,,,https://goupstandup2019.wixsite.com/startup
+SeaBot,cleantech,medium,True,,,http://www.seabotek.com/
+Alifa,fintech,high,True,,,https://www.alifa.tn/
+P&FF-SWM,other,low,True,,,https://startup.gov.tn/en/null
+WiseShare,tech,medium,True,,,https://startup.gov.tn/en/wiseshare.io
+PolyPath HealthTech Company,healthtech,high,True,,,https://startup.gov.tn/en/www.PolyPath.co
+Rent a tutor,edtech,high,True,,,http://scaphandry.com/
+LoDeep,tech,low,True,,,http://www.lodeep.com/
+HackUp,tech,high,True,,,http://www.hackup.io/
+SOFTSYS INTERNATIONALE SARL,tech,medium,True,,,http://www.sofsys.com/
+Cleanance,cleantech,high,True,,,https://startup.gov.tn/en/null
+HUBS TRAVEL,travel,medium,True,,,https://startup.gov.tn/en/hub-travel.com
+Evey Technologies,tech,medium,True,,,http://eveytech.com/
+GST,tech,low,True,,,http://www.gst-tunisie.com/
+Mon Ingénieur Express,logistics,high,True,,,https://moningenieur.express/
+Civitas,tech,medium,True,,,http://www.civitas.tn/
+Tunisia Market,ecommerce,medium,True,,,https://tunisia-market.com/
+Crop's Talk,agritech,medium,True,,,http://www.cropstalk.com/
+Verse,fintech,high,True,,,https://verse.tn/
+Intigrow,agritech,high,True,,,http://www.intigo.tn/
+KALYS,ecommerce,medium,True,,,http://www.kalys-designstore.com/
+CURE,healthtech,medium,True,,,http://dhaouafimed.wixsite.com/curetunisie
+REM4U,logistics,high,True,,,https://www.preprod.airportmobility.rem4u.com/
+Legaltech,tech,high,True,,,https://app.legaltech.tn/
+Siteflow Factory,saas,high,True,,,https://www.siteflow.fr/
+Sougui,marketplace,medium,True,,,https://www.sougui.tn/
+"Baity tn ""Decoriz"" SARL",ecommerce,high,True,,,https://baity.tn/
+Marhba.tn Experiences,travel,high,True,,,https://www.marhba.com/
+Investhune plus,fintech,high,True,,,https://startup.gov.tn/en/null
+Raheeq - رحيق,food,medium,True,,,http://www.aasla.tn/
+Eddium Platinuim,edtech,high,True,,,https://www.eddium.com/
+EdTrust,edtech,high,True,,,https://edtrust.tn/
+Dash Sports,tech,medium,True,,,https://startup.gov.tn/en/www.dashsports.tn
+Watto,ecommerce,high,True,,,https://www.watto.tn/
+DEEPERA,tech,high,True,,,https://www.deepera.ai/
+Hezni Maak,food,medium,True,,,https://startup.gov.tn/en/null
+Lean Manufacturing Company,tech,high,True,,,https://www.lean-manufacturing.net/
+Beenomi,fintech,high,True,,,https://www.beenomi.com/
+Sougui,marketplace,medium,True,,,https://www.sougui.tn/
+KatYos,fintech,low,True,,,https://www.katyos.com/
+Natalista,healthtech,medium,True,,,https://startup.gov.tn/en/null
+Junior Robotics Lab,edtech,high,True,,,http://junioroboticslab.co/
+Lysi,healthtech,medium,True,,,http://lysi.app/
+Katomi,marketplace,medium,True,,,http://katomi.co/
+Next Gen Solution / UnFrauded,fintech,high,True,,,http://www.unfrauded.com/
+KLAY,tech,medium,True,,,https://startup.gov.tn/en/null
+Vife,tech,low,True,,,https://startup.gov.tn/en/null
+CONTYFIND,marketplace,medium,True,,,https://startup.gov.tn/en/www.contyfind.com
+Artify,tech,medium,True,,,http://www.artify.tn/
+Click and win,ecommerce,medium,True,,,https://startup.gov.tn/en/null
+Quenzi,other,low,True,,,https://startup.gov.tn/en/null
+Kuiklink Technologies,tech,medium,True,,,http://www.qwqlink.com/
+Tadwir,tech,high,True,,,https://mermezlab.com/
+WAKAHAW,food,medium,True,,,http://www.wakahaw.com/
+AfiaTech,healthtech,medium,True,,,https://medicatn-c6c40.firebaseapp.com/
+Screenflex,tech,medium,True,,,https://screenflex.pro/
+istishara,healthtech,medium,True,,,https://istishara.com.tn/
+Addvocate AI,saas,high,True,,,https://addvocate.ai/
+Lave'rit,cleantech,high,True,,,https://www.laverit.com/
+Développement d'un biomédicament anti-obésité,healthtech,high,True,,,https://startup.gov.tn/en/null
+The Package Center,logistics,high,True,,,https://www.packagecenter.com/
+AYSHEK,fintech,high,True,,,https://www.ayshek.com/
+E W,ecommerce,high,True,,,http://ewiddy.com/
+PARKEY,logistics,medium,True,,,https://startup.gov.tn/en/www.parkey.tn
+Minima.ai,tech,low,True,,,https://startup.gov.tn/en/null
+Amonak,fintech,high,True,,,http://www.amonak.com/
+Elevage des insectes (nutri-protéine),travel,medium,True,,,https://nutriprotein.org/
+EATISY,food,high,True,,,http://www.eatisy.com/
+Youth Hub,edtech,medium,True,,,https://www.youthhub.community/
+Qr Menu,food,high,True,,,https://qrmenu.agency/
+Pepolls,tech,medium,True,,,https://pepolls.com/
+allcarta,marketplace,medium,True,,,http://www.allcarta.com/
+PROSUMERS,cleantech,medium,True,,,http://www.prosumers.tn/
+Reedz,fintech,medium,True,,,https://reedz.co/
+E-Tafakna,edtech,medium,True,,,https://startup.gov.tn/en/www.e-tafakna.com
+2BK Innovation,cleantech,medium,True,,,http://www.2bkinnovation.com/
+xgol,tech,high,True,,,https://www.xgol.pro/
+TrustiT,fintech,high,True,,,https://www.trustit.tn/
+ACCENT,tech,medium,True,,,http://accent.tn/
+bqube,tech,medium,True,,,https://www.bqubeits.com/
+Moline,agritech,high,True,,,http://www.moline.com.tn/
+TUNISIE ENCHERE,marketplace,high,True,,,https://tunisie-enchere.com/
+Tuntales Interactive,tech,low,True,,,https://startup.gov.tn/en/null
+REC-INov,cleantech,medium,True,,,https://rec-inov.com/
+KYUFI,fintech,medium,True,,,http://www.kyufi.com/
+Tunisian Campers,travel,high,True,,,https://tunisiancampers.com/
+Fouita,marketplace,medium,True,,,https://fouita.com/
+Club privilèges,ecommerce,high,True,,,http://www.clubprivileges.app/
+ASQII,healthtech,medium,True,,,http://www.asqii.tn/
+Fantastic Mall,ecommerce,high,True,,,http://www.fantasticmall.tn/
+Addresti,logistics,high,True,,,https://addresti.tn/
+Caprigène Impact Investing,fintech,medium,True,,,https://startup.gov.tn/en/null
+Tissu.tn | Mercerie.tn,retail,high,True,,,https://startup.gov.tn/en/www.tissu.tn%20%7C%20www.mercerie.tn
+QualiMaker,saas,medium,True,,,https://www.qualimaker.com/
+Satisfy Insight,saas,medium,True,,,https://satisfyinsight.com/
+Carpet Plus,retail,high,True,,,http://www.carpet.plus/
+LEEVYA Communication,tech,medium,True,,,http://www.leevya.com/
+Dqlick,saas,high,True,,,https://www.dqlick.com/
+Thiqab,fintech,medium,True,,,https://startup.gov.tn/en/null
+IZAGRI,agritech,high,True,,,https://startup.gov.tn/en/null
+Mramma.tn,food,high,True,,,https://www.mramma.tn/

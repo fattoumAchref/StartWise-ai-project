@@ -1,0 +1,97 @@
+{
+  "programs": [
+    {
+      "name": "Startup Act Label",
+      "amount": 100000,
+      "currency": "TND",
+      "requirements": {
+        "company_age_max": 8,
+        "innovative": true,
+        "tech_based": true
+      },
+      "description": "Label officiel pour les startups innovantes en Tunisie",
+      "benefits": [
+        "Exonération fiscale pendant 8 ans",
+        "Congé pour création d'entreprise",
+        "Accès aux marchés publics",
+        "Financement jusqu'à 100,000 TND"
+      ],
+      "application_url": "https://startup.gov.tn"
+    },
+    {
+      "name": "BTS Innovation Grant",
+      "amount": 200000,
+      "currency": "TND",
+      "requirements": {
+        "sector": ["tech", "fintech", "healthtech", "edtech"],
+        "has_export": true,
+        "rd_investment": true
+      },
+      "description": "Subvention pour l'innovation et l'export",
+      "benefits": [
+        "Financement R&D jusqu'à 200,000 TND",
+        "Support à l'export",
+        "Accompagnement technique"
+      ],
+      "application_url": "https://www.bts.com.tn"
+    },
+    {
+      "name": "ANPR Innovation Fund",
+      "amount": 150000,
+      "currency": "TND",
+      "requirements": {
+        "sector": ["tech", "biotech", "cleantech"],
+        "has_patent": true,
+        "rd_investment": true
+      },
+      "description": "Fonds pour projets innovants avec brevets",
+      "benefits": [
+        "Financement jusqu'à 150,000 TND",
+        "Support pour dépôt de brevets",
+        "Accompagnement R&D"
+      ],
+      "application_url": "https://www.anpr.tn"
+    },
+    {
+      "name": "FAMEX Export Support",
+      "amount": 80000,
+      "currency": "TND",
+      "requirements": {
+        "has_export": true,
+        "export_pct": 0.3
+      },
+      "description": "Support pour startups exportatrices",
+      "benefits": [
+        "Financement export jusqu'à 80,000 TND",
+        "Participation aux salons internationaux",
+        "Missions commerciales"
+      ],
+      "application_url": "https://www.cepex.nat.tn"
+    },
+    {
+      "name": "Smart Capital Pre-Seed",
+      "amount": 50000,
+      "currency": "TND",
+      "requirements": {
+        "company_age_max": 2,
+        "tech_based": true
+      },
+      "description": "Financement pré-amorçage pour jeunes startups tech",
+      "benefits": [
+        "Investissement jusqu'à 50,000 TND",
+        "Accompagnement 6 mois",
+        "Accès au réseau Smart Capital"
+      ],
+      "application_url": "https://www.smartcapital.tn"
+    }
+  ],
+  "eligibility_notes": {
+    "company_age": "Âge de l'entreprise en années depuis la création",
+    "tech_based": "Entreprise basée sur la technologie ou l'innovation",
+    "has_export": "Activité d'export existante ou planifiée",
+    "export_pct": "Pourcentage du CA à l'export (0.3 = 30%)",
+    "rd_investment": "Investissement en R&D démontrable",
+    "has_patent": "Brevet déposé ou en cours de dépôt"
+  },
+  "last_updated": "2024-01-15"
+}
