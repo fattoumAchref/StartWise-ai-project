@@ -86,37 +86,74 @@ st.markdown(
     font-size: 0.82rem;
 }
 
-/* ── Messages area ── */
-.block-container {
-    max-width: 760px !important;
-    margin: 0 auto !important;
-    padding: 2rem 1rem 6rem 1rem !important;
+/* ── Animations ── */
+@keyframes msgIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50%       { opacity: 1; }
 }
 
-/* Assistant message */
+/* ── Hide avatars ── */
+[data-testid="stChatMessageAvatarAssistant"],
+[data-testid="stChatMessageAvatarUser"],
+[data-testid="stChatMessageAvatar"] {
+    display: none !important;
+}
+
+/* ── Messages area ── */
+.block-container {
+    max-width: 720px !important;
+    margin: 0 auto !important;
+    padding: 2rem 1rem 7rem 1rem !important;
+}
+
+/* Base message — no avatar space needed */
 [data-testid="stChatMessage"] {
     background: transparent;
     border: none;
     border-radius: 0;
-    padding: 1rem 0;
+    padding: 1.1rem 0 1.1rem 0;
     margin: 0;
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 1px solid #f0f0f0;
+    animation: msgIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+    gap: 0 !important;
 }
 
-/* User message */
+/* User bubble */
 [data-testid="stChatMessage"]:has([data-testid="stChatMessageAvatarUser"]) {
     background: #ffffff;
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
+    border-radius: 14px;
+    padding: 0.9rem 1.2rem;
     border: 1px solid #e8e8e8;
+    margin: 0.6rem 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Assistant — subtle left accent */
+[data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])) {
+    padding-left: 1rem;
+    border-left: 2px solid #e0e0e0;
+    border-bottom: none;
     margin: 0.5rem 0;
+    transition: border-color 0.2s;
+}
+[data-testid="stChatMessage"]:not(:has([data-testid="stChatMessageAvatarUser"])):hover {
+    border-left-color: #aaaaaa;
 }
 
 [data-testid="stChatMessage"] p,
 [data-testid="stChatMessage"] li {
     color: #1a1a1a !important;
-    font-size: 0.95rem;
-    line-height: 1.7;
+    font-size: 0.94rem;
+    line-height: 1.75;
+    animation: fadeUp 0.2s ease-out both;
 }
 
 [data-testid="stChatMessage"] strong {
@@ -125,47 +162,63 @@ st.markdown(
 }
 
 [data-testid="stChatMessage"] code {
-    background: #f0f0f0;
+    background: #f4f4f5;
     color: #111;
-    border-radius: 4px;
+    border-radius: 5px;
     padding: 2px 7px;
     font-family: 'SF Mono', 'Fira Code', monospace;
     font-size: 0.87em;
-    border: 1px solid #e2e2e2;
+    border: 1px solid #e4e4e7;
+    transition: background 0.15s;
+}
+
+[data-testid="stChatMessage"] code:hover {
+    background: #ececee;
 }
 
 [data-testid="stChatMessage"] hr {
     border: none;
-    border-top: 1px solid #eeeeee;
+    border-top: 1px solid #f0f0f0;
     margin: 0.8rem 0;
+}
+
+/* ── Welcome screen animation ── */
+.welcome-title {
+    animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.welcome-sub {
+    animation: fadeUp 0.5s 0.1s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ── Input bar ── */
 [data-testid="stChatInputContainer"] {
     background: #f9f9f9;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #ebebeb;
     padding: 1rem 0;
-    max-width: 760px !important;
+    max-width: 720px !important;
     margin: 0 auto !important;
+    backdrop-filter: blur(8px);
+    background: rgba(249,249,249,0.92) !important;
 }
 
 [data-testid="stChatInput"] textarea {
     background: #ffffff;
     color: #1a1a1a;
     border: 1px solid #d4d4d4;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 0.95rem;
-    padding: 12px 16px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    padding: 13px 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 [data-testid="stChatInput"] textarea::placeholder {
-    color: #b0b0b0;
+    color: #bbb;
 }
 
 [data-testid="stChatInput"] textarea:focus {
-    border-color: #0a0a0a;
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.07);
+    border-color: #222;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.07);
     outline: none;
 }
 
@@ -741,17 +794,40 @@ with st.sidebar:
 only_welcome = all(m["role"] == "assistant" for m in st.session_state.messages)
 if only_welcome:
     st.markdown(
-        "<div style='height:15vh'></div>"
-        "<div class='welcome-title'>StartWise</div>"
-        "<div class='welcome-sub'>Votre analyste CFO intelligent — décrivez votre situation financière</div>"
-        "<div style='height:2rem'></div>",
+        "<div style='height:12vh'></div>"
+        "<div class='welcome-title' style='"
+        "font-size:2.2rem;font-weight:700;color:#0a0a0a;"
+        "letter-spacing:-1px;text-align:center;margin-bottom:0.5rem'>"
+        "StartWise"
+        "</div>"
+        "<div class='welcome-sub' style='"
+        "font-size:0.92rem;color:#999;text-align:center;"
+        "max-width:420px;margin:0 auto 2.5rem auto;line-height:1.6'>"
+        "Décrivez votre situation financière.<br>"
+        "Je pose uniquement les questions manquantes."
+        "</div>"
+        "<div style='display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;animation:fadeUp 0.5s 0.2s both'>",
         unsafe_allow_html=True,
     )
+    chips = [
+        "Mon burn rate est de 15 000 DT/mois",
+        "J'ai 80 clients à 200 DT/mois",
+        "Cash disponible : 120 000 DT",
+    ]
+    for chip in chips:
+        st.markdown(
+            f"<span style='background:#f4f4f5;border:1px solid #e4e4e7;"
+            f"border-radius:20px;padding:0.35rem 0.9rem;font-size:0.82rem;"
+            f"color:#555;cursor:default;white-space:nowrap;transition:background 0.15s'>"
+            f"{chip}</span>",
+            unsafe_allow_html=True,
+        )
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # Display message history
 for msg in st.session_state.messages:
     role = "assistant" if msg["role"] == "assistant" else "user"
-    with st.chat_message(role):
+    with st.chat_message(role, avatar=None):
         st.markdown(msg["content"], unsafe_allow_html=True)
 
 # Chat input
@@ -761,10 +837,10 @@ if prompt := st.chat_input("Décrivez votre situation financière..."):
         st.stop()
 
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar=None):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar=None):
         with st.spinner("Analyse en cours..."):
             try:
                 new_ctx = parse_founder_input(prompt)
