@@ -1,4 +1,30 @@
+<<<<<<< Updated upstream
 venv/ 
 __pycache__/ 
 *.pyc 
 .env 
+=======
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+
+# Environment variables — never commit
+.env
+.env.local
+.env/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+>>>>>>> Stashed changes

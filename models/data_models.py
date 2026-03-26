@@ -1,5 +1,8 @@
+<<<<<<< Updated upstream
 # models/data_models.py
 
+=======
+>>>>>>> Stashed changes
 from dataclasses import dataclass, field
 from typing import Optional
 from enum import Enum
@@ -134,6 +137,7 @@ class MonteCarloResult:
     proba_breakeven:    float  # probabilité d'atteindre breakeven [0-1]
     mc_tightness:       float  # 1=serré (fiable) · 0=large (incertain) [0-1]
     n_simulations:      int    = 1000
+    growth_mean_used:   float  = 0.0   # taux de croissance mensuel moyen utilisé dans la simulation
 
 
 @dataclass
