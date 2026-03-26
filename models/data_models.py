@@ -1,8 +1,3 @@
-<<<<<<< Updated upstream
-# models/data_models.py
-
-=======
->>>>>>> Stashed changes
 from dataclasses import dataclass, field
 from typing import Optional
 from enum import Enum
@@ -44,7 +39,7 @@ class FinancialContext:
     """
     Représente toutes les données financières extraites
     depuis le message de l'entrepreneur.
-    Produit par : extract_financials 
+    Produit par : extract_financials
     Consommé par : tous les outils
     """
 
@@ -84,7 +79,7 @@ class FinancialContext:
 class KPIResult:
     """
     Résultat de calculate_kpis.
-    Produit par : calculate_kpis 
+    Produit par : calculate_kpis
     Consommé par : run_monte_carlo, build_a2a_message, LLM
     """
 
@@ -127,7 +122,7 @@ class KPIResult:
 class MonteCarloResult:
     """
     Résultat de run_monte_carlo.
-    Produit par : run_monte_carlo 
+    Produit par : run_monte_carlo
     Consommé par : compute_confidence_score, build_a2a_message, LLM
     """
     p10:                int    # runway mois — scénario pessimiste (10%)
@@ -144,8 +139,8 @@ class MonteCarloResult:
 class ValidationResult:
     """
     Résultat de validate_inputs.
-    Produit par : validate_inputs 
-    Consommé par : boucle ReAct 
+    Produit par : validate_inputs
+    Consommé par : boucle ReAct
     """
     is_valid:             bool   # peut-on continuer ?
     data_quality_score:   float  # moyenne qualité données [0-1]
@@ -197,7 +192,7 @@ class ConfidenceResult:
 class A2AMessage:
     """
     Message envoyé sur le bus A2A vers les autres agents.
-    Produit par : build_a2a_message 
+    Produit par : build_a2a_message
     Consommé par : Risk Agent, Investment Agent, Orchestrateur
     """
     # Identité
