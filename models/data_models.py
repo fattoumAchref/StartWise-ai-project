@@ -1,130 +1,4 @@
 from dataclasses import dataclass, field
-from enum import Enum
-from typing import Optional
-
-
-class DataQuality(Enum):
-    """Quality level of financial data."""
-    REAL = 1.0
-    ESTIMATED = 0.7
-    ASSUMPTION = 0.4
-    MISSING = 0.1
-
-
-class Phase(Enum):
-    """Startup phase detection."""
-    SEED = "SEED"
-    SEED_RAISING = "SEED_RAISING"
-    TRACTION = "TRACTION"
-    FUNDRAISING = "FUNDRAISING"
-
-
-class AlertLevel(Enum):
-    """Alert severity levels."""
-    INFO = "INFO"
-    WARNING = "WARNING"
-    CRITICAL = "CRITICAL"
-
-
-@dataclass
-class FinancialContext:
-    """Founder financial data extracted from input."""
-    
-    # Core metrics
-    burn_rate: Optional[float] = None
-    cash_balance: Optional[float] = None
-    monthly_revenue: Optional[float] = None
-    n_clients: Optional[int] = None
-    prix_client: Optional[float] = None
-    churn_rate: Optional[float] = None
-    marketing_budget: Optional[float] = None
-    new_clients_month: Optional[int] = None
-    cogs: Optional[float] = None
-    months_data: Optional[int] = None
-    
-    # Context
-    secteur: Optional[str] = None
-    pays: str = "TN"
-    phase_hint: Optional[Phase] = None
-    intent_fundraising: bool = False
-    
-    # Data quality flags
-    burn_quality: DataQuality = DataQuality.MISSING
-    cash_quality: DataQuality = DataQuality.MISSING
-    revenue_quality: DataQuality = DataQuality.MISSING
-    
-    # Extracted hypotheses
-    hypotheses: list[str] = field(default_factory=list)
-
-
-@dataclass
-class ValidationResult:
-    """Validation results after parsing."""
-    
-    is_valid: bool = False
-    data_quality_score: float = 0.0
-    incoherences: list[str] = field(default_factory=list)
-    missing_critical: list[str] = field(default_factory=list)
-    questions_to_ask: list[str] = field(default_factory=list)
-
-
-@dataclass
-class KPIResult:
-    """Calculated KPI metrics."""
-    
-    runway_months: Optional[float] = None
-    burn_rate_monthly: Optional[float] = None
-    mrr: Optional[float] = None
-    cac: Optional[float] = None
-    ltv: Optional[float] = None
-    payback_months: Optional[float] = None
-    growth_rate: Optional[float] = None
-
-
-@dataclass
-class MonteCarloResult:
-    """Monte Carlo simulation results."""
-    
-    mean_runway: float = 0.0
-    percentile_10: float = 0.0
-    percentile_90: float = 0.0
-    probability_success: float = 0.0
-    scenarios: list[dict] = field(default_factory=list)
-
-
-@dataclass
-class BenchmarkResult:
-    """Benchmark comparison against cohort."""
-    
-    metric_name: str = ""
-    founder_value: Optional[float] = None
-    percentile_25: Optional[float] = None
-    percentile_50: Optional[float] = None
-    percentile_75: Optional[float] = None
-    status: str = "UNKNOWN"  # ABOVE, BELOW, ALIGNED
-
-
-@dataclass
-class ConfidenceResult:
-    """Confidence and risk assessment."""
-    
-    overall_confidence: float = 0.0
-    key_risks: list[str] = field(default_factory=list)
-    assumptions_count: int = 0
-    missing_count: int = 0
-    recommendation: str = ""
-
-
-@dataclass
-class A2AMessage:
-    """Agent-to-Agent communication message."""
-    
-    sender: str = ""
-    recipient: str = ""
-    message_type: str = ""
-    payload: dict = field(default_factory=dict)
-    timestamp: Optional[str] = None
-from dataclasses import dataclass, field
 from typing import Optional
 from enum import Enum
 
@@ -165,7 +39,7 @@ class FinancialContext:
     """
     Représente toutes les données financières extraites
     depuis le message de l'entrepreneur.
-    Produit par : extract_financials 
+    Produit par : extract_financials
     Consommé par : tous les outils
     """
 
@@ -205,7 +79,7 @@ class FinancialContext:
 class KPIResult:
     """
     Résultat de calculate_kpis.
-    Produit par : calculate_kpis 
+    Produit par : calculate_kpis
     Consommé par : run_monte_carlo, build_a2a_message, LLM
     """
 
@@ -248,7 +122,7 @@ class KPIResult:
 class MonteCarloResult:
     """
     Résultat de run_monte_carlo.
-    Produit par : run_monte_carlo 
+    Produit par : run_monte_carlo
     Consommé par : compute_confidence_score, build_a2a_message, LLM
     """
     p10:                int    # runway mois — scénario pessimiste (10%)
@@ -258,14 +132,15 @@ class MonteCarloResult:
     proba_breakeven:    float  # probabilité d'atteindre breakeven [0-1]
     mc_tightness:       float  # 1=serré (fiable) · 0=large (incertain) [0-1]
     n_simulations:      int    = 1000
+    growth_mean_used:   float  = 0.0   # taux de croissance mensuel moyen utilisé dans la simulation
 
 
 @dataclass
 class ValidationResult:
     """
     Résultat de validate_inputs.
-    Produit par : validate_inputs 
-    Consommé par : boucle ReAct 
+    Produit par : validate_inputs
+    Consommé par : boucle ReAct
     """
     is_valid:             bool   # peut-on continuer ?
     data_quality_score:   float  # moyenne qualité données [0-1]
@@ -317,7 +192,7 @@ class ConfidenceResult:
 class A2AMessage:
     """
     Message envoyé sur le bus A2A vers les autres agents.
-    Produit par : build_a2a_message 
+    Produit par : build_a2a_message
     Consommé par : Risk Agent, Investment Agent, Orchestrateur
     """
     # Identité

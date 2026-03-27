@@ -16,6 +16,7 @@ try:
     from agent.tools.parser import parse_founder_input
     from agent.tools.validator import validate_financial_context
     from agent.tools.fetch_benchmarks import fetch_benchmarks
+    from calcul_tools.pipeline import run_analysis_pipeline
 
     MODULES_OK = True
 except Exception:
@@ -295,6 +296,8 @@ if "validation_result" not in st.session_state:
     st.session_state.validation_result = None
 if "last_uploaded_file" not in st.session_state:
     st.session_state.last_uploaded_file = None
+if "analysis" not in st.session_state:
+    st.session_state.analysis = {}
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -360,25 +363,31 @@ def _quality_enum_to_str(val: Any) -> str:
 
 
 def _merge_contexts(existing: Any, new: Any) -> Any:
+    """Fusion additive : chaque champ fourni est conservé, jamais écrasé par None."""
     if existing is None:
         return new
     if new is None:
         return existing
 
-    if _count_financial_fields(new) >= 3:
-        return new
-
     existing_dict = _to_dict(existing)
     new_dict = _to_dict(new)
 
-    merged = {}
-    for key in existing_dict:
-        new_val = new_dict.get(key)
-        old_val = existing_dict.get(key)
+    # Toujours fusionner champ par champ — jamais remplacer l'ancien contexte entier
+    merged = dict(existing_dict)
+    for key, new_val in new_dict.items():
         if new_val is not None and new_val not in ([], ""):
             merged[key] = new_val
+
+    # Pour les champs de qualité, garder le meilleur niveau (REAL > ESTIMATED > ASSUMPTION > MISSING)
+    # Cela garantit que le data_quality_score est monotone croissant au fil des messages
+    _quality_rank = {"REAL": 3, "ESTIMATED": 2, "ASSUMPTION": 1, "MISSING": 0}
+    for qfield in ("burn_quality", "cash_quality", "revenue_quality"):
+        old_q = _quality_enum_to_str(existing_dict.get(qfield))
+        new_q = _quality_enum_to_str(new_dict.get(qfield))
+        if _quality_rank.get(new_q, -1) > _quality_rank.get(old_q, -1):
+            merged[qfield] = new_dict[qfield]
         else:
-            merged[key] = old_val
+            merged[qfield] = existing_dict.get(qfield)
 
     merged["data_quality"] = {
         "burn": _quality_enum_to_str(merged.get("burn_quality")),
@@ -424,19 +433,21 @@ def _call_llm_text(messages: list) -> str:
 # ── LLM-generated questions ────────────────────────────────────────────────────
 
 # Maps field names extracted from missing_critical to their display label
+# Données BRUTES que l'entrepreneur peut fournir — jamais de métriques calculées
+# Règle : burn_net, LTV, CAC, Runway, Gross Margin ne sont JAMAIS demandés au fondateur
 _FIELD_LABELS: dict[str, str] = {
-    "burn_rate": "burn rate",
-    "cash_balance": "cash balance",
-    "monthly_revenue": "revenue mensuel",
-    "n_clients": "nombre de clients",
-    "prix_client": "prix par client",
-    "churn_rate": "churn rate",
-    "marketing_budget": "budget marketing",
-    "new_clients_month": "nouveaux clients / mois",
-    "cogs": "coût variable (COGS)",
-    "months_data": "historique (mois)",
-    "secteur": "secteur",
-    "pays": "pays",
+    "burn_rate":         "dépenses mensuelles totales",   # salaires + loyer + marketing + autres
+    "cash_balance":      "solde bancaire disponible",
+    "monthly_revenue":   "revenus mensuels",
+    "n_clients":         "nombre de clients actifs",
+    "prix_client":       "prix moyen par client",
+    "churn_rate":        "taux de perte clients / mois",  # % clients perdus par mois
+    "marketing_budget":  "budget marketing mensuel",
+    "new_clients_month": "nouveaux clients acquis / mois",
+    "cogs":              "coût variable par client",
+    "months_data":       "mois d'historique disponibles",
+    "secteur":           "secteur d'activité",
+    "pays":              "pays",
 }
 
 
@@ -494,11 +505,13 @@ def _generate_questions_with_llm(ctx: Any, validation: Any) -> list[str]:
             "role": "system",
             "content": (
                 "Tu es un analyste CFO pour startups tunisiennes. "
-                "Pour chaque champ financier manquant ou incohérent, génère exactement une question courte, "
-                "précise et professionnelle en français. "
+                "Tu ne poses des questions QUE sur des données brutes que l'entrepreneur connaît : "
+                "dépenses, revenus, cash, clients, prix, budget marketing, nouveaux clients, coûts variables. "
+                "INTERDIT de demander : burn rate net, LTV, CAC, runway, gross margin, LTV/CAC — ce sont des métriques calculées par l'agent. "
+                "Pour chaque champ manquant ou incohérent, génère exactement une question courte, précise et professionnelle en français. "
                 f"Tu dois retourner EXACTEMENT {n} lignes, une question par ligne. "
                 "Chaque question DOIT se terminer par le nom du champ entre parenthèses, "
-                "exemple : 'Quel est votre burn rate mensuel total ? (burn rate)'. "
+                "exemple : 'Quel est votre total de dépenses mensuelles (salaires, loyer, marketing) ? (dépenses mensuelles totales)'. "
                 "Sans numérotation, sans tirets, sans markdown."
             ),
         },
@@ -544,15 +557,16 @@ def _generate_questions_with_llm(ctx: Any, validation: Any) -> list[str]:
 
 
 # ── Format extracted data ──────────────────────────────────────────────────────
-def _format_extracted_data(ctx: Any, validation: Any) -> str:
+def _format_extracted_data(ctx: Any, validation: Any, analysis: dict = None) -> str:
     ctx_dict = _to_dict(ctx)
     score = getattr(validation, "data_quality_score", 0.0)
     inco = list(getattr(validation, "incoherences", []) or [])
     is_valid = bool(getattr(validation, "is_valid", False))
+    analysis = analysis or {}
 
     metrics = [
-        ("Burn Rate", "burn_rate", "DT/mois"),
-        ("Cash Balance", "cash_balance", "DT"),
+        ("Dépenses mensuelles", "burn_rate", "DT/mois"),
+        ("Cash disponible", "cash_balance", "DT"),
         ("Revenue mensuel", "monthly_revenue", "DT/mois"),
         ("Clients actifs", "n_clients", ""),
         ("Prix par client", "prix_client", "DT"),
@@ -584,13 +598,156 @@ def _format_extracted_data(ctx: Any, validation: Any) -> str:
             formatted = str(val)
         lines.append(f"- **{label}** : `{formatted}`")
 
-    if ctx_dict.get("burn_rate") and ctx_dict.get("cash_balance"):
+    # ── Runway : priorité au calcul précis des KPIs, sinon calcul brut ──
+    kpis = analysis.get("kpis")
+    if kpis is not None and getattr(kpis, "runway_months", None) is not None:
+        import math as _math
+        runway_val = kpis.runway_months
+        alert = getattr(kpis, "cash_out_alert", "")
+        alert_icon = {"CRITIQUE": " ⚠️", "ATTENTION": " ⚡", "OK": ""}.get(alert, "")
+        if isinstance(runway_val, float) and _math.isinf(runway_val):
+            lines.append(f"- **Runway** : `∞` _(startup rentable)_")
+        else:
+            lines.append(f"- **Runway** : `{runway_val:.1f} mois`{alert_icon}")
+    elif ctx_dict.get("burn_rate") and ctx_dict.get("cash_balance"):
         br = ctx_dict["burn_rate"]
         cb = ctx_dict["cash_balance"]
         if br and br > 0:
-            runway = cb / br
-            lines.append(f"- **Runway estimé** : `{runway:.1f} mois`")
+            lines.append(f"- **Runway estimé** : `{cb / br:.1f} mois`")
 
+    # ── KPIs calculés (uniquement si disponibles) ──────────────────────
+    if kpis is not None:
+        kpi_lines = []
+
+        # Burn Rate net — ce que la startup perd réellement chaque mois
+        burn_net = getattr(kpis, "burn_net", None)
+        if burn_net is not None:
+            if burn_net == 0:
+                _raw_burn = ctx_dict.get("burn_rate") or 0
+                _revenue  = ctx_dict.get("monthly_revenue") or 0
+                _profit   = _revenue - _raw_burn
+                if _profit > 0:
+                    kpi_lines.append(f"- **Burn Rate** : `-{_fmt(_profit)} DT/mois` _(startup profitable — excédent de {_fmt(_profit)} DT)_")
+                else:
+                    kpi_lines.append("- **Burn Rate** : `0 DT/mois` _(revenus = dépenses)_")
+            else:
+                kpi_lines.append(f"- **Burn Rate** : `{_fmt(burn_net)} DT/mois` _(net après revenus)_")
+
+        if getattr(kpis, "cac", None) is not None:
+            kpi_lines.append(f"- **CAC** : `{_fmt(kpis.cac)} DT`")
+
+        if getattr(kpis, "ltv", None) is not None:
+            _prix  = ctx_dict.get("prix_client")
+            _cogs  = ctx_dict.get("cogs")
+            _churn = ctx_dict.get("churn_rate")
+            _duree = round(1 / _churn, 1) if _churn and _churn > 0 else None
+
+            if _cogs and _prix and _duree:
+                # Les deux LTV quand COGS est connu
+                _ltv_rev = round(_prix / _churn, 0)
+                kpi_lines.append(
+                    f"- **LTV Revenue** : `{_fmt(_ltv_rev)} DT`"
+                    f" _({int(_prix)} × {_duree} mois)_"
+                )
+                kpi_lines.append(
+                    f"- **LTV Profit** : `{_fmt(kpis.ltv)} DT`"
+                    f" _(({int(_prix)} − {int(_cogs)}) × {_duree} mois)_"
+                )
+            elif _prix and _duree:
+                kpi_lines.append(
+                    f"- **LTV** : `{_fmt(kpis.ltv)} DT`"
+                    f" _({int(_prix)} × {_duree} mois)_"
+                )
+            else:
+                kpi_lines.append(f"- **LTV** : `{_fmt(kpis.ltv)} DT`")
+
+        if getattr(kpis, "ltv_cac_ratio", None) is not None:
+            status = getattr(kpis, "ltv_cac_status", "")
+            ratio = kpis.ltv_cac_ratio
+            if ratio >= 5:
+                insight = f"Excellent (benchmark > 3x) — vous générez {ratio:.1f} DT pour chaque DT investi en acquisition"
+            elif ratio >= 3:
+                insight = f"Sain (benchmark > 3x) — rentabilité d'acquisition confirmée"
+            elif ratio >= 1:
+                insight = f"Limite — visez > 3x, actuellement {ratio:.1f}x"
+            else:
+                insight = f"Critique — vous perdez de l'argent sur chaque client acquis"
+            status_icon = {"SAIN": " ✓", "LIMITE": " →", "DANGEREUX": " ✗"}.get(status, "")
+            kpi_lines.append(f"- **LTV/CAC** : `{ratio:.1f}x`{status_icon} — _{insight}_")
+
+        if getattr(kpis, "mrr", None) is not None:
+            kpi_lines.append(f"- **MRR** : `{_fmt(kpis.mrr)} DT`")
+
+        if getattr(kpis, "gross_margin_pct", None) is not None:
+            gm = kpis.gross_margin_pct
+            kpi_lines.append(f"- **Gross Margin** : `{gm:.1f}%`")
+
+        # Durée de vie client = 1 / churn (si churn connu)
+        churn_val = ctx_dict.get("churn_rate")
+        if churn_val and churn_val > 0:
+            duree_vie = round(1 / churn_val, 1)
+            churn_pct = churn_val * 100
+            if churn_val > 0.20:
+                churn_insight = "critique — plus d'un client sur cinq perdu chaque mois"
+            elif churn_val > 0.10:
+                churn_insight = "élevé"
+            elif churn_val > 0.05:
+                churn_insight = "modéré"
+            else:
+                churn_insight = "faible"
+            kpi_lines.append(
+                f"- **Durée de vie client** : `{duree_vie} mois` _(churn {churn_pct:.0f}%/mois — {churn_insight})_"
+            )
+
+        if kpi_lines:
+            lines.append("\n**KPIs calculés :**")
+            lines.extend(kpi_lines)
+
+    # ── Monte Carlo ────────────────────────────────────────────────────
+    mc = analysis.get("monte_carlo")
+    # Si burn_net = 0 (startup rentable), le MC est trivial — on l'affiche différemment
+    is_profitable = kpis is not None and getattr(kpis, "burn_net", None) == 0.0
+    if mc is not None and is_profitable:
+        lines.append("\n**Simulation Monte Carlo :** _non pertinente (startup rentable — pas de risque d'insolvabilité)_")
+    elif mc is not None:
+        mc_lines = []
+        if getattr(mc, "p50", None) is not None:
+            mc_lines.append(
+                f"- **Runway médian (p50)** : `{mc.p50:.1f} mois` "
+                f"_(p10: {mc.p10:.1f} · p90: {mc.p90:.1f})_"
+            )
+        if getattr(mc, "proba_survie_12m", None) is not None:
+            mc_lines.append(f"- **Survie à 12 mois** : `{mc.proba_survie_12m:.0%}`")
+        if mc_lines:
+            _growth_used = getattr(mc, "growth_mean_used", None)
+            _growth_label = f"croissance revenue {_growth_used*100:.0f}%/mois · volatilité burn ±12%" if _growth_used else "volatilité burn ±12%"
+            lines.append(f"\n**Simulation Monte Carlo** _({_growth_label}, {mc.n_simulations} simulations)_ **:**")
+            lines.extend(mc_lines)
+
+    # ── Phase ──────────────────────────────────────────────────────────
+    phase = analysis.get("phase")
+    if phase is not None:
+        phase_name = getattr(phase, "value", str(phase))
+        lines.append(f"\n**Phase détectée** : `{phase_name}`")
+
+    # ── Champs optionnels manquants (CAC, marge) ───────────────────────
+    # S'affiche uniquement en mode ANALYSE (tous les champs requis présents)
+    required_present = all(ctx_dict.get(f) is not None for f in (
+        "burn_rate", "cash_balance", "monthly_revenue", "n_clients", "prix_client", "churn_rate"
+    ))
+    if required_present and analysis:
+        opt_hints = []
+        if ctx_dict.get("marketing_budget") is None or ctx_dict.get("new_clients_month") is None:
+            opt_hints.append("**budget marketing** + **nouveaux clients / mois** → calcul du CAC et ratio LTV/CAC")
+        if ctx_dict.get("cogs") is None:
+            opt_hints.append("**coût variable par client** (livraison, emballage, etc.) → calcul de la marge brute")
+        if opt_hints:
+            lines.append("\n---")
+            lines.append("**Pour compléter l'analyse :**")
+            for h in opt_hints:
+                lines.append(f"- Précisez : {h}")
+
+    # ── Incoherences ───────────────────────────────────────────────────
     if inco:
         lines.append("\n---")
         lines.append("**Points à clarifier :**")
@@ -836,13 +993,52 @@ def _format_benchmark_result(bench: Any, ctx: Any) -> str:
 # ── Answer general questions ───────────────────────────────────────────────────
 def _answer_general_question(user_prompt: str, existing_ctx: Any) -> str:
     ctx_dict = _to_dict(existing_ctx)
+    analysis: dict = st.session_state.get("analysis", {})
+
+    # Base financials — burn_rate = dépenses brutes, burn_net = ce qui est vraiment perdu
     parts = []
-    if ctx_dict.get("burn_rate"):
-        parts.append(f"burn_rate={_fmt(ctx_dict['burn_rate'])} DT/mois")
+    raw_burn = ctx_dict.get("burn_rate") or 0
+    revenue  = ctx_dict.get("monthly_revenue") or 0
+    burn_net_computed = max(0.0, raw_burn - revenue)
+
+    if raw_burn:
+        parts.append(f"dépenses_mensuelles={_fmt(raw_burn)} DT/mois")
+    if revenue:
+        parts.append(f"revenue_mensuel={_fmt(revenue)} DT/mois")
+    if raw_burn or revenue:
+        if burn_net_computed == 0:
+            parts.append("burn_rate=0 DT/mois (startup rentable, revenus couvrent les dépenses)")
+        else:
+            parts.append(f"burn_rate={_fmt(burn_net_computed)} DT/mois (net = dépenses - revenus)")
     if ctx_dict.get("cash_balance"):
         parts.append(f"cash_balance={_fmt(ctx_dict['cash_balance'])} DT")
-    if ctx_dict.get("monthly_revenue"):
-        parts.append(f"monthly_revenue={_fmt(ctx_dict['monthly_revenue'])} DT/mois")
+
+    # Enrich with computed KPIs
+    kpis = analysis.get("kpis")
+    if kpis is not None:
+        if getattr(kpis, "runway_months", None) is not None:
+            parts.append(f"runway={kpis.runway_months:.1f} mois")
+        if getattr(kpis, "cac", None) is not None:
+            parts.append(f"CAC={_fmt(kpis.cac)} DT")
+        if getattr(kpis, "ltv_cac_ratio", None) is not None:
+            parts.append(f"LTV/CAC={kpis.ltv_cac_ratio:.1f}x ({getattr(kpis, 'ltv_cac_status', '')})")
+        if getattr(kpis, "gross_margin_pct", None) is not None:
+            parts.append(f"gross_margin={kpis.gross_margin_pct:.1f}%")
+
+    # Phase
+    phase = analysis.get("phase")
+    if phase is not None:
+        parts.append(f"phase={getattr(phase, 'value', str(phase))}")
+
+    # Monte Carlo survival
+    mc = analysis.get("monte_carlo")
+    if mc is not None and getattr(mc, "proba_survie_12m", None) is not None:
+        parts.append(f"survie_12m={mc.proba_survie_12m:.0%}")
+
+    # Scenario recommendation
+    scenarios = analysis.get("scenarios")
+    if scenarios is not None and getattr(scenarios, "recommandation", None):
+        parts.append(f"recommandation={scenarios.recommandation}")
 
     ctx_summary = ("Contexte financier actuel : " + ", ".join(parts) + ". ") if parts else ""
 
@@ -862,16 +1058,65 @@ def _answer_general_question(user_prompt: str, existing_ctx: Any) -> str:
     return result if result.strip() else "Je n'ai pas pu traiter cette demande."
 
 
+# ── Champs bruts requis — jamais calculés, toujours demandés au fondateur ──────
+# Minimum pour lancer l'analyse de base (runway + burn)
+_FIELDS_MINIMUM = {"burn_rate", "cash_balance"}
+# Champs complets pour tous les KPIs (LTV, CAC, breakeven, scénarios)
+_FIELDS_FULL = {"burn_rate", "cash_balance", "monthly_revenue", "n_clients", "prix_client", "churn_rate"}
+
+
+def _missing_fields(ctx: Any) -> list[str]:
+    """Retourne les champs de _FIELDS_FULL encore absents du contexte cumulatif."""
+    d = _to_dict(ctx)
+    return [f for f in _FIELDS_FULL if d.get(f) is None]
+
+
 # ── Shared processing logic ────────────────────────────────────────────────────
 def _process_financial_context(new_ctx: Any) -> tuple[str, list[str], Any]:
-    """Merge context, validate, fetch benchmarks (if valid). Returns (data_text, questions, bench)."""
+    """
+    Fusion cumulative + pipeline de calcul + RAG benchmarks.
+    Returns (data_text, questions, bench).
+    """
     parsed_ctx = _merge_contexts(st.session_state.financial_context, new_ctx)
-    validation = validate_financial_context(parsed_ctx)
+
+    # Pipeline de calcul (gère les données partielles sans planter)
+    analysis: dict = {}
+    try:
+        analysis = run_analysis_pipeline(parsed_ctx)
+    except Exception:
+        analysis = {}
+
+    # Validation — fallback si le pipeline n'en produit pas
+    validation = analysis.get("validation")
+    if validation is None:
+        validation = validate_financial_context(parsed_ctx)
+
     st.session_state.financial_context = parsed_ctx
     st.session_state.validation_result = validation
-    data_text = _format_extracted_data(parsed_ctx, validation)
-    questions = _generate_questions_with_llm(parsed_ctx, validation)
+    st.session_state.analysis = analysis
 
+    data_text = _format_extracted_data(parsed_ctx, validation)
+
+    # Mode COLLECTE vs ANALYSE
+    still_missing = _missing_fields(parsed_ctx)
+    if not still_missing:
+        questions = []
+    else:
+        from models.data_models import ValidationResult as _VR
+        missing_only = [
+            m for m in (getattr(validation, "missing_critical", []) or [])
+            if any(f in m.lower() for f in still_missing)
+        ]
+        validation_filtered = _VR(
+            is_valid=validation.is_valid,
+            data_quality_score=validation.data_quality_score,
+            incoherences=list(getattr(validation, "incoherences", []) or []),
+            missing_critical=missing_only,
+            questions_to_ask=list(getattr(validation, "questions_to_ask", []) or []),
+        )
+        questions = _generate_questions_with_llm(parsed_ctx, validation_filtered)
+
+    # RAG benchmark — seulement si données complètes
     bench = None
     if getattr(validation, "is_valid", False):
         try:
@@ -882,12 +1127,108 @@ def _process_financial_context(new_ctx: Any) -> tuple[str, list[str], Any]:
     return data_text, questions, bench
 
 
+def _render_analysis_charts(ctx: Any, analysis: dict) -> None:
+    """
+    Affiche les visualisations financières quand l'analyse est complète.
+    2 graphiques côte à côte :
+      - Trésorerie projetée sur 24 mois (3 scénarios)
+      - Revenus projetés sur 24 mois (3 scénarios + ligne breakeven)
+    """
+    try:
+        import plotly.graph_objects as go
+    except ImportError:
+        st.caption("_Installez plotly pour les visualisations : `pip install plotly`_")
+        return
+
+    scenarios = analysis.get("scenarios")
+    kpis      = analysis.get("kpis")
+    if scenarios is None or kpis is None:
+        return
+
+    ctx_dict = _to_dict(ctx)
+    cash    = ctx_dict.get("cash_balance") or 0.0
+    burn    = ctx_dict.get("burn_rate")    or 0.0
+    revenue = ctx_dict.get("monthly_revenue") or 0.0
+    n_months = 24
+    months   = list(range(n_months + 1))
+
+    pess_g = getattr(scenarios.pessimiste, "growth_rate", 0.0)
+    real_g = getattr(scenarios.realiste,   "growth_rate", 0.08)
+    opti_g = getattr(scenarios.optimiste,  "growth_rate", 0.15)
+
+    def _trajectory(growth):
+        cash_s, rev_s = [cash], [revenue]
+        c, r = cash, revenue
+        for _ in range(n_months):
+            r = r * (1 + growth)
+            net = r - burn
+            c = max(c + net, 0.0)
+            cash_s.append(round(c, 0))
+            rev_s.append(round(r, 0))
+        return cash_s, rev_s
+
+    pess_cash, pess_rev = _trajectory(pess_g)
+    real_cash, real_rev = _trajectory(real_g)
+    opti_cash, opti_rev = _trajectory(opti_g)
+
+    _layout = dict(
+        height=300,
+        margin=dict(l=10, r=10, t=36, b=10),
+        plot_bgcolor="#fafafa",
+        paper_bgcolor="#ffffff",
+        font=dict(size=11, color="#333"),
+        legend=dict(orientation="h", y=-0.28, x=0),
+        xaxis=dict(title="Mois", gridcolor="#f0f0f0"),
+    )
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        fig_cash = go.Figure()
+        fig_cash.add_trace(go.Scatter(x=months, y=pess_cash, name="Pessimiste",
+            line=dict(color="#ef4444", dash="dash", width=2)))
+        fig_cash.add_trace(go.Scatter(x=months, y=real_cash, name="Réaliste",
+            line=dict(color="#3b82f6", width=2.5)))
+        fig_cash.add_trace(go.Scatter(x=months, y=opti_cash, name="Optimiste",
+            line=dict(color="#22c55e", dash="dot", width=2)))
+        fig_cash.add_hline(y=0, line_dash="dot", line_color="#1a1a1a", line_width=1,
+            annotation_text="Cash out", annotation_position="bottom right",
+            annotation_font_size=10)
+        fig_cash.update_layout(
+            title=dict(text="Trésorerie projetée (24 mois)", font=dict(size=13)),
+            yaxis=dict(title="Cash (DT)", gridcolor="#f0f0f0"), **_layout)
+        st.plotly_chart(fig_cash, use_container_width=True)
+
+    with col2:
+        fig_rev = go.Figure()
+        fig_rev.add_trace(go.Scatter(x=months, y=pess_rev, name="Pessimiste",
+            line=dict(color="#ef4444", dash="dash", width=2)))
+        fig_rev.add_trace(go.Scatter(x=months, y=real_rev, name="Réaliste",
+            line=dict(color="#3b82f6", width=2.5)))
+        fig_rev.add_trace(go.Scatter(x=months, y=opti_rev, name="Optimiste",
+            line=dict(color="#22c55e", dash="dot", width=2)))
+        if burn > 0:
+            fig_rev.add_hline(y=burn, line_dash="dot", line_color="#f59e0b", line_width=1.5,
+                annotation_text="Breakeven", annotation_position="top right",
+                annotation_font_size=10)
+        fig_rev.update_layout(
+            title=dict(text="Revenus projetés (24 mois)", font=dict(size=13)),
+            yaxis=dict(title="Revenue (DT)", gridcolor="#f0f0f0"), **_layout)
+        st.plotly_chart(fig_rev, use_container_width=True)
+
+
 def _render_financial_reply(data_text: str, questions: list[str], bench: Any = None, ctx: Any = None) -> str:
-    """Render extracted data + benchmark + stream questions. Returns full reply for session state."""
+    """Render extracted data + charts + benchmark + questions. Returns text for session state."""
     full_reply_parts = []
+
     if data_text:
         st.markdown(data_text, unsafe_allow_html=True)
         full_reply_parts.append(data_text)
+
+    # Charts — rendus en live uniquement (pas stockés dans l'historique)
+    analysis = st.session_state.get("analysis", {})
+    if analysis.get("scenarios") is not None:
+        _render_analysis_charts(ctx or st.session_state.get("financial_context"), analysis)
 
     if bench is not None:
         bench_text = _format_benchmark_result(bench, ctx)
@@ -905,6 +1246,7 @@ def _render_financial_reply(data_text: str, questions: list[str], bench: Any = N
         full_reply_parts.append(
             "\n\nQuestions :\n" + "\n".join(f"- {q}" for q in streamed_questions)
         )
+
     return "\n\n".join(full_reply_parts) if full_reply_parts else "Aucune donnée extraite."
 
 
@@ -932,6 +1274,7 @@ with st.sidebar:
         st.session_state.financial_context = None
         st.session_state.validation_result = None
         st.session_state.last_uploaded_file = None
+        st.session_state.analysis = {}
         st.rerun()
 
     st.divider()
@@ -954,7 +1297,7 @@ with st.sidebar:
         )
 
         sidebar_metrics = [
-            ("Burn Rate", "burn_rate", "DT/m"),
+            ("Dépenses", "burn_rate", "DT/m"),
             ("Cash", "cash_balance", "DT"),
             ("Revenue", "monthly_revenue", "DT/m"),
             ("Clients", "n_clients", ""),
@@ -973,11 +1316,24 @@ with st.sidebar:
                     unsafe_allow_html=True,
                 )
 
-        if ctx_dict.get("burn_rate") and ctx_dict.get("cash_balance") and ctx_dict.get("burn_rate") > 0:
+        # Runway: use net burn from KPIs if available, otherwise gross burn as fallback
+        _analysis = st.session_state.get("analysis", {})
+        _kpis = _analysis.get("kpis") if _analysis else None
+        if _kpis is not None and getattr(_kpis, "runway_months", None) is not None:
+            _rw = _kpis.runway_months
+            _rw_display = "∞" if _rw == float("inf") else f"{_rw:.1f} mois"
+            st.markdown(
+                f"<div class='sidebar-metric'>"
+                f"<span class='sidebar-metric-label'>Runway (net)</span>"
+                f"<span class='sidebar-metric-value'>{_rw_display}</span>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
+        elif ctx_dict.get("burn_rate") and ctx_dict.get("cash_balance") and ctx_dict.get("burn_rate") > 0:
             runway = ctx_dict["cash_balance"] / ctx_dict["burn_rate"]
             st.markdown(
                 f"<div class='sidebar-metric'>"
-                f"<span class='sidebar-metric-label'>Runway</span>"
+                f"<span class='sidebar-metric-label'>Runway (brut)</span>"
                 f"<span class='sidebar-metric-value'>{runway:.1f} mois</span>"
                 f"</div>",
                 unsafe_allow_html=True,

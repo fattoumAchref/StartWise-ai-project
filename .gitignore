@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+venv/ 
+__pycache__/ 
+*.pyc 
+.env 
+=======
+=======
+>>>>>>> recover-salim-work
 # Python
 __pycache__/
 *.pyc
@@ -6,6 +15,10 @@ __pycache__/
 
 # Virtual environment
 venv/
+
+# Environment variables — never commit
+.env
+.env.local
 .env/
 
 # VS Code
@@ -16,4 +29,9 @@ venv/
 
 # OS
 .DS_Store
+<<<<<<< HEAD
 Thumbs.db
+>>>>>>> Stashed changes
+=======
+Thumbs.db
+>>>>>>> recover-salim-work

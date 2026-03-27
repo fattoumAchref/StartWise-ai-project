@@ -51,13 +51,15 @@ def validate_financial_context(context: FinancialContext) -> ValidationResult:
         missing_critical: list[str] = []
         questions_to_ask: list[str] = []
 
+        # Dépenses < revenus → startup rentable, PAS une incoherence
+        # On pose juste une question de vérification dans questions_to_ask
         if (
             context.burn_rate is not None
             and context.monthly_revenue is not None
             and context.burn_rate < context.monthly_revenue
         ):
-            incoherences.append(
-                "Burn rate inférieur aux revenus — vérifier si toutes les charges sont incluses"
+            questions_to_ask.append(
+                "Vos revenus dépassent vos dépenses — avez-vous bien inclus tous vos coûts (salaires, loyer, infrastructure) ?"
             )
 
         if context.churn_rate is not None and context.churn_rate > 0.20:
@@ -78,14 +80,13 @@ def validate_financial_context(context: FinancialContext) -> ValidationResult:
                         "Incohérence détectée : prix_client × n_clients ne correspond pas à monthly_revenue déclaré"
                     )
 
-        if (
-            context.cash_balance is not None
-            and context.burn_rate is not None
-            and context.cash_balance < context.burn_rate
-        ):
-            incoherences.append(
-                "Cash disponible inférieur au burn mensuel — runway inférieur à 1 mois, situation critique"
-            )
+        # Runway critique — utilise le burn NET (dépenses - revenus), pas le burn brut
+        if context.burn_rate is not None and context.cash_balance is not None:
+            burn_net = max(0.0, context.burn_rate - (context.monthly_revenue or 0.0))
+            if burn_net > 0 and context.cash_balance < burn_net:
+                incoherences.append(
+                    "Cash disponible inférieur au burn net mensuel — runway inférieur à 1 mois, situation critique"
+                )
 
         # All required fields — analysis cannot proceed without them
         REQUIRED: list[tuple[str, str | None, str]] = [

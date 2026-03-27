@@ -13,3 +13,4 @@ tavily-python
 streamlit
 openpyxl
 pymupdf
+plotly
