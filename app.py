@@ -15,6 +15,7 @@ import streamlit as st
 try:
     from agent.tools.parser import parse_founder_input
     from agent.tools.validator import validate_financial_context
+    from agent.tools.fetch_benchmarks import fetch_benchmarks
 
     MODULES_OK = True
 except Exception:
@@ -602,6 +603,236 @@ def _format_extracted_data(ctx: Any, validation: Any) -> str:
     return "\n".join(lines)
 
 
+# ── Benchmark formatting ───────────────────────────────────────────────────────
+import re as _re
+
+_RE_DOCS_GROSS_MARGIN   = _re.compile(r"gross margin of ([\d.]+)%")
+_RE_DOCS_CHURN          = _re.compile(r"monthly churn rate of ([\d.]+)%")
+_RE_DOCS_EV_MULTIPLE    = _re.compile(r"EV to revenue multiple of ([\d.]+)x")
+_RE_DOCS_LTV_CAC        = _re.compile(r"LTV to CAC ratio of ([\d.]+)x")
+_RE_DOCS_CAC_PAYBACK    = _re.compile(r"CAC payback period of ([\d.]+) months")
+_RE_DOCS_NRR            = _re.compile(r"net revenue retention of ([\d.]+)%")
+_RE_DOCS_GROWTH         = _re.compile(r"growing at ([\d.]+)%")
+
+
+def _parse_docs_extra(docs: list[str]) -> dict:
+    """Extract additional metrics not included in BenchmarkResult."""
+    import statistics
+
+    def _vals(pattern):
+        vals = []
+        for doc in docs:
+            m = pattern.search(doc)
+            if m:
+                vals.append(float(m.group(1)))
+        return vals
+
+    def _med(vals):
+        return round(statistics.median(vals), 2) if vals else None
+
+    return {
+        "ltv_cac_ratio":      _med(_vals(_RE_DOCS_LTV_CAC)),
+        "cac_payback_months": _med(_vals(_RE_DOCS_CAC_PAYBACK)),
+        "nrr":                _med(_vals(_RE_DOCS_NRR)),
+        "growth_yoy":         _med(_vals(_RE_DOCS_GROWTH)),
+    }
+
+
+def _format_benchmark_result(bench: Any, ctx: Any) -> str:
+    """Return detailed HTML/Markdown benchmark analysis block."""
+    if bench is None:
+        return ""
+
+    source = getattr(bench, "source", "unknown")
+    sim    = getattr(bench, "similarity_score", 0.0)
+    docs   = list(getattr(bench, "documents_raw", []) or [])
+
+    ctx_dict = _to_dict(ctx)
+    sector   = ctx_dict.get("secteur") or "SaaS"
+    extra    = _parse_docs_extra(docs)
+
+    # Determine source badge
+    if "Tavily" in source or "tavily" in source:
+        badge_html = "<span style='background:#fff3e0;color:#e65100;border:1px solid #ffcc80;border-radius:4px;padding:2px 8px;font-size:0.74rem;font-weight:600'>Tavily live</span>"
+    else:
+        badge_html = "<span style='background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;border-radius:4px;padding:2px 8px;font-size:0.74rem;font-weight:600'>ChromaDB cache</span>"
+
+    n_docs = len(docs)
+    lines = []
+    lines.append(
+        f"---\n**Analyse sectorielle — {sector}** "
+        f"&nbsp;·&nbsp; similarité {sim:.0%} "
+        f"&nbsp;{badge_html}&nbsp; "
+        f"<span style='color:#aaa;font-size:0.78rem'>{n_docs} doc(s)</span>"
+    )
+
+    # ── Section 1 : KPIs calculés ─────────────────────────────────────────────
+    lines.append("\n**KPIs calculés depuis vos données**\n")
+
+    burn   = ctx_dict.get("burn_rate")
+    cash   = ctx_dict.get("cash_balance")
+    rev    = ctx_dict.get("monthly_revenue")
+    cogs   = ctx_dict.get("cogs")
+    n_cl   = ctx_dict.get("n_clients")
+    p_cl   = ctx_dict.get("prix_client")
+    churn  = ctx_dict.get("churn_rate")
+    mktg   = ctx_dict.get("marketing_budget")
+    new_cl = ctx_dict.get("new_clients_month")
+
+    kpi_rows = []
+
+    if burn and cash and burn > 0:
+        runway = cash / burn
+        kpi_rows.append(("Runway", f"{runway:.1f} mois", "mois avant épuisement du cash"))
+
+    if burn and rev:
+        burn_net = burn - rev
+        kpi_rows.append(("Burn net", f"{burn_net:,.0f} DT/mois".replace(",", " "), "dépenses − revenus"))
+
+    if rev and burn and burn > 0:
+        coverage = rev / burn
+        kpi_rows.append(("Couverture revenus", f"{coverage:.0%}", "revenus / burn total"))
+
+    if rev and cogs and n_cl and n_cl > 0:
+        total_cogs = cogs * n_cl
+        gm = (rev - total_cogs) / rev if rev > 0 else None
+        if gm is not None and 0 <= gm <= 0.98:
+            kpi_rows.append(("Gross margin", f"{gm:.1%}", "marge brute sur revenus"))
+
+    if p_cl and churn and churn > 0:
+        ltv = p_cl / churn
+        kpi_rows.append(("LTV estimé", f"{ltv:,.0f} DT".replace(",", " "), "valeur vie client"))
+        if mktg and new_cl and new_cl > 0:
+            cac = mktg / new_cl
+            kpi_rows.append(("CAC", f"{cac:,.0f} DT".replace(",", " "), "coût acquisition client"))
+            ratio = ltv / cac
+            status_icon = "✓" if ratio >= 3 else ("~" if ratio >= 1.5 else "!")
+            kpi_rows.append(("LTV / CAC", f"{ratio:.1f}x {status_icon}", "doit être > 3x"))
+
+    if churn:
+        kpi_rows.append(("Churn mensuel", f"{churn:.1%}", "% clients perdus/mois"))
+
+    if kpi_rows:
+        tbl = "| KPI | Valeur | Note |\n|-----|--------|------|\n"
+        tbl += "\n".join(f"| {r} | {v} | {n} |" for r, v, n in kpi_rows)
+        lines.append(tbl)
+    else:
+        lines.append("_Données insuffisantes pour calculer les KPIs._")
+
+    # ── Section 2 : Comparaison sectorielle ───────────────────────────────────
+    lines.append("\n**Comparaison sectorielle**\n")
+
+    churn_med = getattr(bench, "churn_median", None)
+    gm_med    = getattr(bench, "gross_margin_median", None)
+    ev_mult   = getattr(bench, "valorisation_multiple", None)
+    ltv_cac_b = extra.get("ltv_cac_ratio")
+    payback_b = extra.get("cac_payback_months")
+    nrr_b     = extra.get("nrr")
+
+    def _cmp(founder_val, bench_val, higher_is_better=True) -> str:
+        if founder_val is None or bench_val is None:
+            return "—"
+        diff = founder_val - bench_val
+        if abs(diff) / (abs(bench_val) + 1e-9) < 0.05:
+            return "Aligné"
+        if (diff > 0) == higher_is_better:
+            return "Au-dessus"
+        return "En dessous"
+
+    cmp_rows = []
+    if churn_med:
+        founder_churn = churn
+        status = _cmp(founder_churn, churn_med, higher_is_better=False)
+        cmp_rows.append(("Churn mensuel",
+                          f"{founder_churn:.1%}" if founder_churn else "—",
+                          f"{churn_med:.1%}",
+                          status))
+    if gm_med:
+        founder_gm = None
+        if rev and cogs and n_cl and n_cl > 0:
+            tc = cogs * n_cl
+            g = (rev - tc) / rev if rev > 0 else None
+            founder_gm = g if g is not None and 0 <= g <= 0.98 else None
+        status = _cmp(founder_gm, gm_med, higher_is_better=True)
+        cmp_rows.append(("Gross margin",
+                          f"{founder_gm:.1%}" if founder_gm else "—",
+                          f"{gm_med:.1%}",
+                          status))
+    if ev_mult:
+        cmp_rows.append(("Multiple EV/ARR", "—", f"{ev_mult:.1f}x", "Référence marché"))
+    if ltv_cac_b:
+        founder_ltv_cac = None
+        if p_cl and churn and mktg and new_cl and churn > 0 and new_cl > 0:
+            founder_ltv_cac = (p_cl / churn) / (mktg / new_cl)
+        status = _cmp(founder_ltv_cac, ltv_cac_b, higher_is_better=True)
+        cmp_rows.append(("LTV / CAC",
+                          f"{founder_ltv_cac:.1f}x" if founder_ltv_cac else "—",
+                          f"{ltv_cac_b:.1f}x",
+                          status))
+    if payback_b:
+        cmp_rows.append(("CAC payback", "—", f"{payback_b:.0f} mois", "Référence marché"))
+    if nrr_b:
+        cmp_rows.append(("NRR", "—", f"{nrr_b:.1f}%", "Référence marché"))
+
+    if cmp_rows:
+        tbl2 = "| Métrique | Votre valeur | Médiane secteur | Statut |\n|----------|-------------|-----------------|--------|\n"
+        tbl2 += "\n".join(f"| {m} | {fv} | {bv} | {s} |" for m, fv, bv, s in cmp_rows)
+        lines.append(tbl2)
+    else:
+        lines.append("_Benchmarks sectoriels insuffisants pour cette comparaison._")
+
+    # ── Section 3 : Recommandations ───────────────────────────────────────────
+    lines.append("\n**Recommandations**\n")
+
+    recs = []
+
+    # Runway
+    if burn and cash and burn > 0:
+        rw = cash / burn
+        if rw < 3:
+            recs.append("**Runway critique** (< 3 mois) — priorité absolue : réduire le burn ou déclencher une levée d'urgence.")
+        elif rw < 6:
+            recs.append("**Runway serré** (< 6 mois) — préparez votre prochaine levée ou bridging maintenant.")
+
+    # Churn vs benchmark
+    if churn and churn_med and churn > churn_med * 1.3:
+        recs.append(f"**Churn élevé** ({churn:.1%}) vs médiane secteur ({churn_med:.1%}) — investissez dans l'onboarding et le support client.")
+
+    # Gross margin
+    if rev and cogs and n_cl and n_cl > 0:
+        tc = cogs * n_cl
+        gm_val = (rev - tc) / rev if rev > 0 else None
+        if gm_val is not None and 0 <= gm_val <= 0.98:
+            if gm_val < 0.5:
+                recs.append(f"**Gross margin faible** ({gm_val:.1%}) — examinez vos coûts variables et opportunités de pricing.")
+            elif gm_med and gm_val < gm_med * 0.85:
+                recs.append(f"**Gross margin en dessous** de la médiane secteur ({gm_med:.1%}) — optimisez vos COGS.")
+
+    # LTV/CAC
+    if p_cl and churn and mktg and new_cl and churn > 0 and new_cl > 0:
+        ltv_v = p_cl / churn
+        cac_v = mktg / new_cl
+        ratio_v = ltv_v / cac_v
+        if ratio_v < 1:
+            recs.append(f"**LTV/CAC < 1** ({ratio_v:.1f}x) — chaque client coûte plus qu'il ne rapporte. Révisez le modèle d'acquisition.")
+        elif ratio_v < 3:
+            recs.append(f"**LTV/CAC sous-optimal** ({ratio_v:.1f}x, cible > 3x) — réduisez le CAC ou augmentez la rétention.")
+
+    # Valorisation
+    if ev_mult and rev:
+        arr = rev * 12
+        valuation_ref = arr * ev_mult
+        recs.append(f"**Valorisation de référence** : ARR × {ev_mult:.1f}x = **{valuation_ref:,.0f} DT** (médiane secteur).".replace(",", " "))
+
+    if not recs:
+        recs.append("Données insuffisantes pour des recommandations ciblées. Complétez votre profil financier.")
+
+    for r in recs:
+        lines.append(f"- {r}")
+
+    return "\n".join(lines)
+
+
 # ── Answer general questions ───────────────────────────────────────────────────
 def _answer_general_question(user_prompt: str, existing_ctx: Any) -> str:
     ctx_dict = _to_dict(existing_ctx)
@@ -632,23 +863,38 @@ def _answer_general_question(user_prompt: str, existing_ctx: Any) -> str:
 
 
 # ── Shared processing logic ────────────────────────────────────────────────────
-def _process_financial_context(new_ctx: Any) -> tuple[str, list[str]]:
-    """Merge context, validate, format data and generate questions. Returns (data_text, questions)."""
+def _process_financial_context(new_ctx: Any) -> tuple[str, list[str], Any]:
+    """Merge context, validate, fetch benchmarks (if valid). Returns (data_text, questions, bench)."""
     parsed_ctx = _merge_contexts(st.session_state.financial_context, new_ctx)
     validation = validate_financial_context(parsed_ctx)
     st.session_state.financial_context = parsed_ctx
     st.session_state.validation_result = validation
     data_text = _format_extracted_data(parsed_ctx, validation)
     questions = _generate_questions_with_llm(parsed_ctx, validation)
-    return data_text, questions
+
+    bench = None
+    if getattr(validation, "is_valid", False):
+        try:
+            bench = fetch_benchmarks(parsed_ctx)
+        except Exception:
+            bench = None
+
+    return data_text, questions, bench
 
 
-def _render_financial_reply(data_text: str, questions: list[str]) -> str:
-    """Render extracted data + stream questions. Returns full reply string for session state."""
+def _render_financial_reply(data_text: str, questions: list[str], bench: Any = None, ctx: Any = None) -> str:
+    """Render extracted data + benchmark + stream questions. Returns full reply for session state."""
     full_reply_parts = []
     if data_text:
         st.markdown(data_text, unsafe_allow_html=True)
         full_reply_parts.append(data_text)
+
+    if bench is not None:
+        bench_text = _format_benchmark_result(bench, ctx)
+        if bench_text:
+            st.markdown(bench_text, unsafe_allow_html=True)
+            full_reply_parts.append(bench_text)
+
     if questions:
         st.divider()
         st.markdown("<div class='questions-label'>Questions</div>", unsafe_allow_html=True)
@@ -770,9 +1016,13 @@ with st.sidebar:
                 Path(tmp_path).unlink(missing_ok=True)
 
         if new_ctx is not None and _has_new_financial_data(new_ctx):
-            data_text, questions = _process_financial_context(new_ctx)
+            data_text, questions, bench = _process_financial_context(new_ctx)
             # Store reply without streaming (sidebar context)
             parts = [data_text] if data_text else []
+            if bench is not None:
+                bench_text = _format_benchmark_result(bench, st.session_state.financial_context)
+                if bench_text:
+                    parts.append(bench_text)
             if questions:
                 parts.append("Questions :\n" + "\n".join(f"- {q}" for q in questions))
             reply = "\n\n".join(parts) if parts else "Aucune donnée extraite du fichier."
@@ -850,8 +1100,8 @@ if prompt := st.chat_input("Décrivez votre situation financière..."):
 
         if _has_new_financial_data(new_ctx):
             with st.spinner("Génération des questions..."):
-                data_text, questions = _process_financial_context(new_ctx)
-            full_reply = _render_financial_reply(data_text, questions)
+                data_text, questions, bench = _process_financial_context(new_ctx)
+            full_reply = _render_financial_reply(data_text, questions, bench, st.session_state.financial_context)
             st.session_state.messages.append({"role": "assistant", "content": full_reply})
         else:
             with st.spinner("Réflexion..."):
