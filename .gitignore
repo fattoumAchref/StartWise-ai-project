@@ -1,0 +1,16 @@
+# Python / Django
+venv/
+__pycache__/
+*.pyc
+backend/db.sqlite3
+
+# Environnement (VITAL pour tes clés API)
+.env
+
+# Frontend / Node
+node_modules/
+frontend/node_modules/
+dist/
+build/
+.vscode/
+package-lock.json
