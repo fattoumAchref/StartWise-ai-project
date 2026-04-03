@@ -23,6 +23,7 @@ build/
 # misc
 .DS_Store
 *.pem
+backend/ideation/output/
 
 # debug
 npm-debug.log*

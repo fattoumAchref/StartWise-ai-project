@@ -3,31 +3,39 @@ import os
 import re
 
 from .a2a_client import A2AClient
-from .schemas import SessionState
+from .schemas import SessionState, SourceLink
 
 
 class AgentOrchestrator:
     def __init__(self) -> None:
         self.max_questions = int(os.getenv("MAX_IDEATION_QUESTIONS", "5"))
         self.use_mock = os.getenv("USE_A2A_MOCK", "false").lower() == "true"
+        self.use_a2a_streaming = os.getenv("A2A_USE_STREAMING", "false").lower() == "true"
 
         timeout = float(os.getenv("A2A_TIMEOUT_SECONDS", "90"))
         self.question_agent = A2AClient(
+            agent_name="QuestionAgent",
             endpoint=os.getenv("QUESTION_AGENT_URL", "http://localhost:8101"),
             timeout_seconds=timeout,
+            streaming_enabled=False,
         )
         self.research_agent = A2AClient(
+            agent_name="ResearchAgent",
             endpoint=os.getenv("RESEARCH_AGENT_URL", "http://localhost:8102"),
             timeout_seconds=timeout,
+            streaming_enabled=self.use_a2a_streaming,
         )
         self.formulator_agent = A2AClient(
+            agent_name="FormulatorAgent",
             endpoint=os.getenv("FORMULATOR_AGENT_URL", "http://localhost:8103"),
             timeout_seconds=timeout,
+            streaming_enabled=self.use_a2a_streaming,
         )
 
-    def generate_next_question(self, session: SessionState) -> tuple[str, list[str]]:
+    def generate_next_question(self, session: SessionState) -> tuple[str, list[str], list[SourceLink]]:
         if self.use_mock:
-            return self._mock_next_question(session)
+            question, keywords = self._mock_next_question(session)
+            return question, keywords, []
 
         history = self._format_history(session)
         refine_prompt = (
@@ -39,7 +47,10 @@ class AgentOrchestrator:
         )
 
         try:
-            refined_objective = self.question_agent.call_sync(refine_prompt)
+            refined_objective = self.question_agent.call_sync(
+                refine_prompt,
+                context={"session_id": session.session_id, "source": "refine_objective"},
+            )
         except Exception:
             refined_objective = session.description.strip()
 
@@ -65,11 +76,17 @@ class AgentOrchestrator:
         except Exception:
             # Fallback to sync if SSE is unavailable.
             try:
-                research_chunks = [self.research_agent.call_sync(research_prompt)]
+                research_chunks = [
+                    self.research_agent.call_sync(
+                        research_prompt,
+                        context={"session_id": session.session_id, "target_agent": "formulator_agent"},
+                    )
+                ]
             except Exception:
                 research_chunks = []
 
         research_notes = "\n".join(research_chunks).strip()
+        sources = self._extract_sources(research_notes)
 
         formulate_prompt = (
             "You are the Formulator Agent.\n"
@@ -110,7 +127,7 @@ class AgentOrchestrator:
 
         question = self._sanitize_question(question_text)
         keywords = self.generate_keywords(question, session)
-        return question, keywords
+        return question, keywords, sources
 
     def evaluate_answer(self, session: SessionState, question_index: int, answer: str) -> tuple[bool, str]:
         question = session.questions[question_index].question
@@ -129,7 +146,10 @@ class AgentOrchestrator:
             f"History:\n{history}\n"
         )
         try:
-            raw = self.question_agent.call_sync(prompt)
+            raw = self.question_agent.call_sync(
+                prompt,
+                context={"session_id": session.session_id, "source": "evaluate_answer"},
+            )
             parsed = self._safe_json(raw)
             if isinstance(parsed, dict) and "is_satisfactory" in parsed:
                 is_ok = bool(parsed.get("is_satisfactory"))
@@ -160,7 +180,10 @@ class AgentOrchestrator:
             f"Conversation history:\n{history}\n"
         )
         try:
-            return self.question_agent.call_sync(prompt).strip()
+            return self.question_agent.call_sync(
+                prompt,
+                context={"session_id": session.session_id, "source": "suggest_answer"},
+            ).strip()
         except Exception:
             return (
                 "We will use "
@@ -180,7 +203,7 @@ class AgentOrchestrator:
         try:
             raw = self.question_agent.call_sync(
                 prompt,
-                context={"session_id": session.session_id},
+                context={"session_id": session.session_id, "source": "generate_keywords"},
             )
             parsed = self._safe_json(raw)
             if isinstance(parsed, list):
@@ -204,9 +227,33 @@ class AgentOrchestrator:
             f"Q/A history:\n{history}\n"
         )
         try:
-            return self.question_agent.call_sync(prompt).strip()
+            return self.question_agent.call_sync(
+                prompt,
+                context={"session_id": session.session_id, "source": "generate_summary"},
+            ).strip()
         except Exception:
             return self._mock_summary(session)
+
+    def generate_image_prompt(self, business_idea: str, business_summary: str) -> str:
+        if self.use_mock:
+            return self._mock_image_prompt(business_idea)
+
+        prompt = (
+            "You are an art director creating prompts for business hero images.\n"
+            "Return one concise prompt only, under 80 words.\n"
+            "Make it realistic, modern, professional, and suitable as a website background.\n"
+            "Avoid logos, text overlays, UI mockups, watermarks, and overly futuristic imagery.\n\n"
+            f"Business idea:\n{business_idea}\n\n"
+            f"Business summary:\n{business_summary}\n"
+        )
+        try:
+            raw = self.question_agent.call_sync(prompt)
+            cleaned = self._sanitize_image_prompt(raw)
+            if cleaned:
+                return cleaned
+        except Exception:
+            pass
+        return self._mock_image_prompt(business_idea)
 
     def _mock_next_question(self, session: SessionState) -> tuple[str, list[str]]:
         question_bank = [
@@ -266,6 +313,12 @@ class AgentOrchestrator:
         )
         return "\n".join(lines)
 
+    def _mock_image_prompt(self, business_idea: str) -> str:
+        return (
+            f"professional scene representing {business_idea}, modern workspace, "
+            "warm natural lighting, subtle depth, realistic photography, wide hero composition"
+        )
+
     def _format_history(self, session: SessionState) -> str:
         if not session.questions:
             return "(No previous questions yet.)"
@@ -279,11 +332,42 @@ class AgentOrchestrator:
     def _sanitize_question(self, value: str) -> str:
         text = re.sub(r"\s+", " ", (value or "").strip())
         text = text.strip('"').strip("'")
+        question_candidates = re.findall(r"([^?]{20,}\?)", text)
+        if question_candidates:
+            text = question_candidates[-1].strip()
         if not text:
             return "What is the most critical assumption you need to validate first, and how will you test it this week?"
         if not text.endswith("?"):
             text += "?"
         return text
+
+    def _extract_sources(self, research_notes: str) -> list[SourceLink]:
+        items: list[SourceLink] = []
+        seen_urls: set[str] = set()
+        for line in research_notes.splitlines():
+            raw = line.strip()
+            if not raw:
+                continue
+            match = re.search(r"\[Source\]\((https?://[^\)]+)\)", raw)
+            if not match:
+                continue
+            url = match.group(1).strip()
+            if not url or url in seen_urls:
+                continue
+            title = re.sub(r"^\-\s*", "", raw)
+            title = re.sub(r"\s*\[Source\]\([^\)]+\)", "", title).strip()
+            title = title.strip("*").strip()
+            items.append(SourceLink(title=title[:140], url=url))
+            seen_urls.add(url)
+            if len(items) >= 3:
+                break
+        return items
+
+    def _sanitize_image_prompt(self, value: str) -> str:
+        text = re.sub(r"\s+", " ", (value or "").strip())
+        text = text.replace("```", "").strip('"').strip("'")
+        text = re.sub(r"^[\-\*\d\.\)\s]+", "", text)
+        return text[:240].strip()
 
     def _safe_json(self, value: str):
         if not value:

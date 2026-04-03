@@ -9,7 +9,7 @@ Startwise guides founders from idea to clarity by combining:
 - A modern frontend experience (`Next.js` + `TypeScript`)
 - A Django API backend for session/state orchestration
 - Multi-agent reasoning with Google ADK + A2A
-- Gemini-powered iterative questioning and refinement
+- OpenAI-powered iterative questioning and refinement with Firecrawl-backed research
 
 The core flow is sequential and adaptive: each next question is generated based on the previous user answer.
 
@@ -22,7 +22,7 @@ The core flow is sequential and adaptive: each next question is generated based 
 - Frontend: `Next.js`, `React`, `TypeScript`, `Tailwind`, `shadcn/ui`
 - Backend: `Django`, `Python`
 - Agent Runtime: `google-adk`, `a2a-sdk`, `uvicorn`
-- LLM Provider: `Gemini` (AI Studio API key mode)
+- LLM Provider: `OpenRouter` via LiteLLM (`meta-llama/llama-3.3-70b-instruct:free`)
 
 ## Repository Structure
 
@@ -65,8 +65,10 @@ cp .env.example .env
 
 Required env values:
 
-- `GOOGLE_GENAI_USE_VERTEXAI=false`
-- `GOOGLE_API_KEY=<your_gemini_api_key>`
+- `OPENROUTER_API_KEY=<your_openrouter_api_key>`
+- `QUESTION_AGENT_MODEL=meta-llama/llama-3.3-70b-instruct:free`
+- `RESEARCH_AGENT_MODEL=meta-llama/llama-3.3-70b-instruct:free`
+- `FORMULATOR_AGENT_MODEL=meta-llama/llama-3.3-70b-instruct:free`
 
 ### 2. Run backend services
 
@@ -110,4 +112,5 @@ Main endpoints:
 ## Notes
 
 - If agent services are unavailable, set `USE_A2A_MOCK=true` in `backend/.env` for local fallback.
+- The A2A architecture is unchanged. The text agents now run through ADK's LiteLLM connector against OpenRouter instead of Gemini.
 - For full backend details, see [`backend/README.md`](backend/README.md).

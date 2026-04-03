@@ -28,6 +28,10 @@ export interface QuestionData {
   question: string;
   response: string | null;
   keywords: string[] | null;
+  sources?: Array<{
+    title: string;
+    url: string;
+  }> | null;
   is_satisfactory: boolean;
   satisfaction_reason: string | null;
 }
@@ -37,10 +41,27 @@ export interface SessionResponse {
   description: string;
   questions: QuestionData[];
   summary?: string;
+  background_image?: {
+    image_url?: string | null;
+    business_idea?: string | null;
+    generated_at?: string | null;
+    status?: string | null;
+    prompt?: string | null;
+    filename?: string | null;
+    local_path?: string | null;
+    file_size?: number | null;
+    serve_url?: string | null;
+    content_type?: string | null;
+    error?: string | null;
+  } | null;
 }
 
 export interface AnswerResponse {
   question: string | null;
+  question_sources?: Array<{
+    title: string;
+    url: string;
+  }> | null;
   has_more_questions: boolean;
   question_satisfaction: {
     is_satisfactory: boolean;
@@ -58,6 +79,7 @@ export interface SuggestAnswerResponse {
 
 export interface SummaryResponse {
   summary: string;
+  background_image?: SessionResponse['background_image'];
 }
 
 // API Configuration

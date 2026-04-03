@@ -60,6 +60,10 @@ export interface DynamicQuestion {
   question: string;
   answer?: string;
   keywords?: string[];
+  sources?: Array<{
+    title: string;
+    url: string;
+  }>;
   suggestedAnswer?: string;
   isLoadingSuggestion?: boolean;
   isLoadingKeywords?: boolean;
@@ -131,6 +135,7 @@ export function useIdeation({
       question: q.question,
       answer: q.response || undefined,
       keywords: q.keywords || undefined,
+      sources: q.sources || undefined,
       isSatisfactory: q.is_satisfactory,
       satisfactionReason: q.satisfaction_reason || undefined,
       type: 'textarea' as const // Default type for AI-generated questions
@@ -359,6 +364,7 @@ export function useIdeation({
         const newQuestion: DynamicQuestion = {
           index: questions.length,
           question: response.question,
+          sources: response.question_sources || undefined,
           type: 'textarea'
         };
         

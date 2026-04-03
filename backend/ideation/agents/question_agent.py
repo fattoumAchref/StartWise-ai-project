@@ -2,6 +2,7 @@ import os
 
 import uvicorn
 from google.adk.agents.llm_agent import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 
 try:
     from google.adk.a2a.utils.agent_to_a2a import to_a2a
@@ -10,18 +11,20 @@ except ModuleNotFoundError as exc:
         "Missing A2A dependency. Install with: pip install \"a2a-sdk[http-server]\""
     ) from exc
 
-from .helpers import setup_env
+from .helpers import normalize_litellm_model, setup_env
 
 setup_env()
 
 PORT = int(os.getenv("QUESTION_AGENT_PORT", "8101"))
 HOST = os.getenv("AGENT_HOST", "0.0.0.0")
-MODEL = os.getenv("QUESTION_AGENT_MODEL", "gemini-2.5-pro")
+MODEL = normalize_litellm_model(
+    os.getenv("QUESTION_AGENT_MODEL", "gpt-4o")
+)
 
 
 def main() -> None:
     root_agent = LlmAgent(
-        model=MODEL,
+        model=LiteLlm(model=MODEL),
         name="QuestionAgent",
         description=(
             "Refines startup idea context, evaluates answer quality, "

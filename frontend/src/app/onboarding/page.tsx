@@ -34,8 +34,21 @@ interface Question {
   type?: "text" | "textarea" | "yesno" | "number" | "date" | "location";
   answer?: string;
   keywords?: string[];
+  sources?: Array<{
+    title: string;
+    url: string;
+  }>;
   isSatisfactory?: boolean;
   satisfactionReason?: string;
+}
+
+function formatQuestionForDisplay(value: string): string {
+  const text = (value || "").replace(/\s+/g, " ").trim();
+  const questionCandidates = text.match(/[^?]{20,}\?/g);
+  if (questionCandidates && questionCandidates.length > 0) {
+    return questionCandidates[questionCandidates.length - 1].trim();
+  }
+  return text;
 }
 
 export default function OnboardingPage() {
@@ -775,7 +788,25 @@ export default function OnboardingPage() {
                             )}
                           </div>
                           {/* Question text on bottom */}
-                          <span className="font-medium text-surface text-left text-xl">{question.question}</span>
+                          <span className="font-medium text-surface text-left text-xl">
+                            {formatQuestionForDisplay(question.question)}
+                          </span>
+                          {question.sources && question.sources.length > 0 && (
+                            <div className="flex flex-wrap gap-2 pt-1">
+                              {question.sources.map((source) => (
+                                <a
+                                  key={source.url}
+                                  href={source.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="inline-flex max-w-full items-center rounded-full border border-surface-accent/20 bg-surface-accent/5 px-3 py-1 text-xs text-surface-accent hover:bg-surface-accent/10"
+                                  onClick={(event) => event.stopPropagation()}
+                                >
+                                  {source.title}
+                                </a>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </AccordionTrigger>
                       <AccordionContent className="px-6 pb-6">
@@ -800,6 +831,7 @@ export default function OnboardingPage() {
                                   type: question.type || "textarea",
                                   answer: question.answer,
                                   keywords: question.keywords,
+                                  sources: question.sources,
                                   isSatisfactory: question.isSatisfactory,
                                   satisfactionReason: question.satisfactionReason
                                 })}

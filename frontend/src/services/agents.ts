@@ -566,7 +566,21 @@ export async function generateBusinessImage(request: ImageGenerationRequest): Pr
   });
   
   if (!response.ok) {
-    throw new Error('Failed to generate business image');
+    let message = 'Failed to generate business image';
+    try {
+      const payload = await response.json();
+      if (payload?.detail) {
+        message = payload.detail;
+      } else if (payload?.error) {
+        message = payload.error;
+      }
+    } catch {
+      const raw = await response.text();
+      if (raw) {
+        message = raw;
+      }
+    }
+    throw new Error(message);
   }
   
   return response.json();
