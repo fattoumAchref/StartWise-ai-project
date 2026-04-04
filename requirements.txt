@@ -14,3 +14,5 @@ streamlit
 openpyxl
 pymupdf
 plotly
+fpdf2
+kaleido
