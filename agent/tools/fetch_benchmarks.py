@@ -319,9 +319,38 @@ def fetch_benchmarks(ctx: FinancialContext) -> BenchmarkResult:
         f"ev_multiple={agg['ev_revenue_multiple']}"
     )
 
+    # Estimate TND-denominated CAC/LTV from scraped ratios + ctx pricing data.
+    # Method: dimensionless ratios (payback months, LTV/CAC) × prix_client removes
+    # the USD→TND conversion problem.
+    # ⚠ LIMITATION: assumes benchmark was for a pricing tier similar to this startup.
+    # If the benchmark used enterprise ($500/mo) pricing but this startup charges
+    # SMB (50 DT/mo), the ratio collapses by ~10× in absolute terms. Use as order-
+    # of-magnitude reference only, not as precise targets.
+    cac_tnd = None
+    ltv_tnd = None
+    cac_ltv_estimated = False
+    if ctx.prix_client and ctx.prix_client > 0:
+        _payback = agg.get("cac_payback_months")
+        _ratio   = agg.get("ltv_cac_ratio")
+        _churn   = ctx.churn_rate
+        if _payback and _payback > 0:
+            cac_tnd = round(ctx.prix_client * _payback, 0)
+            cac_ltv_estimated = True
+        if _ratio and _ratio > 0 and cac_tnd:
+            ltv_tnd = round(cac_tnd * _ratio, 0)
+        elif _churn and _churn > 0:
+            ltv_tnd = round(ctx.prix_client / _churn, 0)
+
+    # Append estimation disclaimer to source label when currency conversion was applied
+    if cac_ltv_estimated:
+        source_label += (
+            " · CAC/LTV estimés en DT (ratio dimensionless × prix_client — "
+            "valable uniquement si segment de prix similaire au benchmark)"
+        )
+
     return BenchmarkResult(
-        cac_median=None,          # valeur absolue non disponible dans les benchmarks globaux
-        ltv_median=None,          # idem — dépend de la devise
+        cac_median=cac_tnd,
+        ltv_median=ltv_tnd,
         churn_median=agg["churn_rate_monthly"],
         gross_margin_median=agg["gross_margin"],
         valorisation_multiple=agg["ev_revenue_multiple"],

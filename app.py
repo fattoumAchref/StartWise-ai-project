@@ -387,8 +387,20 @@ def _merge_contexts(existing: Any, new: Any) -> Any:
     # Toujours fusionner champ par champ — jamais remplacer l'ancien contexte entier
     merged = dict(existing_dict)
     for key, new_val in new_dict.items():
+        if key == "revenue_history":
+            continue  # handled separately below
         if new_val is not None and new_val not in ([], ""):
             merged[key] = new_val
+
+    # Revenue history: cumulative merge — deduplicate by date, newer data wins
+    def _rh_date(p):
+        return p.get("date") if isinstance(p, dict) else getattr(p, "date", "")
+
+    existing_history = existing_dict.get("revenue_history") or []
+    new_history      = new_dict.get("revenue_history") or []
+    combined         = {_rh_date(p): p for p in existing_history if _rh_date(p)}
+    combined.update({_rh_date(p): p for p in new_history if _rh_date(p)})
+    merged["revenue_history"] = sorted(combined.values(), key=_rh_date)
 
     # Pour les champs de qualité, garder le meilleur niveau (REAL > ESTIMATED > ASSUMPTION > MISSING)
     # Cela garantit que le data_quality_score est monotone croissant au fil des messages
@@ -1074,7 +1086,7 @@ def _format_benchmark_result(bench: Any, ctx: Any, analysis: dict = None) -> str
     return "\n".join(lines)
 
 
-def _render_benchmark_charts(bench: Any, ctx: Any, analysis: dict = None) -> None:
+def _render_benchmark_charts(bench: Any, ctx: Any, analysis: dict = None, key_suffix: str = "") -> None:
     """Renders Plotly comparison charts: founder vs sector medians."""
     try:
         import plotly.graph_objects as go
@@ -1140,7 +1152,7 @@ def _render_benchmark_charts(bench: Any, ctx: Any, analysis: dict = None) -> Non
             legend=dict(orientation="h", y=-0.28, x=0),
             yaxis=dict(title="%", gridcolor="#f0f0f0"),
         )
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(fig1, use_container_width=True, key=f"bench_chart1{key_suffix}")
 
     # ── Graphique 2 : ratios (LTV/CAC, CAC payback) ───────────────────────────
     ratio_labels, founder_r, sector_r = [], [], []
@@ -1183,7 +1195,7 @@ def _render_benchmark_charts(bench: Any, ctx: Any, analysis: dict = None) -> Non
             legend=dict(orientation="h", y=-0.28, x=0),
             yaxis=dict(title="ratio", gridcolor="#f0f0f0"),
         )
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, use_container_width=True, key=f"bench_chart2{key_suffix}")
 
     # ── Graphique 3 : gauge Gross Margin ─────────────────────────────────────
     if founder_gm_pct is not None:
@@ -1212,7 +1224,7 @@ def _render_benchmark_charts(bench: Any, ctx: Any, analysis: dict = None) -> Non
         ))
         fig3.update_layout(height=260, margin=dict(l=20, r=20, t=50, b=10),
                            paper_bgcolor="#ffffff")
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, use_container_width=True, key=f"bench_chart3{key_suffix}")
 
 
 # ── What-if simulation ────────────────────────────────────────────────────────
@@ -1595,10 +1607,122 @@ def _process_financial_context(new_ctx: Any) -> tuple[str, list[str], Any]:
         docs  = list(getattr(bench, "documents_raw", []) or [])
         st.session_state.last_bench_extra = _parse_docs_extra(docs)
 
+        # Wire scenario_comparator now that we have both kpis + benchmarks
+        _kpis      = analysis.get("kpis")
+        _scenarios = analysis.get("scenarios")
+        if _kpis and _scenarios:
+            try:
+                from calcul_tools.scenario_comparator import scenario_comparator as _sc
+                analysis["comparator"] = _sc(parsed_ctx, _kpis, _scenarios, bench)
+                st.session_state.analysis = analysis
+            except Exception:
+                pass
+
     return data_text, questions, bench
 
 
-def _render_analysis_charts(ctx: Any, analysis: dict) -> None:
+def _render_seasonality_section(analysis: dict, key_suffix: str = "") -> None:
+    """Render the seasonality & trend forecast section."""
+    try:
+        import plotly.graph_objects as go
+    except ImportError:
+        st.caption("_Installez plotly pour les visualisations._")
+        return
+
+    seas = analysis.get("seasonality")
+    if seas is None:
+        st.info("Données de saisonnalité non disponibles pour cette analyse.")
+        return
+
+    # ── Reasoning banner ──────────────────────────────────────────────────────
+    level_colors = {
+        "HIGH":     ("#e8f5e9", "#2e7d32", "Confiance élevée"),
+        "MEDIUM":   ("#fff8e1", "#f57f17", "Confiance moyenne"),
+        "LOW":      ("#fff3e0", "#e65100", "Confiance faible"),
+        "VERY_LOW": ("#fce4ec", "#c62828", "Confiance très faible"),
+        "NONE":     ("#f3e5f5", "#6a1b9a", "Estimation sectorielle"),
+    }
+    bg, fg, label = level_colors.get(
+        getattr(seas, "confidence_level", "NONE"),
+        ("#f5f5f5", "#333", "Inconnu"),
+    )
+    st.markdown(
+        f"<div style='background:{bg};border-left:4px solid {fg};"
+        f"padding:10px 14px;border-radius:4px;margin-bottom:12px'>"
+        f"<span style='color:{fg};font-weight:700;font-size:0.85rem'>{label}</span><br>"
+        f"<span style='color:#333;font-size:0.82rem'>{getattr(seas, 'reasoning', '')}</span>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
+
+    # ── Forecast KPI row ───────────────────────────────────────────────────────
+    cols = st.columns(4)
+    metrics = [
+        ("Tendance",    getattr(seas, "trend_direction", "—"),            ""),
+        ("Forecast 3m", f"{getattr(seas, 'forecast_3m', 0):,.0f} DT",    ""),
+        ("Forecast 6m", f"{getattr(seas, 'forecast_6m', 0):,.0f} DT",    ""),
+        ("Forecast 12m",f"{getattr(seas, 'forecast_12m', 0):,.0f} DT",   ""),
+    ]
+    for col, (lbl, val, delta) in zip(cols, metrics):
+        col.metric(lbl, val, delta or None)
+
+    # ── Confidence interval for 12m forecast ──────────────────────────────────
+    lower = getattr(seas, "forecast_12m_lower", None)
+    upper = getattr(seas, "forecast_12m_upper", None)
+    if lower is not None and upper is not None:
+        st.caption(
+            f"Intervalle de confiance 12m : "
+            f"**{lower:,.0f} DT** — **{upper:,.0f} DT** "
+            f"(poids données client : {getattr(seas, 'blend_weight_client', 1.0):.0%})"
+        )
+
+    # ── Sector seasonality index chart ────────────────────────────────────────
+    sector_idx = getattr(seas, "sector_index", [])
+    if sector_idx and len(sector_idx) == 12:
+        month_names = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
+                       "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"]
+        colors = [
+            "#4caf50" if v >= 1.05 else "#f44336" if v <= 0.88 else "#2196f3"
+            for v in sector_idx
+        ]
+        fig = go.Figure(go.Bar(
+            x=month_names, y=sector_idx,
+            marker_color=colors,
+            text=[f"{v:.2f}x" for v in sector_idx],
+            textposition="outside",
+        ))
+        fig.update_layout(
+            title="Indice de saisonnalité sectorielle (1.0 = moyenne)",
+            height=280,
+            margin=dict(l=10, r=10, t=40, b=10),
+            plot_bgcolor="#fafafa", paper_bgcolor="#ffffff",
+            yaxis=dict(range=[0.5, max(sector_idx) * 1.15], gridcolor="#f0f0f0"),
+            showlegend=False,
+        )
+        fig.add_hline(y=1.0, line_dash="dash", line_color="#aaa", annotation_text="moyenne")
+        st.plotly_chart(fig, use_container_width=True, key=f"seas_chart{key_suffix}")
+
+    # ── Anomalies + market context ─────────────────────────────────────────────
+    _MONTH_NAMES_FR = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun",
+                       "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"]
+    anomalies = getattr(seas, "anomaly_months", [])
+    if anomalies:
+        anom_labels = [_MONTH_NAMES_FR[m - 1] for m in anomalies if 1 <= m <= 12]
+        st.warning(
+            f"**Anomalies détectées** en {', '.join(anom_labels)} : "
+            "vos revenus s'écartent significativement du schéma sectoriel."
+        )
+
+    mctx = getattr(seas, "market_context", "")
+    if mctx:
+        st.caption(f"**Contexte marché** : {mctx}")
+
+    src_note = f"Signal externe : {getattr(seas, 'blend_weight_client', 1.0):.0%} données client · " \
+               f"{1 - getattr(seas, 'blend_weight_client', 1.0):.0%} benchmarks sectoriels"
+    st.caption(src_note)
+
+
+def _render_analysis_charts(ctx: Any, analysis: dict, key_suffix: str = "") -> None:
     """
     Affiche les visualisations financières quand l'analyse est complète.
     2 graphiques côte à côte :
@@ -1668,7 +1792,7 @@ def _render_analysis_charts(ctx: Any, analysis: dict) -> None:
         fig_cash.update_layout(
             title=dict(text="Trésorerie projetée (24 mois)", font=dict(size=13)),
             yaxis=dict(title="Cash (DT)", gridcolor="#f0f0f0"), **_layout)
-        st.plotly_chart(fig_cash, use_container_width=True)
+        st.plotly_chart(fig_cash, use_container_width=True, key=f"analysis_cash{key_suffix}")
 
     with col2:
         fig_rev = go.Figure()
@@ -1685,7 +1809,7 @@ def _render_analysis_charts(ctx: Any, analysis: dict) -> None:
         fig_rev.update_layout(
             title=dict(text="Revenus projetés (24 mois)", font=dict(size=13)),
             yaxis=dict(title="Revenue (DT)", gridcolor="#f0f0f0"), **_layout)
-        st.plotly_chart(fig_rev, use_container_width=True)
+        st.plotly_chart(fig_rev, use_container_width=True, key=f"analysis_rev{key_suffix}")
 
 
 def _render_pdf_download(ctx: Any, analysis: dict, bench: Any) -> None:
@@ -1725,7 +1849,7 @@ def _render_pdf_download(ctx: Any, analysis: dict, bench: Any) -> None:
             st.caption(f"_PDF non disponible : {exc}_")
 
 
-def _render_action_buttons(ctx: Any, analysis: dict, bench: Any) -> None:
+def _render_action_buttons(ctx: Any, analysis: dict, bench: Any, key_suffix: str = "") -> None:
     """
     Affiche les boutons d'action proposés après les KPIs.
     Chaque bouton révèle une section supplémentaire (graphiques / benchmarks / PDF).
@@ -1744,12 +1868,12 @@ def _render_action_buttons(ctx: Any, analysis: dict, bench: Any) -> None:
         unsafe_allow_html=True,
     )
 
-    btn_cols = st.columns(3)
+    btn_cols = st.columns(4)
     with btn_cols[0]:
         if has_charts:
             active = "charts" in st.session_state.shown_sections
             label  = "📈 Graphiques ✓" if active else "📈 Graphiques"
-            if st.button(label, key="action_charts", use_container_width=True):
+            if st.button(label, key=f"action_charts{key_suffix}", use_container_width=True):
                 s = set(st.session_state.shown_sections)
                 s.discard("charts") if active else s.add("charts")
                 st.session_state.shown_sections = s
@@ -1758,14 +1882,24 @@ def _render_action_buttons(ctx: Any, analysis: dict, bench: Any) -> None:
         if has_bench:
             active = "bench" in st.session_state.shown_sections
             label  = "📊 Benchmarks ✓" if active else "📊 Benchmarks"
-            if st.button(label, key="action_bench", use_container_width=True):
+            if st.button(label, key=f"action_bench{key_suffix}", use_container_width=True):
                 s = set(st.session_state.shown_sections)
                 s.discard("bench") if active else s.add("bench")
                 st.session_state.shown_sections = s
                 st.rerun()
     with btn_cols[2]:
+        has_seas = analysis.get("seasonality") is not None
+        if has_seas:
+            active = "seasonality" in st.session_state.shown_sections
+            label  = "📅 Saisonnalité ✓" if active else "📅 Saisonnalité"
+            if st.button(label, key=f"action_seasonality{key_suffix}", use_container_width=True):
+                s = set(st.session_state.shown_sections)
+                s.discard("seasonality") if active else s.add("seasonality")
+                st.session_state.shown_sections = s
+                st.rerun()
+    with btn_cols[3]:
         if has_pdf:
-            if st.button("📄 Rapport PDF", key="action_pdf", use_container_width=True):
+            if st.button("📄 Rapport PDF", key=f"action_pdf{key_suffix}", use_container_width=True):
                 s = set(st.session_state.shown_sections)
                 s.add("pdf")
                 st.session_state.shown_sections = s
@@ -1774,14 +1908,18 @@ def _render_action_buttons(ctx: Any, analysis: dict, bench: Any) -> None:
     # ── Sections révélées ─────────────────────────────────────────────────────
     if "charts" in st.session_state.shown_sections and has_charts:
         st.divider()
-        _render_analysis_charts(ctx, analysis)
+        _render_analysis_charts(ctx, analysis, key_suffix=key_suffix)
 
     if "bench" in st.session_state.shown_sections and has_bench:
         st.divider()
         bench_text = _format_benchmark_result(bench, ctx, analysis)
         if bench_text:
             st.markdown(bench_text, unsafe_allow_html=True)
-        _render_benchmark_charts(bench, ctx, analysis)
+        _render_benchmark_charts(bench, ctx, analysis, key_suffix=key_suffix)
+
+    if "seasonality" in st.session_state.shown_sections:
+        st.divider()
+        _render_seasonality_section(analysis, key_suffix=key_suffix)
 
     if "pdf" in st.session_state.shown_sections and has_pdf:
         _render_pdf_download(ctx, analysis, bench)
@@ -1809,7 +1947,7 @@ def _render_financial_reply(data_text: str, questions: list[str], bench: Any = N
     # Proposer les actions (graphiques / benchmarks / PDF)
     _effective_ctx   = ctx or st.session_state.get("financial_context")
     _effective_bench = bench or st.session_state.pending_bench
-    _render_action_buttons(_effective_ctx, analysis, _effective_bench)
+    _render_action_buttons(_effective_ctx, analysis, _effective_bench, key_suffix="_main")
 
     if questions:
         st.divider()
@@ -2078,7 +2216,7 @@ _pa_ctx      = st.session_state.financial_context
 _pa_analysis = st.session_state.get("analysis", {})
 _pa_bench    = st.session_state.pending_bench
 if _pa_ctx is not None and (_pa_analysis or _pa_bench):
-    _render_action_buttons(_pa_ctx, _pa_analysis, _pa_bench)
+    _render_action_buttons(_pa_ctx, _pa_analysis, _pa_bench, key_suffix="_sidebar")
 
 # ── Bouton What-if dans la zone prompt (CSS fixed bottom) ─────────────────────
 _wi_active = st.session_state.whatif_mode

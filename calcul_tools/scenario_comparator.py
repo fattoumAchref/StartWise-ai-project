@@ -1,13 +1,16 @@
 # tools/scenario_comparator.py— Comparaison scénarios vs benchmarks Chroma
 # Dépend de : scenario_projection + benchmarks Chroma
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 from models.data_models import (
-    FinancialContext, KPIResult, BenchmarkResult, Phase
+    FinancialContext, KPIResult, BenchmarkResult,
 )
 from calcul_tools.scenario_projection import ScenarioProjectionResult
 
+# TND/USD approximate exchange rate — used to convert USD benchmark defaults to local currency.
+# Update annually. Source: Banque Centrale de Tunisie (BCT) average.
+_TND_PER_USD: float = 3.10
 
 # ─────────────────────────────────────────
 # MODÈLE DE SORTIE
@@ -115,8 +118,7 @@ def scenario_comparator(
     scenario_rec = _recommend_scenario(scenarios, score)
 
     # ── Résumé ───────────────────────────────────────────────
-    resume = _build_resume(score, points_forts, points_faibles,
-                           scenarios, scenario_rec)
+    resume = _build_resume(score, points_forts, points_faibles, scenario_rec)
 
     return ScenarioComparatorResult(
         comparaisons        = comparaisons,
@@ -159,13 +161,10 @@ def _compare_kpi(
 
     if abs(ecart_pct) <= tolerance:
         statut = "DANS_LA_NORME"
-        emoji  = "→"
     elif lower_is_better:
         statut = "AU_DESSUS" if ecart_pct < 0 else "EN_DESSOUS"
-        emoji  = "✓" if statut == "AU_DESSUS" else "✗"
     else:
         statut = "AU_DESSUS" if ecart_pct > 0 else "EN_DESSOUS"
-        emoji  = "✓" if statut == "AU_DESSUS" else "✗"
 
     direction = "mieux" if statut == "AU_DESSUS" else \
                 "moins bien" if statut == "EN_DESSOUS" else "dans la norme"
@@ -233,7 +232,6 @@ def _build_resume(
     score: float,
     points_forts: list,
     points_faibles: list,
-    scenarios: ScenarioProjectionResult,
     scenario_rec: str,
 ) -> str:
     if score >= 0.7:
@@ -254,36 +252,52 @@ def _build_resume(
 
 
 def _default_benchmarks(secteur: str) -> BenchmarkResult:
-    """Benchmarks par défaut selon le secteur — utilisés si Chroma vide."""
+    """Benchmarks par défaut selon le secteur — valeurs converties en TND (×3.10)."""
     secteur = (secteur or "default").lower()
+    r = _TND_PER_USD
 
     benchmarks = {
         "saas": BenchmarkResult(
-            cac_median=300, ltv_median=1200, churn_median=0.05,
+            cac_median=round(300 * r), ltv_median=round(1200 * r), churn_median=0.05,
             gross_margin_median=70.0, valorisation_multiple=6.0,
-            source="SaaStr benchmarks 2024"
+            source="SaaStr benchmarks 2024 (converti en TND)"
         ),
         "food_delivery": BenchmarkResult(
-            cac_median=150, ltv_median=450, churn_median=0.08,
+            cac_median=round(150 * r), ltv_median=round(450 * r), churn_median=0.08,
             gross_margin_median=25.0, valorisation_multiple=2.5,
-            source="Food delivery MENA benchmarks 2024"
+            source="Food delivery MENA benchmarks 2024 (converti en TND)"
         ),
         "marketplace": BenchmarkResult(
-            cac_median=200, ltv_median=800, churn_median=0.06,
+            cac_median=round(200 * r), ltv_median=round(800 * r), churn_median=0.06,
             gross_margin_median=40.0, valorisation_multiple=4.0,
-            source="Marketplace benchmarks 2024"
+            source="Marketplace benchmarks 2024 (converti en TND)"
         ),
         "ecommerce": BenchmarkResult(
-            cac_median=180, ltv_median=540, churn_median=0.07,
+            cac_median=round(180 * r), ltv_median=round(540 * r), churn_median=0.07,
             gross_margin_median=35.0, valorisation_multiple=2.0,
-            source="E-commerce benchmarks 2024"
+            source="E-commerce benchmarks 2024 (converti en TND)"
+        ),
+        "fintech": BenchmarkResult(
+            cac_median=round(350 * r), ltv_median=round(1750 * r), churn_median=0.04,
+            gross_margin_median=55.0, valorisation_multiple=7.0,
+            source="Fintech benchmarks 2024 (converti en TND)"
+        ),
+        "edtech": BenchmarkResult(
+            cac_median=round(120 * r), ltv_median=round(480 * r), churn_median=0.06,
+            gross_margin_median=60.0, valorisation_multiple=4.5,
+            source="EdTech benchmarks 2024 (converti en TND)"
+        ),
+        "hrtech": BenchmarkResult(
+            cac_median=round(280 * r), ltv_median=round(1120 * r), churn_median=0.05,
+            gross_margin_median=55.0, valorisation_multiple=5.0,
+            source="HRTech benchmarks 2024 (converti en TND)"
         ),
     }
 
     default = BenchmarkResult(
-        cac_median=250, ltv_median=750, churn_median=0.06,
+        cac_median=round(250 * r), ltv_median=round(750 * r), churn_median=0.06,
         gross_margin_median=45.0, valorisation_multiple=3.0,
-        source="Benchmarks généraux startups early-stage 2024"
+        source="Benchmarks généraux startups early-stage 2024 (converti en TND)"
     )
 
     return benchmarks.get(secteur, default)

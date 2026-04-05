@@ -18,7 +18,11 @@ def route_by_phase(context: FinancialContext) -> Phase:
     """
     intent      = context.intent_fundraising or False
     revenue     = context.monthly_revenue or 0.0
-    months      = context.months_data or 0
+    # Use the richer of months_data (declared) vs len(revenue_history) (extracted)
+    months      = max(
+        context.months_data or 0,
+        len(getattr(context, "revenue_history", []) or []),
+    )
     has_revenue = revenue > 0
     has_history = months >= 6
 

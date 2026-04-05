@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
-
+#oomla 
 @dataclass
 class MarketData:
     metric: str

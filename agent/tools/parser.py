@@ -35,6 +35,7 @@ def _empty_context() -> FinancialContext:
         cash_quality=DataQuality.MISSING,
         revenue_quality=DataQuality.MISSING,
         hypotheses=[],
+        revenue_history=[],
     )
 
 
@@ -139,12 +140,18 @@ def _build_extraction_prompt() -> str:
         "  \"pays\": string|null,\n"
         "  \"intent_fundraising\": boolean,\n"
         "  \"hypotheses\": string[],\n"
+        "  \"revenue_history\": [{\"date\": \"YYYY-MM-DD\", \"revenue\": number}],\n"
         "  \"data_quality\": {\n"
         "    \"burn\": \"REAL|ESTIMATED|ASSUMPTION|MISSING\",\n"
         "    \"cash\": \"REAL|ESTIMATED|ASSUMPTION|MISSING\",\n"
         "    \"revenue\": \"REAL|ESTIMATED|ASSUMPTION|MISSING\"\n"
         "  }\n"
         "}\n\n"
+        "Revenue history rules:\n"
+        "- If the founder mentions revenues for several months, extract each as a {date, revenue} pair.\n"
+        "- Use YYYY-MM-01 format for dates. If only the month name is given, assume current year.\n"
+        "- Example: 'janvier 1200, février 1450, mars 1800' → [{\"date\":\"2025-01-01\",\"revenue\":1200},{\"date\":\"2025-02-01\",\"revenue\":1450},{\"date\":\"2025-03-01\",\"revenue\":1800}]\n"
+        "- If no monthly history is mentioned, return an empty array [].\n\n"
         "Data quality rules:\n"
         "- REAL: founder cites a precise source like bank statement, Stripe, invoice, or says 'exactement'\n"
         "- ESTIMATED: founder uses words like environ, autour de, approximately, about, a peu pres\n"
@@ -311,6 +318,28 @@ def _extract_from_tabular_file(path: Path) -> dict[str, Any]:
     extracted["secteur"] = row[secteur_col] if secteur_col else None
     extracted["pays"] = row[pays_col] if pays_col and row[pays_col] else "TN"
 
+    # Extract revenue history if the file has date + revenue columns (each row = one month)
+    date_col    = _find_column(df_non_empty, ["date", "mois", "month", "periode"])
+    revenue_col = _find_column(df_non_empty, ["monthly_revenue", "revenue", "revenus", "ca", "mrr"])
+    if date_col and revenue_col and len(df_non_empty) >= 2:
+        history_items = []
+        for _, row in df_non_empty.iterrows():
+            try:
+                import pandas as _pd
+                raw_date = row[date_col]
+                raw_rev  = float(row[revenue_col])
+                if _pd.isna(raw_date) or raw_rev <= 0:
+                    continue
+                parsed_date = _pd.to_datetime(raw_date)
+                history_items.append({
+                    "date":    parsed_date.strftime("%Y-%m-01"),
+                    "revenue": raw_rev,
+                })
+            except Exception:
+                continue
+        if len(history_items) >= 2:
+            extracted["revenue_history"] = history_items
+
     return extracted
 
 
@@ -375,6 +404,19 @@ def _build_context(extracted: dict[str, Any], source_text: str = "") -> Financia
         hypotheses = []
     hypotheses = [str(h).strip() for h in hypotheses if str(h).strip()]
 
+    from models.data_models import RevenueDataPoint as _RDP
+    raw_history = extracted.get("revenue_history") or []
+    revenue_history = []
+    for _item in raw_history:
+        if isinstance(_item, dict):
+            try:
+                _date = str(_item.get("date", "")).strip()
+                _rev  = float(_item.get("revenue", 0))
+                if _date and _rev > 0:
+                    revenue_history.append(_RDP(date=_date, revenue=_rev))
+            except Exception:
+                pass
+
     secteur = extracted.get("secteur")
     pays = extracted.get("pays") or "TN"
 
@@ -397,6 +439,7 @@ def _build_context(extracted: dict[str, Any], source_text: str = "") -> Financia
         cash_quality=cash_quality,
         revenue_quality=revenue_quality,
         hypotheses=hypotheses,
+        revenue_history=revenue_history,
     )
 
 

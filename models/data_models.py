@@ -30,6 +30,13 @@ class AlertLevel(Enum):
     CRITIQUE = "CRITIQUE"
 
 
+@dataclass
+class RevenueDataPoint:
+    """Un point de données mensuel de revenus."""
+    date:    str    # format "YYYY-MM-DD" (1er du mois)
+    revenue: float
+
+
 # ─────────────────────────────────────────
 # INPUT — ce que l'entrepreneur fournit
 # ─────────────────────────────────────────
@@ -54,6 +61,7 @@ class FinancialContext:
     new_clients_month:  Optional[int]   = None  # nouveaux clients/mois
     cogs:               Optional[float] = None  # coût variable par client/mois
     months_data:        int             = 0     # mois d'historique disponibles
+    revenue_history:    list            = field(default_factory=list)  # list[RevenueDataPoint]
 
     # ── Contexte startup ──
     secteur:            str             = "unknown"
@@ -193,35 +201,46 @@ class A2AMessage:
     """
     Message envoyé sur le bus A2A vers les autres agents.
     Produit par : build_a2a_message
-    Consommé par : Risk Agent, Investment Agent, Orchestrateur
+    Consommé par : risk_agent, investment_agent, orchestrator
+
+    Format standardisé inter-agents :
+    {
+      "message_id": "uuid",
+      "type":       "financial_analysis",
+      "from":       "finance_agent",
+      "to":         ["risk_agent", "investment_agent", "orchestrator"],
+      "timestamp":  "ISO-8601",
+      "context":    { "project_id": "uuid", "session_id": "uuid" },
+      "payload":    { "data": { kpis, monte_carlo, benchmarks, alertes, ... } },
+      "confidence": 0.0,
+      "metadata":   { "priority": "low|medium|high",
+                      "requires_response": bool,
+                      "tags": [] }
+    }
+
+    Note : 'from' est un mot réservé Python → stocké sous 'from_agent',
+    sérialisé en 'from' lors du JSON dump.
     """
-    # Identité
-    message_id:     str             # UUID unique
-    timestamp:      str             # ISO 8601
-    from_agent:     str             = "finance_agent"
-    to_agents:      list            = field(default_factory=lambda: [
-                                        "risk_agent",
-                                        "investment_agent",
-                                        "orchestrator"
-                                    ])
-
-    # Contexte
-    phase:          str             = "unknown"
-    secteur:        str             = "unknown"
-    pays:           str             = "TN"
-
-    # Résultats
-    kpis:           Optional[KPIResult]         = None
-    monte_carlo:    Optional[MonteCarloResult]   = None
-    benchmarks:     Optional[BenchmarkResult]    = None
-    confidence:     Optional[ConfidenceResult]   = None
-
-    # Alertes consolidées
-    alertes:        list            = field(default_factory=list)
-
-    # Comportement
-    requires_reply: bool            = False
-    # True si l'agent attend une réponse avant de répondre à l'entrepreneur
+    message_id:  str
+    type:        str   = "financial_analysis"
+    from_agent:  str   = "finance_agent"
+    to:          list  = field(default_factory=lambda: [
+                             "risk_agent",
+                             "investment_agent",
+                             "orchestrator",
+                         ])
+    timestamp:   str   = ""
+    context:     dict  = field(default_factory=lambda: {
+                             "project_id": "",
+                             "session_id": "",
+                         })
+    payload:     dict  = field(default_factory=lambda: {"data": {}})
+    confidence:  float = 0.0
+    metadata:    dict  = field(default_factory=lambda: {
+                             "priority": "medium",
+                             "requires_response": False,
+                             "tags": [],
+                         })
 
 
 # ─────────────────────────────────────────
