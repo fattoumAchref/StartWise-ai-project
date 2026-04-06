@@ -1,6 +1,6 @@
 # 🚀 StartWise — Multi-Agent AI Strategic Analysis Platform
 
-> **StartWise** est une plateforme d'intelligence artificielle multi-agents conçue pour analyser des projets de startup en profondeur. En quelques minutes, 4 agents IA spécialisés produisent une analyse stratégique complète : veille marché, identité visuelle, psychologie comportementale, et plan d'exécution créatif — le tout streamé en temps réel via WebSocket.
+> **StartWise** est une plateforme d'intelligence artificielle multi-agents conçue pour analyser des projets de startup en profondeur. En quelques minutes, 4 agents IA spécialisés produisent une analyse marketing stratégique complète : veille marché, identité visuelle, psychologie comportementale, et plan d'exécution créatif — le tout streamé en temps réel via WebSocket.
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
 ![Django](https://img.shields.io/badge/Django-4.2-green?logo=django)
@@ -488,21 +488,10 @@ startwise/
 
 ---
 
-## 👥 Équipe
-
-Projet réalisé dans le cadre d'un projet académique à **ESPRIT School of Engineering**.
-
-| Membre | Rôle |
-|--------|------|
-| **Fattoum Achref** | Lead Developer |
-| *(camarades)* | Développement collaboratif |
-
----
-
 ## 📄 Licence
 
-Projet académique — ESPRIT School of Engineering © 2025
+Projet académique — ESPRIT School of Engineering © 2026
 
 ---
 
-*Généré avec ❤️ et beaucoup d'IA par l'équipe StartWise*
+*Généré avec ❤️ par MANÉ*
