@@ -9,3 +9,4 @@ requests
 selenium 
 webdriver-manager
 pandas
+reportlab

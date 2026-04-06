@@ -10,6 +10,8 @@ from agents.investment.scenario_generator import ScenarioGenerator
 from agents.investment.strategy_selector import StrategySelector
 from agents.investment.output_formatter import OutputFormatter
 from agents.investment.benchmark_engine import BenchmarkEngine
+from agents.investment.memory.store import save_analysis
+from agents.investment.memory.comparator import ProgressComparator
 
 
 class InvestmentAgent:
@@ -35,8 +37,10 @@ class InvestmentAgent:
         self.strategy_selector = StrategySelector()
         self.output_formatter = OutputFormatter()
         self.benchmark_engine = BenchmarkEngine(use_real_data=True)
+        self.comparator = ProgressComparator()
     
-    def analyze(self, finance_data: dict, marketing_data: dict) -> dict:
+    def analyze(self, finance_data: dict, marketing_data: dict,
+                project_id: str = "default", user_id: str = "user_001") -> dict:
         """
         Main analysis method.
         
@@ -131,9 +135,47 @@ class InvestmentAgent:
             data=data
         )
         print("      ✓ Recommendation ready")
-        
+
         print("\n" + "="*70)
         print("INVESTMENT AGENT - ANALYSIS COMPLETE")
         print("="*70)
-        
-        return recommendation.to_dict()
+
+        result = recommendation.to_dict()
+
+        # Inject fields needed for memory storage
+        result["data"]["stage"]            = data.get("stage")
+        result["data"]["sector"]           = data.get("sector") or data.get("industry")
+        result["data"]["annual_revenue"]   = data.get("annual_revenue")
+        result["data"]["growth_rate"]      = data.get("growth_rate")
+        result["data"]["available_grants"] = data.get("available_grants", [])
+
+        # Save to memory
+        save_analysis(project_id, user_id, result)
+
+        # Progress comparison (only if previous sessions exist)
+        progress = self.comparator.compare(project_id, result)
+        if progress:
+            result["progress_report"] = progress
+            print("\n[Memory] Progress report generated")
+
+        # Generate A2A message output
+        a2a_msg = recommendation.to_a2a_message(
+            project_id=project_id,
+            session_id=result.get("timestamp", ""),
+            to=["Orchestrator"],
+            priority="high",
+            requires_response=False,
+            tags=[data.get("stage", ""), data.get("sector") or data.get("industry", "")],
+        )
+        result["a2a_message"] = a2a_msg
+
+        # Write JSON file
+        import json, os
+        output_dir = os.path.join(os.path.dirname(__file__), "outputs")
+        os.makedirs(output_dir, exist_ok=True)
+        output_path = os.path.join(output_dir, f"{project_id}_latest.json")
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(a2a_msg, f, indent=2, ensure_ascii=False)
+        print(f"[Output] A2A message saved → {output_path}")
+
+        return result

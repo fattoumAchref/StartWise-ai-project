@@ -34,19 +34,13 @@ class Orchestrator:
         self.marketing  = MarketingAgent()
         self.investment = InvestmentAgent()
 
-    def process(self, raw_text: str, user_id: str = "user_001") -> dict:
+    def process(self, raw_text: str, user_id: str = "user_001", project_id: str = None) -> dict:
         """
         Run the full pipeline on a user project description.
-
-        Returns:
-            {
-                "project":    StartupProject,
-                "finance":    AgentMessage dict,
-                "marketing":  AgentMessage dict,
-                "investment": InvestmentRecommendation dict,
-            }
+        Pass a stable project_id to enable memory tracking across sessions.
         """
-        project_id = f"proj_{uuid.uuid4().hex[:8]}"
+        if project_id is None:
+            project_id = f"proj_{uuid.uuid4().hex[:8]}"
 
         print("\n" + "="*65)
         print("  ORCHESTRATOR — STARTING PIPELINE")
@@ -65,6 +59,8 @@ class Orchestrator:
         investment_result = self.investment.analyze(
             finance_data=finance_msg.data,
             marketing_data=marketing_msg.data,
+            project_id=project_id,
+            user_id=user_id,
         )
 
         print("\n" + "="*65)

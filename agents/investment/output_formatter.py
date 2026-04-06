@@ -1,52 +1,68 @@
 """
-Output formatter - creates final investment recommendation.
+Output formatter - structured data + LLM narrative recommendation.
 """
 
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
 from agents.investment.models import InvestmentRecommendation
+from agents.investment.config import TOKENFACTORY_API_KEY, BASE_URL, MODEL_NAME
 
 
 class OutputFormatter:
-    """Formats final investment recommendation."""
+    """Formats final investment recommendation with LLM-generated narrative."""
 
     NEXT_STEPS = {
         "idea": [
-            "Join an incubator (Flat6Labs, Cogite, or StartupHouse)",
-            "Validate your idea with 20+ potential customers",
-            "Apply for Smart Capital Pre-Seed grant (50k TND)",
+            "Rejoindre un incubateur (Flat6Labs, Cogite, ou StartupHouse)",
+            "Valider votre idée avec 20+ clients potentiels",
+            "Postuler à la subvention Smart Capital Pre-Seed (50k TND)",
         ],
         "pre-seed": [
-            "Apply for Startup Act label at startup.gov.tn",
-            "Pitch to angel investors and family offices",
-            "Build MVP and reach first 10 paying customers",
+            "Obtenir le label Startup Act sur startup.gov.tn",
+            "Pitcher auprès des business angels et family offices",
+            "Construire le MVP et atteindre les 10 premiers clients payants",
         ],
         "seed": [
-            "Apply for Startup Act label (if not yet labeled)",
-            "Target accelerators: Flat6Labs, Wamda, Sawari Ventures",
-            "Prepare pitch deck with traction metrics",
+            "Obtenir le label Startup Act (si pas encore labellisé)",
+            "Cibler les accélérateurs : Flat6Labs, Wamda, Sawari Ventures",
+            "Préparer un pitch deck avec les métriques de traction",
         ],
         "early": [
-            "Approach seed VCs: AfricInvest, BIAT Capital, Algebra Ventures",
-            "Apply for BTS Innovation Grant if tech/export-oriented",
-            "Prepare 18-month financial model for due diligence",
+            "Approcher les VCs seed : AfricInvest, BIAT Capital, Algebra Ventures",
+            "Postuler à la subvention BTS Innovation si tech/export",
+            "Préparer un modèle financier sur 18 mois pour la due diligence",
         ],
         "growth": [
-            "Target Series A VCs: Partech Africa, AfricInvest, Endeavor",
-            "Explore debt financing via BTS or Amen Bank",
-            "Consider FAMEX grant for export expansion",
+            "Cibler les VCs Series A : Partech Africa, AfricInvest, Endeavor",
+            "Explorer le financement par dette via BTS ou Amen Bank",
+            "Considérer la subvention FAMEX pour l'expansion à l'export",
         ],
         "scale": [
-            "Engage growth equity funds and international VCs",
-            "Explore strategic partnerships or acquisition opportunities",
-            "Prepare for potential IPO or secondary market listing",
+            "Engager des fonds de growth equity et des VCs internationaux",
+            "Explorer les partenariats stratégiques ou opportunités d'acquisition",
+            "Se préparer à une éventuelle introduction en bourse",
         ],
     }
 
+    def __init__(self):
+        self.llm = ChatOpenAI(
+            model=MODEL_NAME,
+            base_url=BASE_URL,
+            api_key=TOKENFACTORY_API_KEY,
+            temperature=0.4,
+            max_tokens=400,
+        )
+
     def format(self, valuation, optimal_scenario, all_scenarios, dilution, data) -> InvestmentRecommendation:
-        text = self._build_text(valuation, optimal_scenario, dilution, data)
+        structured = self._build_structured(valuation, optimal_scenario, dilution, data)
+        narrative  = self._generate_narrative(valuation, optimal_scenario, dilution, data)
         confidence = self._calculate_confidence(data, valuation)
 
+        # Combine: narrative first, then structured data
+        full_text = narrative + "\n\n" + structured
+
         return InvestmentRecommendation(
-            recommendation=text,
+            recommendation=full_text,
             confidence_score=confidence,
             valuation=valuation,
             optimal_scenario=optimal_scenario,
@@ -54,19 +70,65 @@ class OutputFormatter:
             dilution=dilution,
         )
 
-    def _build_text(self, valuation, scenario, dilution, data) -> str:
+    def _generate_narrative(self, valuation, scenario, dilution, data) -> str:
+        """LLM writes a personalized investment narrative."""
+        try:
+            stage   = data.get("stage", "seed")
+            sector  = data.get("sector") or data.get("industry", "tech")
+            grants  = data.get("available_grants", [])
+            grants_total = sum(g.get("amount", 0) for g in grants)
+            warnings = data.get("data_warnings", "")
+            rationale = getattr(scenario, "rationale", "")
+
+            prompt = ChatPromptTemplate.from_messages([
+                ("system",
+                 "Tu es un conseiller en investissement senior spécialisé dans les startups tunisiennes. "
+                 "Rédige une analyse d'investissement concise et professionnelle en 3-4 phrases. "
+                 "Mentionne la valorisation, le montant recommandé, l'impact sur la dilution et l'opportunité clé. "
+                 "Sois direct et actionnable. La devise est le TND (Dinar Tunisien). "
+                 "Écris en prose fluide, sans listes ni puces."),
+                ("user",
+                 "Stade: {stage} | Secteur: {sector}\n"
+                 "Valorisation pre-money: {valuation} TND ({method})\n"
+                 "Levée recommandée: {raise_amt} TND "
+                 "(subventions: {grants} TND, equity: {equity} TND, dette: {debt} TND)\n"
+                 "Dilution fondateurs: {dilution}% (ownership post-tour: {after}%)\n"
+                 "Subventions disponibles: {grants_total} TND\n"
+                 "Justification stratégie: {rationale}\n"
+                 "Notes données: {warnings}")
+            ])
+            chain = prompt | self.llm
+            response = chain.invoke({
+                "stage":        stage,
+                "sector":       sector,
+                "valuation":    f"{valuation.final_valuation:,.0f}",
+                "method":       valuation.method_used,
+                "raise_amt":    f"{scenario.raise_amount:,.0f}",
+                "grants":       f"{scenario.grants:,.0f}",
+                "equity":       f"{scenario.equity:,.0f}",
+                "debt":         f"{scenario.debt:,.0f}",
+                "dilution":     f"{dilution.founder_dilution_pct:.1f}",
+                "after":        f"{dilution.founder_after_pct:.1f}",
+                "grants_total": f"{grants_total:,.0f}",
+                "rationale":    rationale or "N/A",
+                "warnings":     warnings or "None",
+            })
+            return "ANALYSIS\n" + "-"*55 + "\n" + response.content.strip()
+        except Exception as e:
+            return f"(narrative unavailable: {e})"
+
+    def _build_structured(self, valuation, scenario, dilution, data) -> str:
+        """Deterministic structured section — no LLM, always reliable."""
         sector = data.get("sector") or data.get("industry", "N/A")
         stage  = data.get("stage", "seed")
 
-        # Market context
         sample_size = data.get("market_sample_size", 0)
         act_rate    = data.get("startup_act_rate")
-        market_line = f"Market data  : {sample_size} similar {sector} startups in Tunisia"
+        market_line = f"Données marché : {sample_size} startups {sector} similaires en Tunisie"
         if act_rate is not None:
-            market_line += f" | Startup Act rate: {act_rate*100:.0f}%"
+            market_line += f" | Taux Startup Act: {act_rate*100:.0f}%"
 
-        # Valuation methods breakdown
-        # DCF is unreliable at idea/pre-seed — hide it to avoid misleading numbers
+        # Valuation breakdown — hide DCF for idea/pre-seed
         show_dcf = stage not in ("idea", "pre-seed")
         methods = []
         if valuation.revenue_multiple:
@@ -81,74 +143,63 @@ class OutputFormatter:
         grants_list = data.get("available_grants", [])
         if grants_list:
             total_grants = sum(g.get("amount", 0) for g in grants_list)
-            grants_text = "\n".join(
-                f"  - {g['name']}: {g['amount']:,.0f} TND"
-                for g in grants_list
-            )
+            grants_text = "\n".join(f"  - {g['name']}: {g['amount']:,.0f} TND" for g in grants_list)
             grants_text += f"\n  Total potential: {total_grants:,.0f} TND"
         else:
             grants_text = "  - No matching grants found"
 
-        # All scenarios comparison
-        scenarios_text = ""
-        for s in sorted(data.get("_all_scenarios", []), key=lambda x: x.get("score", 0), reverse=True):
-            scenarios_text += f"\n  {s['name']:<14} raise: {s['raise_amount']:>10,.0f} TND  dilution: {s['dilution_pct']:.1f}%  score: {s['score']:.0f}"
+        # Strategy rationale from LLM (if available)
+        rationale = getattr(scenario, "rationale", None)
+        rationale_line = f"\n  Pourquoi: {rationale}" if rationale else ""
 
-        # Stage-aware next steps
+        # Data warnings from input handler
+        warnings = data.get("data_warnings", "")
+        warnings_line = f"\nDATA NOTES\n  {warnings}" if warnings and "No issues" not in warnings else ""
+
+        # Next steps
         steps = self.NEXT_STEPS.get(stage, self.NEXT_STEPS["seed"])
         steps_text = "\n".join(f"{i+1}. {s}" for i, s in enumerate(steps))
 
-        return f"""
-INVESTMENT RECOMMENDATION
+        return f"""RECOMMANDATION D'INVESTISSEMENT
 {'='*55}
-Stage        : {stage.upper()}
-Sector       : {sector}
+Stade        : {stage.upper()}
+Secteur      : {sector}
 {market_line}
 
-VALUATION  ({valuation.method_used})
+VALORISATION  ({valuation.method_used})
   {methods_text}
   >> Final: {valuation.final_valuation:,.0f} TND (pre-money)
 
-OPTIMAL STRATEGY  ({scenario.name.upper()})
-  Total raise : {scenario.raise_amount:,.0f} TND
-  Grants      : {scenario.grants:,.0f} TND  ({scenario.grants/scenario.raise_amount*100:.0f}%)
-  Equity      : {scenario.equity:,.0f} TND  ({scenario.equity/scenario.raise_amount*100:.0f}%)
-  Debt        : {scenario.debt:,.0f} TND  ({scenario.debt/scenario.raise_amount*100:.0f}%)
-  Post-money  : {scenario.post_money:,.0f} TND
+STRATEGIE OPTIMALE  ({scenario.name.upper()})
+  Levée totale : {scenario.raise_amount:,.0f} TND
+  Subventions  : {scenario.grants:,.0f} TND  ({scenario.grants/scenario.raise_amount*100:.0f}%)
+  Equity       : {scenario.equity:,.0f} TND  ({scenario.equity/scenario.raise_amount*100:.0f}%)
+  Dette        : {scenario.debt:,.0f} TND  ({scenario.debt/scenario.raise_amount*100:.0f}%)
+  Post-money   : {scenario.post_money:,.0f} TND{rationale_line}
 
 DILUTION
-  Before round : {dilution.founder_before_pct:.1f}%
-  After round  : {dilution.founder_after_pct:.1f}%
-  Diluted by   : {dilution.founder_dilution_pct:.1f}%  (incl. {10:.0f}% option pool)
+  Avant le tour : {dilution.founder_before_pct:.1f}%
+  Après le tour : {dilution.founder_after_pct:.1f}%
+  Dilué de      : {dilution.founder_dilution_pct:.1f}%  (incl. 10% option pool)
 
-ELIGIBLE GRANTS
+SUBVENTIONS ELIGIBLES
 {grants_text}
 
-NEXT STEPS
-{steps_text}
-""".strip()
+PROCHAINES ETAPES
+{steps_text}{warnings_line}""".strip()
 
     def _calculate_confidence(self, data: dict, valuation) -> float:
-        confidence = 0.60  # base
-
-        # Revenue data available
+        confidence = 0.60
         if data.get("annual_revenue", 0) > 0:
             confidence += 0.10
-
-        # Multiple valuation methods used
         if valuation.method_used == "hybrid_dcf":
             confidence += 0.10
         elif valuation.method_used == "hybrid":
             confidence += 0.05
-
-        # Strong team/market signals
         if data.get("team_score", 0) >= 0.7:
             confidence += 0.05
         if data.get("market_score", 0) >= 0.7:
             confidence += 0.05
-
-        # Real market data available
         if data.get("market_sample_size", 0) >= 10:
             confidence += 0.05
-
         return min(round(confidence, 2), 0.95)

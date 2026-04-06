@@ -2,6 +2,7 @@
 Data models for Investment Agent MVP.
 """
 
+import uuid as _uuid
 from dataclasses import dataclass, field
 from typing import Optional
 from datetime import datetime
@@ -41,6 +42,7 @@ class FundingScenario:
     post_money: float
     dilution_pct: float
     score: float = 0.0
+    rationale: str = ""  # LLM-generated explanation
 
 
 @dataclass
@@ -81,6 +83,7 @@ class InvestmentRecommendation:
                     "dilution_pct": self.optimal_scenario.dilution_pct,
                     "post_money": self.optimal_scenario.post_money,
                     "score": self.optimal_scenario.score,
+                    "rationale": self.optimal_scenario.rationale,
                 } if self.optimal_scenario else None,
                 "all_scenarios": [
                     {
@@ -102,4 +105,57 @@ class InvestmentRecommendation:
                     "founder_dilution_pct": self.dilution.founder_dilution_pct,
                 } if self.dilution else None,
             }
+        }
+
+    def to_a2a_message(
+        self,
+        project_id: str = None,
+        session_id: str = None,
+        to: list = None,
+        event_type: str = "investment.recommendation",
+        priority: str = "high",
+        requires_response: bool = False,
+        tags: list = None,
+    ) -> dict:
+        """
+        Wrap the result in the A2A message envelope format.
+
+        Args:
+            project_id      : stable project identifier
+            session_id      : current session identifier
+            to              : list of recipient agent names
+            event_type      : message type (default: investment.recommendation)
+            priority        : low | medium | high
+            requires_response: whether a response is expected
+            tags            : optional list of tags
+
+        Returns:
+            A2A-compliant message dict
+        """
+        inner = self.to_dict()
+
+        return {
+            "message_id": str(_uuid.uuid4()),
+            "type": event_type,
+            "from": "InvestmentAgent",
+            "to": to or ["Orchestrator"],
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+            "context": {
+                "project_id": project_id or str(_uuid.uuid4()),
+                "session_id": session_id or str(_uuid.uuid4()),
+            },
+            "payload": {
+                "data": inner["data"],
+                "recommendation": inner["recommendation"],
+            },
+            "confidence": inner["confidence_score"],
+            "metadata": {
+                "priority": priority,
+                "requires_response": requires_response,
+                "tags": tags or [
+                    inner["data"].get("stage", "unknown"),
+                    inner["data"].get("sector") or inner["data"].get("industry", "unknown"),
+                    inner.get("agent_id", "investment"),
+                ],
+            },
         }

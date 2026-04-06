@@ -5,6 +5,11 @@ Configuration Investment Agent MVP.
 # Agent ID
 AGENT_ID = "investment"
 
+# LLM (TokenFactory)
+TOKENFACTORY_API_KEY = "sk-3af10c5256a547299d9402856f312f8f"
+BASE_URL = "https://tokenfactory.esprit.tn/api"
+MODEL_NAME = "hosted_vllm/Llama-3.1-70B-Instruct"
+
 # Valuation parameters — all sectors from enriched dataset
 INDUSTRY_MULTIPLES = {
     "saas":        8.0,

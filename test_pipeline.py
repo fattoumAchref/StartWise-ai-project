@@ -10,17 +10,19 @@ from orchestrateur.orchestrator import Orchestrator
 
 # ── Simple startup example ──────────────────────────────────────────────────
 PROJECT_TEXT = """
-I want to build a fintech platform for SME invoice financing in Tunisia.
-We already have 120,000 TND annual revenue with 80% growth.
-Monthly burn rate is 30,000 TND.
-We need 600,000 TND to fund 18 months of development.
-Team of 4 people (2 experienced founders + 2 developers).
-The SME financing market in Tunisia is around 8 billion TND.
+Je veux creer une plateforme qui connecte les agriculteurs tunisiens directement
+aux acheteurs en Europe pour vendre leurs produits bio (huile d'olive, dattes, harissa).
+j ai 15,000 TND comme revenu, on est en phase de validation.
+Burn rate de 15,000 TND par mois.
+On a besoin de 300,000 TND pour construire le MVP et valider le marche.
+Equipe de 3 personnes (1 fondateur agricole + 2 developpeurs).
+Le marche export agricole tunisien depasse 3 milliards TND par an.
 """
 
 def main():
     orchestrator = Orchestrator()
-    result = orchestrator.process(PROJECT_TEXT)
+    # Fixed IDs so memory tracks this project across runs
+    result = orchestrator.process(PROJECT_TEXT, user_id="user_001", project_id="agritech_demo")
 
     inv = result["investment"]
 
@@ -50,6 +52,13 @@ def main():
     for sc in inv["data"]["all_scenarios"]:
         print(f"  {sc['name']:<14} raise: {sc['raise_amount']:>9,.0f} TND  "
               f"dilution: {sc['dilution_pct']:>5.1f}%  score: {sc['score']:.0f}")
+
+    # Show progress report if this is not the first session
+    if inv.get("progress_report"):
+        print("\n" + "="*65)
+        print("  PROGRESS SINCE LAST SESSION")
+        print("="*65)
+        print(inv["progress_report"])
 
 if __name__ == "__main__":
     main()

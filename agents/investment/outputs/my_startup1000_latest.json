@@ -1,0 +1,79 @@
+{
+  "message_id": "748d94be-5ede-415a-86cc-555ceec8d6d9",
+  "type": "investment.recommendation",
+  "from": "InvestmentAgent",
+  "to": [
+    "Orchestrator"
+  ],
+  "timestamp": "2026-04-05T19:43:50.470674Z",
+  "context": {
+    "project_id": "my_startup1000",
+    "session_id": "2026-04-05T19:43:50.450165"
+  },
+  "payload": {
+    "data": {
+      "valuation": {
+        "revenue_multiple": 10000000,
+        "dcf": 30500000,
+        "scorecard": 13100000,
+        "final_valuation": 16800000,
+        "method": "hybrid_dcf"
+      },
+      "optimal_scenario": {
+        "name": "optimal",
+        "raise_amount": 3000000,
+        "grants": 100000,
+        "equity": 2030000,
+        "debt": 870000,
+        "dilution_pct": 10.78,
+        "post_money": 18830000,
+        "score": 149.1,
+        "rationale": "The optimal funding scenario is ideal for the growth stage as it balances dilution at 10.8% while securing sufficient funds (3,000,000 TND) to drive growth. The mix of grants (100,000 TND), equity (2,030,000 TND), and debt (870,000 TND) minimizes risk and maximizes score (149.1), outperforming the conservative and aggressive alternatives. This approach allows for strategic investment without over-leveraging the startup."
+      },
+      "all_scenarios": [
+        {
+          "name": "optimal",
+          "raise_amount": 3000000,
+          "grants": 100000,
+          "equity": 2030000,
+          "dilution_pct": 10.78,
+          "score": 149.1
+        },
+        {
+          "name": "conservative",
+          "raise_amount": 2400000,
+          "grants": 100000,
+          "equity": 1610000,
+          "dilution_pct": 8.75,
+          "score": 143.3
+        },
+        {
+          "name": "aggressive",
+          "raise_amount": 3600000,
+          "grants": 100000,
+          "equity": 2450000,
+          "dilution_pct": 12.73,
+          "score": 135.1
+        }
+      ],
+      "dilution": {
+        "pre_money": 16800000,
+        "post_money": 18830000,
+        "new_investor_pct": 10.78,
+        "founder_before_pct": 80.0,
+        "founder_after_pct": 64.24,
+        "founder_dilution_pct": 15.76
+      }
+    },
+    "recommendation": "ANALYSIS\n-------------------------------------------------------\nWe recommend investing in this growth-stage HR management startup, valued at 16,800,000 TND, through a hybrid funding approach consisting of 100,000 TND in grants, 2,030,000 TND in equity, and 870,000 TND in debt, totaling 3,000,000 TND. This strategic funding mix will result in a manageable 15.8% founder dilution, with the founder retaining 64.2% ownership post-round. By securing this optimal funding scenario, the startup can drive growth while minimizing risk, capitalizing on its existing revenue and growth momentum to further establish its position in the market.\n\nINVESTMENT RECOMMENDATION\n=======================================================\nStage        : GROWTH\nSector       : hr management\nMarket data  : 0 similar hr management startups in Tunisia\n\nVALUATION  (hybrid_dcf)\n  Revenue multiple: 10,000,000 TND\n  DCF            : 30,500,000 TND\n  Scorecard      : 13,100,000 TND\n  >> Final: 16,800,000 TND (pre-money)\n\nOPTIMAL STRATEGY  (OPTIMAL)\n  Total raise : 3,000,000 TND\n  Grants      : 100,000 TND  (3%)\n  Equity      : 2,030,000 TND  (68%)\n  Debt        : 870,000 TND  (29%)\n  Post-money  : 18,830,000 TND\n  Why: The optimal funding scenario is ideal for the growth stage as it balances dilution at 10.8% while securing sufficient funds (3,000,000 TND) to drive growth. The mix of grants (100,000 TND), equity (2,030,000 TND), and debt (870,000 TND) minimizes risk and maximizes score (149.1), outperforming the conservative and aggressive alternatives. This approach allows for strategic investment without over-leveraging the startup.\n\nDILUTION\n  Before round : 80.0%\n  After round  : 64.2%\n  Diluted by   : 15.8%  (incl. 10% option pool)\n\nELIGIBLE GRANTS\n  - Startup Act Label: 100,000 TND\n  Total potential: 100,000 TND\n\nNEXT STEPS\n1. Target Series A VCs: Partech Africa, AfricInvest, Endeavor\n2. Explore debt financing via BTS or Amen Bank\n3. Consider FAMEX grant for export expansion\nDATA NOTES\n  The burn rate seems inconsistent with the runway, as 120,000 TND/month would result in a runway of approximately 25 months with 3,000,000 TND, but the startup already has revenue and growth, suggesting the burn rate might be too high or the revenue too low to justify the runway."
+  },
+  "confidence": 0.85,
+  "metadata": {
+    "priority": "high",
+    "requires_response": false,
+    "tags": [
+      "growth",
+      "hr management"
+    ]
+  }
+}
