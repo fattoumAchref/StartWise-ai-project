@@ -41,6 +41,8 @@ export default {
         'slide-in-right': 'slideInRight 0.5s ease-out',
         'shine': 'shine 3s ease-in-out infinite',
         'gradient': 'gradient 8s ease infinite',
+        'shrink': 'shrink 5s linear forwards',
+        'toast-in': 'toastIn 0.35s cubic-bezier(0.16,1,0.3,1) forwards',
       },
       keyframes: {
         glow: {
@@ -66,6 +68,14 @@ export default {
         gradient: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
+        },
+        shrink: {
+          '0%':   { width: '100%' },
+          '100%': { width: '0%' },
+        },
+        toastIn: {
+          '0%':   { opacity: 0, transform: 'translateX(100%) scale(0.95)' },
+          '100%': { opacity: 1, transform: 'translateX(0) scale(1)' },
         },
       },
       backgroundSize: {

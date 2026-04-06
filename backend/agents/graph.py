@@ -5,6 +5,7 @@ from typing import TypedDict, Annotated, List
 import operator
 import json
 import logging
+import asyncio
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -47,6 +48,9 @@ def ensure_string_list(data):
 
 class AgentState(TypedDict):
     project_description: str
+    lang: str        # 'fr' | 'en' | 'bm' | 'ar'
+    creativity: int  # 0–100 → temperature pour les LLM
+    model: str       # 'llama-70b' | 'llama-8b' | 'mixtral' | 'gemma2'
     trend_result: dict
     vision_result: dict
     emotion_result: dict
@@ -62,68 +66,43 @@ async def supervisor_node(state: AgentState) -> AgentState:
         "current_thoughts": ["Initialisation du système..."]
     }
 
-async def trend_node(state: AgentState) -> AgentState:
-    try:
-        res = await run_trend_agent(state)
-        
-        trend_result = res.get("trend_result", {})
-        messages = ensure_string_list(res.get("messages", []))
-        agent_thoughts = ensure_string_list(trend_result.get("agent_thoughts", []))
-        
-        return {
-            "trend_result": trend_result,
-            "messages": messages,
-            "current_thoughts": agent_thoughts
-        }
-    except Exception as e:
-        logger.error(f"Trend node error: {e}")
-        return {
-            "trend_result": {"error": str(e)},
-            "messages": [f"Erreur dans trend_agent: {str(e)}"],
-            "current_thoughts": [f"Erreur: {str(e)}"]
-        }
+async def parallel_scout_node(state: AgentState) -> AgentState:
+    """Lance Trend + Vision + Emotion en parallèle via asyncio.gather."""
+    trend_res, vision_res, emotion_res = await asyncio.gather(
+        run_trend_agent(state),
+        run_vision_agent(state),
+        run_emotion_agent(state),
+        return_exceptions=True,
+    )
 
-async def vision_node(state: AgentState) -> AgentState:
-    try:
-        res = await run_vision_agent(state)
-        
-        vision_result = res.get("vision_result", {})
-        messages = ensure_string_list(res.get("messages", []))
-        agent_thoughts = ensure_string_list(vision_result.get("agent_thoughts", []))
-        
-        return {
-            "vision_result": vision_result,
-            "messages": messages,
-            "current_thoughts": agent_thoughts
-        }
-    except Exception as e:
-        logger.error(f"Vision node error: {e}")
-        return {
-            "vision_result": {"error": str(e)},
-            "messages": [f"Erreur dans vision_agent: {str(e)}"],
-            "current_thoughts": [f"Erreur: {str(e)}"]
-        }
+    def _safe_result(res, key, label):
+        if isinstance(res, Exception):
+            logger.error(f"{label} error: {res}")
+            return {key: {"error": str(res)}, "messages": [f"Erreur dans {label}: {res}"], "agent_thoughts": []}
+        return res
 
-async def emotion_node(state: AgentState) -> AgentState:
-    try:
-        res = await run_emotion_agent(state)
-        
-        emotion_result = res.get("emotion_result", {})
-        messages = ensure_string_list(res.get("messages", []))
-        agent_thoughts = ensure_string_list(emotion_result.get("agent_thoughts", []))
-        
-        return {
-            "emotion_result": emotion_result,
-            "messages": messages,
-            "current_thoughts": agent_thoughts
-        }
-    except Exception as e:
-        logger.error(f"Emotion node error: {e}")
-        return {
-            "emotion_result": {"error": str(e)},
-            "messages": [f"Erreur dans emotion_agent: {str(e)}"],
-            "current_thoughts": [f"Erreur: {str(e)}"]
-        }
+    trend_res  = _safe_result(trend_res,  "trend_result",  "trend_agent")
+    vision_res = _safe_result(vision_res, "vision_result", "vision_agent")
+    emotion_res= _safe_result(emotion_res,"emotion_result","emotion_agent")
+
+    messages = (
+        ensure_string_list(trend_res.get("messages", []))
+        + ensure_string_list(vision_res.get("messages", []))
+        + ensure_string_list(emotion_res.get("messages", []))
+    )
+    thoughts = (
+        ensure_string_list(trend_res.get("trend_result", {}).get("agent_thoughts", []))
+        + ensure_string_list(vision_res.get("vision_result", {}).get("agent_thoughts", []))
+        + ensure_string_list(emotion_res.get("emotion_result", {}).get("agent_thoughts", []))
+    )
+
+    return {
+        "trend_result":  trend_res.get("trend_result", {}),
+        "vision_result": vision_res.get("vision_result", {}),
+        "emotion_result":emotion_res.get("emotion_result", {}),
+        "messages":      messages,
+        "current_thoughts": thoughts,
+    }
 
 async def self_correct_node(state: AgentState) -> AgentState:
     try:
@@ -189,18 +168,14 @@ def build_graph():
     workflow = StateGraph(AgentState)
 
     workflow.add_node("supervisor", supervisor_node)
-    workflow.add_node("trend_hunter", trend_node)
-    workflow.add_node("visual_semiotics", vision_node)
-    workflow.add_node("emotional_intelligence", emotion_node)
+    workflow.add_node("parallel_scout", parallel_scout_node)
     workflow.add_node("creative_director", creative_node)
 
     workflow.set_entry_point("supervisor")
 
-    # CHAINE STRICTE : 1 -> 2 -> 3 -> 4 -> FIN
-    workflow.add_edge("supervisor", "trend_hunter")
-    workflow.add_edge("trend_hunter", "visual_semiotics")
-    workflow.add_edge("visual_semiotics", "emotional_intelligence")
-    workflow.add_edge("emotional_intelligence", "creative_director")
+    # Supervisor → parallel (Trend + Vision + Emotion) → Creative → END
+    workflow.add_edge("supervisor", "parallel_scout")
+    workflow.add_edge("parallel_scout", "creative_director")
     workflow.add_edge("creative_director", END)
 
     return workflow.compile()

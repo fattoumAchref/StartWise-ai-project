@@ -30,9 +30,9 @@ export default function ActivityFeed({ activities }) {
   return (
     <div className="space-y-3">
       <AnimatePresence>
-        {activities.slice().reverse().map((activity) => (
+        {activities.slice().reverse().map((activity, idx) => (
           <motion.div
-            key={activity.id}
+            key={`${activity.id}-${idx}`}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
