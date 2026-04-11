@@ -25,6 +25,10 @@ Implemented endpoints (matching frontend service calls):
 - `GET /image-output`
 - `GET /images/<filename>`
 - `POST /reset`
+- `GET /product-audit/health`
+- `POST /product-audit/analyze`
+- `GET /product-audit/session/<session_id>`
+- `DELETE /product-audit/session/<session_id>`
 
 ## Local Setup
 
@@ -60,6 +64,14 @@ cp backend/.env.example backend/.env
    Optional for geo-targeted research:
    - `FIRECRAWL_COUNTRY=US`
    - `FIRECRAWL_LOCATION=San Francisco,California,United States`
+   Required for product audit with Gemini:
+   - `GEMINI_API_KEY=<your Gemini API key>`
+   - `PRODUCT_AUDIT_GEMINI_MODEL=gemini-2.5-flash-lite`
+   - `GEMINI_EMBEDDING_MODEL=gemini-embedding-001`
+   Optional for product-audit retrieval:
+   - `QDRANT_URL=http://localhost:6333`
+   - `QDRANT_API_KEY=<optional qdrant api key>`
+   - `PRODUCT_AUDIT_QDRANT_COLLECTION=product_audit`
    Recommended on Windows:
    - `PYTHONUTF8=1`
    Optional for summary image generation:
@@ -99,3 +111,4 @@ python manage.py runserver 0.0.0.0:8001
 - Firecrawl search is used for fresh-web research because `google_search` is Gemini-specific and not compatible with the OpenRouter model path.
 - ADK A2A bridge requires `a2a-sdk` (installed via `requirements.txt` as `a2a-sdk[http-server]`).
 - `POST /summary-with-image/<session_id>` now attempts to generate a background image, stores the file under `backend/ideation/output/images/`, and appends image metadata to the returned summary markdown.
+- `POST /product-audit/analyze` is a separate one-shot pipeline that can accept a website URL plus uploaded attachment payloads, extract retrieval text from multimodal uploads with Gemini, index that text evidence into Qdrant, pull fresh Firecrawl research, and generate a SWOT-style report with Gemini.

@@ -127,6 +127,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         items: [],
       },
       {
+        title: "Product Audit",
+        url: "/dashboard/product-audit",
+        icon: FileText,
+        status: "available",
+        items: [],
+      },
+      {
         title: "Viability Assessment",
         url: "/dashboard/viability-assessment",
         icon: FileText,

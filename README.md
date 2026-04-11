@@ -81,6 +81,12 @@ uv run python -m ideation.agents.formulator_agent
 uv run python manage.py runserver 0.0.0.0:8001
 ```
 
+If you want the product-audit retrieval store locally, start Qdrant from the repo root:
+
+```bash
+docker compose up -d qdrant
+```
+
 ### 3. Frontend setup
 
 From `frontend/`:

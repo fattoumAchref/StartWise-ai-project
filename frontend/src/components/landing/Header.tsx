@@ -86,6 +86,8 @@ export default function Header() {
                     localStorage.removeItem('startwise_summary');
                     localStorage.removeItem('startwise_business_idea');
                     localStorage.removeItem('startwise_dashboard_timestamp');
+                    localStorage.removeItem('startwise_track');
+                    localStorage.removeItem('startwise_product_audit_draft');
                   }
                   // Force reload to onboarding with reset param
                   window.location.href = '/onboarding?reset=true';

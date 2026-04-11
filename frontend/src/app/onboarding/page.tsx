@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
-import { Send, Sparkles, X, MapPin, Calendar, Hash, AlertCircle, Wifi, WifiOff } from "lucide-react";
+import { Send, Sparkles, X, MapPin, Calendar, Hash, AlertCircle, Wifi, WifiOff, Lightbulb, Building2, ArrowRight } from "lucide-react";
 import Header from "@/components/landing/Header";
 import SummaryLoading from "@/components/loading/SummaryLoading";
 import dynamic from "next/dynamic";
@@ -52,6 +53,7 @@ function formatQuestionForDisplay(value: string): string {
 }
 
 export default function OnboardingPage() {
+  const router = useRouter();
   const {
     businessIdea,
     setBusinessIdea,
@@ -86,6 +88,10 @@ export default function OnboardingPage() {
   const [selectedKeywords, setSelectedKeywords] = useState<{[questionIndex: number]: string[]}>({});
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState<"idea" | "startup" | null>(null);
+  const [startupName, setStartupName] = useState("");
+  const [startupWebsite, setStartupWebsite] = useState("");
+  const [startupDescription, setStartupDescription] = useState("");
   // Track open questions by index (accordion control)
   const [openQuestions, setOpenQuestions] = useState<number[]>([]);
   // Track validated questions (locked/read-only)
@@ -105,6 +111,12 @@ export default function OnboardingPage() {
       localStorage.removeItem('startwise_summary');
       localStorage.removeItem('startwise_business_idea');
       localStorage.removeItem('startwise_dashboard_timestamp');
+      localStorage.removeItem('startwise_track');
+      localStorage.removeItem('startwise_product_audit_draft');
+      setSelectedTrack(null);
+      setStartupName("");
+      setStartupWebsite("");
+      setStartupDescription("");
       // Clean up URL
       window.history.replaceState({}, '', '/onboarding');
     }
@@ -144,7 +156,31 @@ export default function OnboardingPage() {
   // Handle initial business idea submission - now uses API
   const handleBusinessIdeaSubmit = async () => {
     if (!businessIdea.trim() || isGeneratingQuestions) return;
+    localStorage.setItem('startwise_track', 'idea');
     await startJourney();
+  };
+
+  const handleTrackSelection = (track: "idea" | "startup") => {
+    setSelectedTrack(track);
+    localStorage.setItem('startwise_track', track);
+  };
+
+  const handleStartupTrackContinue = () => {
+    if (!startupName.trim() && !startupWebsite.trim() && !startupDescription.trim()) {
+      return;
+    }
+
+    localStorage.setItem(
+      'startwise_product_audit_draft',
+      JSON.stringify({
+        startup_name: startupName.trim(),
+        website_url: startupWebsite.trim(),
+        product_description: startupDescription.trim(),
+        audit_goal: 'Analyze product vulnerabilities, trust gaps, SWOT, and high-priority fixes.',
+      })
+    );
+    localStorage.setItem('startwise_track', 'startup');
+    router.push('/dashboard/product-audit');
   };
 
   // Handle question answer submission - now uses API with completion handling
@@ -589,7 +625,7 @@ export default function OnboardingPage() {
             )}
           </AnimatePresence>
         
-        {/* Initial Business Idea Input - Cool Design */}
+        {/* Track Selection */}
         {questions.length === 0 && !isComplete && (
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -597,7 +633,6 @@ export default function OnboardingPage() {
             transition={{ duration: 1, ease: "easeOut" }}
             className="flex flex-col items-center justify-center min-h-[70vh] space-y-12"
           >
-            {/* Hero Section */}
             <div className="text-center space-y-6 max-w-4xl">
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -606,7 +641,7 @@ export default function OnboardingPage() {
                 className="inline-flex items-center gap-3 bg-surface/80 backdrop-blur-sm px-6 py-3 rounded-full shadow-soft border border-surface"
               >
                 <Sparkles className="h-5 w-5 text-primary" />
-                <span className="text-primary font-semibold">AI-Powered Business Planning</span>
+                <span className="text-primary font-semibold">Choose Your Track</span>
               </motion.div>
               
               <motion.h1
@@ -615,10 +650,10 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.5, duration: 0.8 }}
                 className="text-3xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent leading-tight"
               >
-                What's Your
+                Build From an Idea
                 <br />
                 <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-800 bg-clip-text text-transparent">
-                  Big Idea?
+                  or Audit What Exists
                 </span>
               </motion.h1>
               
@@ -628,63 +663,198 @@ export default function OnboardingPage() {
                 transition={{ delay: 0.7, duration: 0.8 }}
                 className="text-xl md:text-xl text-surface-muted max-w-3xl mx-auto leading-relaxed"
               >
-                Share your business vision and let our AI create a personalized roadmap to turn your idea into reality.
+                Founders with only an idea can stay in the guided ideation workflow. Founders with a live startup,
+                website, or landing page can jump straight into a product audit powered by Gemini, Firecrawl, and Qdrant.
               </motion.p>
             </div>
 
-            {/* Large Unboxed Input */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8 }}
-              className="w-full max-w-4xl space-y-6"
+              className="grid w-full max-w-5xl gap-4 md:grid-cols-2"
             >
-              <div className="relative">
-                <Textarea
-                  value={businessIdea}
-                  onChange={(e) => setBusinessIdea(e.target.value)}
-                  placeholder="Describe your business idea in detail... What problem does it solve? Who is your target audience? What makes it unique?"
-                  className="w-full min-h-[200px] text-xl md:text-xl p-8 bg-surface border-2 border-surface rounded-2xl shadow-sm focus:border-surface-accent resize-none placeholder:text-surface-muted transition-all duration-300 outline-none focus:outline-none"
-                />
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 pointer-events-none" />
-              </div>
-              
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex justify-center"
+              <button
+                type="button"
+                onClick={() => handleTrackSelection("idea")}
+                className={`rounded-3xl border p-6 text-left transition-all duration-300 ${
+                  selectedTrack === "idea"
+                    ? "border-primary bg-primary/5 shadow-xl shadow-primary/10"
+                    : "border-surface bg-surface hover:border-surface-accent/50 hover:bg-surface/70"
+                }`}
               >
-                <Button
-                  onClick={handleBusinessIdeaSubmit}
-                  disabled={!businessIdea.trim() || isGeneratingQuestions || !isApiHealthy}
-                  className="px-12 py-6 text-lg font bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-gentle border-0 transition-all duration-300 min-w-[200px] disabled:opacity-50"
-                  size="lg"
-                >
-                  {isGeneratingQuestions ? (
-                    <>
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="mr-3 text-white"
-                      >
-                        <Sparkles className="h-6 w-6 text-white" />
-                      </motion.div>
-                      <span className="text-white">Getting AI Questions...</span>
-                    </>
-                  ) : !isApiHealthy ? (
-                    <>
-                      <WifiOff className="h-6 w-6 mr-3 text-white" />
-                      <span className="text-white">AI Unavailable</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-6 w-6 mr-3 text-white" />
-                      <span className="text-white">Start Your Journey</span>
-                    </>
-                  )}
-                </Button>
-              </motion.div>
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+                  <Lightbulb className="h-6 w-6 text-primary" />
+                </div>
+                <h2 className="text-2xl font-semibold text-surface">Idea Track</h2>
+                <p className="mt-3 text-base leading-7 text-surface-muted">
+                  Start with a rough concept and move through the existing guided question workflow until
+                  you reach a business-plan style summary.
+                </p>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleTrackSelection("startup")}
+                className={`rounded-3xl border p-6 text-left transition-all duration-300 ${
+                  selectedTrack === "startup"
+                    ? "border-primary bg-primary/5 shadow-xl shadow-primary/10"
+                    : "border-surface bg-surface hover:border-surface-accent/50 hover:bg-surface/70"
+                }`}
+              >
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10">
+                  <Building2 className="h-6 w-6 text-emerald-600" />
+                </div>
+                <h2 className="text-2xl font-semibold text-surface">Existing Startup Track</h2>
+                <p className="mt-3 text-base leading-7 text-surface-muted">
+                  Upload screenshots, PDFs, or a live URL and run a product audit for vulnerabilities,
+                  positioning gaps, trust issues, and SWOT-based recommendations.
+                </p>
+              </button>
             </motion.div>
+
+            <AnimatePresence mode="wait">
+              {selectedTrack === "idea" && (
+                <motion.div
+                  key="idea-track"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35 }}
+                  className="w-full max-w-4xl space-y-6 rounded-3xl border border-surface bg-surface/60 p-6 shadow-sm"
+                >
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-semibold text-surface">Describe the idea you want to explore</h3>
+                    <p className="text-base leading-7 text-surface-muted">
+                      We’ll keep the current workflow exactly as it is and turn your idea into a sequence of adaptive questions.
+                    </p>
+                  </div>
+
+                  <div className="relative">
+                    <Textarea
+                      value={businessIdea}
+                      onChange={(e) => setBusinessIdea(e.target.value)}
+                      placeholder="Describe your business idea in detail... What problem does it solve? Who is your target audience? What makes it unique?"
+                      className="w-full min-h-[200px] text-xl md:text-xl p-8 bg-surface border-2 border-surface rounded-2xl shadow-sm focus:border-surface-accent resize-none placeholder:text-surface-muted transition-all duration-300 outline-none focus:outline-none"
+                    />
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/5 to-purple-500/5 pointer-events-none" />
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setSelectedTrack(null)}
+                    >
+                      Back
+                    </Button>
+
+                    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                      <Button
+                        onClick={handleBusinessIdeaSubmit}
+                        disabled={!businessIdea.trim() || isGeneratingQuestions || !isApiHealthy}
+                        className="px-12 py-6 text-lg font bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-gentle border-0 transition-all duration-300 min-w-[220px] disabled:opacity-50"
+                        size="lg"
+                      >
+                        {isGeneratingQuestions ? (
+                          <>
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              className="mr-3 text-white"
+                            >
+                              <Sparkles className="h-6 w-6 text-white" />
+                            </motion.div>
+                            <span className="text-white">Getting AI Questions...</span>
+                          </>
+                        ) : !isApiHealthy ? (
+                          <>
+                            <WifiOff className="h-6 w-6 mr-3 text-white" />
+                            <span className="text-white">AI Unavailable</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="h-6 w-6 mr-3 text-white" />
+                            <span className="text-white">Start Idea Journey</span>
+                          </>
+                        )}
+                      </Button>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              )}
+
+              {selectedTrack === "startup" && (
+                <motion.div
+                  key="startup-track"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.35 }}
+                  className="w-full max-w-4xl space-y-6 rounded-3xl border border-surface bg-surface/60 p-6 shadow-sm"
+                >
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-semibold text-surface">Seed your startup audit</h3>
+                    <p className="text-base leading-7 text-surface-muted">
+                      Add whatever context you already have. We’ll pass this into the product-audit workspace,
+                      where you can attach screenshots, PDFs, and URLs before running the analysis.
+                    </p>
+                  </div>
+
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-surface">Startup name</label>
+                      <Input
+                        value={startupName}
+                        onChange={(e) => setStartupName(e.target.value)}
+                        placeholder="Startwise"
+                        className="bg-surface border-surface focus:border-surface-accent"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-surface">Website or landing page</label>
+                      <Input
+                        value={startupWebsite}
+                        onChange={(e) => setStartupWebsite(e.target.value)}
+                        placeholder="https://your-site.com"
+                        type="url"
+                        className="bg-surface border-surface focus:border-surface-accent"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-surface">What should we audit?</label>
+                    <Textarea
+                      value={startupDescription}
+                      onChange={(e) => setStartupDescription(e.target.value)}
+                      placeholder="Describe the product, target user, current website, or the weak spots you want reviewed."
+                      className="min-h-[160px] bg-surface border-surface focus:border-surface-accent"
+                    />
+                  </div>
+
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setSelectedTrack(null)}
+                    >
+                      Back
+                    </Button>
+
+                    <Button
+                      onClick={handleStartupTrackContinue}
+                      disabled={!startupName.trim() && !startupWebsite.trim() && !startupDescription.trim()}
+                      className="px-8 py-6 text-lg font bg-primary hover:bg-primary/90 text-white rounded-2xl min-w-[260px]"
+                      size="lg"
+                    >
+                      <span className="text-white">Continue to Product Audit</span>
+                      <ArrowRight className="h-5 w-5 text-white" />
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
 

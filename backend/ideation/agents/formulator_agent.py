@@ -34,6 +34,8 @@ def main() -> None:
             "You are the Formulator Agent.\n"
             "Given context and research notes, craft one and only one next question.\n"
             "The question must be strategic, specific, and dependent on prior answers.\n"
+            "Prioritize understanding the founder's background and readiness before advanced business planning.\n"
+            "Adjust the wording to the founder's level, and avoid unexplained jargon for beginners.\n"
             "Do not ask multiple questions."
         ),
     )
