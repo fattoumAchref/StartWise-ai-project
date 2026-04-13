@@ -3,6 +3,7 @@ from django.http import StreamingHttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .graph import compiled_graph
+from .document_processor import extract_text
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -89,4 +90,34 @@ def analyze_project_sync(request):
         "self_correction_score": final_state.get("self_correction_score", 0),
         "correction_attempts": final_state.get("correction_attempts", 0),
         "messages": final_state.get("messages", [])
+    })
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def upload_document(request):
+    """Extract text from an uploaded PDF or TXT file (max 5 MB)."""
+    file = request.FILES.get('file')
+    if not file:
+        return JsonResponse({"error": "Aucun fichier fourni."}, status=400)
+
+    MAX_SIZE = 5 * 1024 * 1024  # 5 MB
+    file_bytes = file.read()
+    if len(file_bytes) > MAX_SIZE:
+        return JsonResponse({"error": "Fichier trop volumineux (max 5 Mo)."}, status=400)
+
+    text = extract_text(file_bytes, file.name)
+
+    # Tronque à 8 000 caractères pour ne pas saturer le contexte LLM
+    MAX_CHARS = 8000
+    truncated = len(text) > MAX_CHARS
+    text = text[:MAX_CHARS]
+
+    print(f"[UPLOAD] {file.name} — {len(text)} chars extraits{' (tronqué)' if truncated else ''}")
+
+    return JsonResponse({
+        "text": text,
+        "filename": file.name,
+        "chars": len(text),
+        "truncated": truncated,
     })

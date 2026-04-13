@@ -48,9 +48,10 @@ def ensure_string_list(data):
 
 class AgentState(TypedDict):
     project_description: str
+    document_text: str   # texte extrait du document uploadé par l'utilisateur ('' si absent)
     lang: str        # 'fr' | 'en' | 'bm' | 'ar'
     creativity: int  # 0–100 → temperature pour les LLM
-    model: str       # 'llama-70b' | 'llama-8b' | 'mixtral' | 'gemma2'
+    model: str       # 'llama-70b' | 'llama-8b' | 'qwen-32b' | 'kimi-k2'
     trend_result: dict
     vision_result: dict
     emotion_result: dict

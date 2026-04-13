@@ -1749,7 +1749,7 @@ function NavItem({ icon, label, active, onClick }) {
 // ==================== MAIN DASHBOARD ====================
 export default function Dashboard() {
   const navigate = useNavigate()
-  const { lang, setLang, t, isDarkMode, setIsDarkMode, projectDesc, setProjectDesc, isRunning, agentsStatus, agentsResults, currentThoughts, stats, analysisHistory, settings, setSettings, launchAnalysis, loadAnalysis } = useApp()
+  const { lang, setLang, t, isDarkMode, setIsDarkMode, projectDesc, setProjectDesc, isRunning, agentsStatus, agentsResults, currentThoughts, stats, analysisHistory, settings, setSettings, launchAnalysis, loadAnalysis, documentText, setDocumentText, documentFileName, setDocumentFileName } = useApp()
   const [activeNav, setActiveNav] = useState('dashboard')
   const [showLaunchOverlay, setShowLaunchOverlay] = useState(false)
   const [showBPlan, setShowBPlan] = useState(false)
@@ -1757,11 +1757,53 @@ export default function Dashboard() {
 
   const launchMessages = [t.launchMsg1, t.launchMsg2, t.launchMsg3, t.launchMsg4]
 
+  const [docUploading, setDocUploading] = useState(false)
+  const [docError, setDocError] = useState('')
+  const fileInputRef = useRef(null)
+
   const handleLaunch = () => {
     if (!projectDesc.trim() || isRunning) return
     setShowLaunchOverlay(true)
     setTimeout(() => setShowLaunchOverlay(false), 5000)
     launchAnalysis(projectDesc)
+  }
+
+  const handleFileSelect = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    // Reset input so selecting the same file again triggers onChange
+    e.target.value = ''
+
+    if (file.size > 5 * 1024 * 1024) {
+      setDocError(t.docTooLarge)
+      setTimeout(() => setDocError(''), 4000)
+      return
+    }
+    setDocError('')
+    setDocUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await fetch('http://localhost:8000/api/upload-document/', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || t.docError)
+      setDocumentText(data.text)
+      setDocumentFileName(data.filename)
+    } catch (err) {
+      setDocError(err.message || t.docError)
+      setTimeout(() => setDocError(''), 4000)
+    } finally {
+      setDocUploading(false)
+    }
+  }
+
+  const clearDocument = () => {
+    setDocumentText('')
+    setDocumentFileName('')
+    setDocError('')
   }
 
   const handleAgentClick = (agentId) => {
@@ -1891,8 +1933,59 @@ export default function Dashboard() {
                       <div className="p-4">
                         <TypewriterInput value={projectDesc} onChange={setProjectDesc} disabled={isRunning} t={t} />
                         <PromptSuggestions onSelect={setProjectDesc} t={t} />
+
+                        {/* Document badge */}
+                        {(documentFileName || docUploading || docError) && (
+                          <div className="mt-2">
+                            {docUploading && (
+                              <div className="flex items-center gap-1.5 text-xs text-purple-500">
+                                <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="inline-block">⚙️</motion.span>
+                                {t.docUploading}
+                              </div>
+                            )}
+                            {docError && (
+                              <div className="flex items-center gap-1.5 text-xs text-red-500">
+                                <span>⚠️</span> {docError}
+                              </div>
+                            )}
+                            {documentFileName && !docUploading && (
+                              <div className="flex items-center gap-2">
+                                <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 font-medium">
+                                  <span>📄</span>
+                                  <span className="max-w-[180px] truncate">{documentFileName}</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500 text-white font-bold ml-1">{t.docAnalyzed}</span>
+                                </span>
+                                <button onClick={clearDocument} disabled={isRunning}
+                                  className="w-4 h-4 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 hover:bg-red-100 hover:text-red-500 transition-colors text-[10px]">
+                                  ×
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                          <span className="text-xs text-gray-400">{projectDesc.length} {t.chars}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs text-gray-400">{projectDesc.length} {t.chars}</span>
+                            {/* File upload button */}
+                            <input ref={fileInputRef} type="file" accept=".pdf,.txt" className="hidden" onChange={handleFileSelect} />
+                            <motion.button
+                              onClick={() => fileInputRef.current?.click()}
+                              disabled={isRunning || docUploading}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              title={t.uploadDoc}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all
+                                ${documentFileName
+                                  ? 'border-emerald-400 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20'
+                                  : 'border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-purple-400 hover:text-purple-600'
+                                } ${isRunning || docUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                              <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                              </svg>
+                              {documentFileName ? '✓' : t.uploadDoc}
+                            </motion.button>
+                          </div>
                           <motion.button onClick={handleLaunch}
                             disabled={isRunning || !projectDesc.trim()}
                             whileHover={!isRunning && projectDesc.trim() ? { scale: 1.04 } : {}}

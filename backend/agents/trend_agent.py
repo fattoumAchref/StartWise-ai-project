@@ -189,7 +189,7 @@ class TrendHunterAgent:
 
     # ── Expert fallback (LLM pur, sans données web) ───────────────────────
 
-    async def _expert_fallback(self, project_desc: str) -> Dict:
+    async def _expert_fallback(self, project_desc: str, document_text: str = "") -> Dict:
         """Génère une analyse stratégique complète via expertise LLM pure."""
         self._log("ANALYSIS", "Fallback expert LLM — génération de données analytiques internes...")
 
@@ -199,7 +199,12 @@ class TrendHunterAgent:
             "Respond ONLY with valid JSON — no markdown, no code blocks, no explanation."
         )
 
-        user_msg = f"""Perform a rigorous strategic analysis for this project: "{project_desc}"
+        doc_section = (
+            f"\n\nSUPPLEMENTARY CONTEXT (USER DOCUMENT):\n{document_text[:3000]}\n"
+            "INSTRUCTION: Give absolute priority to this context over your general knowledge.\n"
+        ) if document_text.strip() else ""
+
+        user_msg = f"""Perform a rigorous strategic analysis for this project: "{project_desc}"{doc_section}
 
 Return EXACTLY this JSON structure with realistic, sector-specific values:
 
@@ -412,7 +417,7 @@ Return: {{"primary_cause": "specific cause", "secondary_causes": ["cause1","caus
 
     # ── Analyse principale ────────────────────────────────────────────────
 
-    async def analyze_with_web_intelligence(self, project_desc: str) -> Dict:
+    async def analyze_with_web_intelligence(self, project_desc: str, document_text: str = "") -> Dict:
         self._thoughts = []
 
         # ── Étape 1 : Décomposition ────────────────────────────────────
@@ -495,7 +500,12 @@ Return: {{"primary_cause": "specific cause", "secondary_causes": ["cause1","caus
         # ── Étape 8 : Rapport stratégique principal ───────────────────
         self._log("ANALYSIS", "Génération du rapport stratégique principal via LLM...")
 
-        main_prompt = f"""Projet analysé : {project_desc}
+        doc_section = (
+            f"\n\n---\nCONTEXTE SUPPLÉMENTAIRE (DOCUMENT UTILISATEUR) :\n{document_text[:3000]}\n"
+            "INSTRUCTION : Donne la priorité absolue à ces informations sur tes connaissances générales.\n---"
+        ) if document_text.strip() else ""
+
+        main_prompt = f"""Projet analysé : {project_desc}{doc_section}
 Données marché collectées : {json.dumps([r[0].page_content[:150] for r in sim_results[:3]])}
 Tendances émergentes : {json.dumps([s["signal"] for s in weak_signals[:3]])}
 
@@ -543,7 +553,7 @@ Règles strictes :
 
         if n_risks == 0 or n_recs == 0:
             self._log("ERROR", f"Parsing JSON échoué (risques={n_risks}, recs={n_recs}) — activation du fallback expert")
-            fallback = await self._expert_fallback(project_desc)
+            fallback = await self._expert_fallback(project_desc, document_text)
             if not analysis.get("main_risks"):
                 analysis["main_risks"] = fallback.get("main_risks", [])
             if not analysis.get("recommendations"):
@@ -630,13 +640,16 @@ async def run_trend_agent(state: dict) -> dict:
     llm_params = state_llm_params(state)
     agent = TrendHunterAgent(lang=lang, llm_params=llm_params)
     project_desc = state["project_description"]
+    document_text = state.get("document_text", "")
 
     print(f"\n{'='*50}")
     print(f"🔍 TREND HUNTER — model={llm_params.get('model_override','défaut')} temp={llm_params.get('temperature')}")
     print(f"📝 Projet: {project_desc}")
+    if document_text:
+        print(f"📄 Document RAG: {len(document_text)} chars injectés")
     print(f"{'='*50}\n")
 
-    result = await agent.analyze_with_web_intelligence(project_desc)
+    result = await agent.analyze_with_web_intelligence(project_desc, document_text)
 
     print(f"\n✅ Analyse terminée!")
     print(f"   Score: {result['score']}/10")

@@ -88,15 +88,20 @@ class VisionIntelligenceUnit:
     
     # ==================== ANALYSES SÉMIOTIQUES (Groq) ====================
     
-    async def analyze_competitor_semiotics(self, competitors: List[Dict], project_desc: str) -> Dict:
+    async def analyze_competitor_semiotics(self, competitors: List[Dict], project_desc: str, document_text: str = "") -> Dict:
         """Analyse sémiotique des concurrents (Cross-Mapping) - via Groq"""
+        doc_section = (
+            f"\n\n        CONTEXTE SUPPLÉMENTAIRE (DOCUMENT UTILISATEUR) :\n        {document_text[:2000]}\n"
+            "        INSTRUCTION : Donne la priorité absolue à ces informations pour orienter le design.\n"
+        ) if document_text.strip() else ""
+
         prompt = f"""
         Tu es un expert en sémiotique et design de marque pour grandes entreprises.
-        
+
         CONCURRENTS IDENTIFIÉS:
         {json.dumps(competitors[:5], ensure_ascii=False)}
-        
-        PROJET: {project_desc}
+
+        PROJET: {project_desc}{doc_section}
         
         Identifie en détail:
         1. Les "signifiants" visuels dominants (couleurs, formes, styles, archétypes)
@@ -544,7 +549,7 @@ Réponds UNIQUEMENT en JSON avec ces 6 clés exactes.
 
     # ==================== ANALYSE COMPLÈTE ====================
 
-    async def analyze_visual_identity(self, project_desc: str, trend_result: Dict = None) -> Dict:
+    async def analyze_visual_identity(self, project_desc: str, trend_result: Dict = None, document_text: str = "") -> Dict:
         """Analyse complète de l'identité visuelle"""
         
         thoughts = [
@@ -565,7 +570,7 @@ Réponds UNIQUEMENT en JSON avec ces 6 clés exactes.
         thoughts.append(f"[OK] {len(competitors)} concurrents visuels identifiés")
 
         # 2. Analyse sémiotique
-        semiotics = await self.analyze_competitor_semiotics(competitors, project_desc)
+        semiotics = await self.analyze_competitor_semiotics(competitors, project_desc, document_text)
         archetype = semiotics.get("recommended_archetype", "The Sage")
         thoughts.append(f"[SEMIOTICS] Archétype recommandé : {archetype}")
 
@@ -669,13 +674,16 @@ async def run_vision_agent(state: dict) -> dict:
     agent = VisionIntelligenceUnit(lang=lang, llm_params=llm_params)
     project_desc = state["project_description"]
     trend_result = state.get("trend_result", {})
+    document_text = state.get("document_text", "")
 
     print(f"\n{'='*50}")
     print(f"👁️ VISUAL SEMIOTICS AGENT — model={llm_params.get('model_override','défaut')} temp={llm_params.get('temperature')}")
     print(f"📝 Projet: {project_desc}")
+    if document_text:
+        print(f"📄 Document RAG: {len(document_text)} chars injectés")
     print(f"{'='*50}\n")
-    
-    result = await agent.analyze_visual_identity(project_desc, trend_result)
+
+    result = await agent.analyze_visual_identity(project_desc, trend_result, document_text)
     
     print(f"\n✅ Analyse visuelle terminée!")
     print(f"   Modèle: {result['model_used']}")

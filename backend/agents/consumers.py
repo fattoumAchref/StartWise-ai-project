@@ -25,6 +25,7 @@ class AgentConsumer(AsyncWebsocketConsumer):
                 creativity = int(data.get("creativity", 50))
                 lang = data.get("lang", "fr")
                 model = data.get("model", "llama-70b")
+                document_text = str(data.get("document_text", ""))[:8000]  # sécurité taille
 
                 # ── Prompt Guard — sécurisation avant exécution ──────
                 print(f"[PROMPT GUARD] 🛡️  Analyse de sécurité du prompt...")
@@ -39,7 +40,7 @@ class AgentConsumer(AsyncWebsocketConsumer):
                     return
 
                 self.analysis_task = asyncio.create_task(
-                    self.run_analysis(project_desc, deep_scan=deep_scan, creativity=creativity, lang=lang, model=model)
+                    self.run_analysis(project_desc, deep_scan=deep_scan, creativity=creativity, lang=lang, model=model, document_text=document_text)
                 )
         except Exception as e:
             await self.send(json.dumps({
@@ -57,10 +58,13 @@ class AgentConsumer(AsyncWebsocketConsumer):
             "result": result
         }))
     
-    async def run_analysis(self, project_desc, deep_scan=False, creativity=50, lang='fr', model='llama-70b'):
+    async def run_analysis(self, project_desc, deep_scan=False, creativity=50, lang='fr', model='llama-70b', document_text=''):
+        if document_text:
+            print(f"[RAG] 📄 Document utilisateur injecté — {len(document_text)} chars")
         try:
             state = AgentState(
                 project_description=project_desc,
+                document_text=document_text,
                 lang=lang,
                 creativity=creativity,
                 model=model,

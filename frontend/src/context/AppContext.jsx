@@ -42,6 +42,11 @@ export const TRANSLATIONS = {
     deepScanActive: 'ACTIF — 8 MIN', deepScanFast: 'RAPIDE — 4 MIN',
     statusHigh: 'ÉLEVÉ', statusMedium: 'MOYEN', statusNormal: 'NORMAL',
     modelNote: 'Modèle actif sur Groq — s\'applique à tous les agents dès la prochaine analyse.',
+    // RAG Upload
+    uploadDoc: 'Joindre un document', docAnalyzed: 'Document analysé',
+    docTooLarge: 'Fichier trop volumineux (max 5 Mo)',
+    docError: 'Erreur lors de l\'extraction du texte',
+    docUploading: 'Extraction en cours...',
     // Synthesis
     synthTitle: 'Executive AI Synthesis', synthWaiting: 'En attente des 4 agents...',
     synthReady: 'Synthèse prête', masterScore: 'Master Score',
@@ -87,6 +92,10 @@ export const TRANSLATIONS = {
     deepScanActive: 'ACTIVE — 8 MIN', deepScanFast: 'FAST — 4 MIN',
     statusHigh: 'HIGH', statusMedium: 'MEDIUM', statusNormal: 'NORMAL',
     modelNote: 'Active model on Groq — applies to all agents on the next analysis.',
+    uploadDoc: 'Attach a document', docAnalyzed: 'Document analyzed',
+    docTooLarge: 'File too large (max 5 MB)',
+    docError: 'Error extracting text',
+    docUploading: 'Extracting...',
     synthTitle: 'Executive AI Synthesis', synthWaiting: 'Waiting for 4 agents...',
     synthReady: 'Synthesis ready', masterScore: 'Master Score',
     nextStep1: 'Generate Business Plan', nextStep2: 'Create Pitch Deck', nextStep3: 'Contact Suppliers',
@@ -129,6 +138,10 @@ export const TRANSLATIONS = {
     deepScanActive: 'KƐLEN — 8 MIN', deepScanFast: 'JOONA — 4 MIN',
     statusHigh: 'GƐLƐN', statusMedium: 'CƐMANCƐ', statusNormal: 'DƆGƆMAN',
     modelNote: 'Groq modɛli kɛlen — agent bɛɛ ka sèbèni kɔfɛ a bɛ kɛ.',
+    uploadDoc: 'Sɛbɛnni lase', docAnalyzed: 'Sɛbɛnni sɛgɛsɛgɛlen',
+    docTooLarge: 'Dosiye ka belebeleba (max 5 Mo)',
+    docError: 'Sɛbɛnni bɔ sababu',
+    docUploading: 'Sɛgɛsɛgɛli bɛ kɛ...',
     synthTitle: 'AI Farafin Sèbèni', synthWaiting: 'Agentw 4 kɔnni...',
     synthReady: 'Sèbèni sigilen', masterScore: 'Hakɛ Gɛlɛn',
     nextStep1: 'Business Plan kɛ', nextStep2: 'Pitch Deck kɛ', nextStep3: 'Jɔyɔrɔw wele',
@@ -170,6 +183,10 @@ export const TRANSLATIONS = {
     deepScanActive: 'نشط — 8 دقائق', deepScanFast: 'سريع — 4 دقائق',
     statusHigh: 'مرتفع', statusMedium: 'متوسط', statusNormal: 'طبيعي',
     modelNote: 'النموذج النشط على Groq — يُطبَّق على جميع الوكلاء في التحليل القادم.',
+    uploadDoc: 'إرفاق مستند', docAnalyzed: 'تم تحليل المستند',
+    docTooLarge: 'الملف كبير جداً (الحد الأقصى 5 ميجابايت)',
+    docError: 'خطأ في استخراج النص',
+    docUploading: 'جارٍ الاستخراج...',
     synthTitle: 'التوليف التنفيذي بالذكاء الاصطناعي', synthWaiting: 'في انتظار الوكلاء الأربعة...',
     synthReady: 'التوليف جاهز', masterScore: 'النتيجة الرئيسية',
     nextStep1: 'إنشاء خطة عمل', nextStep2: 'إنشاء عرض تقديمي', nextStep3: 'التواصل مع الموردين',
@@ -194,6 +211,8 @@ export function AppProvider({ children }) {
   })
   const [projectDesc, setProjectDesc] = useState(() => localStorage.getItem('lastProject') || '')
   const [isRunning, setIsRunning] = useState(false)
+  const [documentText, setDocumentText] = useState('')
+  const [documentFileName, setDocumentFileName] = useState('')
   const [agentsStatus, setAgentsStatus] = useState(() => {
     try { return JSON.parse(localStorage.getItem('agentsStatus') || '{}') } catch { return {} }
   })
@@ -398,6 +417,7 @@ export function AppProvider({ children }) {
       creativity: settings.creativity,
       model: settings.model,
       lang,
+      document_text: documentText,
     }))
   }, [isRunning, settings])
 
@@ -454,6 +474,8 @@ export function AppProvider({ children }) {
       stats, analysisHistory, settings, setSettings,
       launchAnalysis, loadAnalysis, socketRef,
       securityToast, setSecurityToast,
+      documentText, setDocumentText,
+      documentFileName, setDocumentFileName,
     }}>
       {children}
     </AppContext.Provider>

@@ -19,10 +19,15 @@ class EmotionalIntelligenceUnit:
         lang_name = LANG_NAMES.get(self.lang, 'French')
         return f"\n\nCRITICAL: Generate ALL text values in {lang_name}. JSON keys must remain in English."
 
-    def generate_full_emotional_intelligence(self, project_desc, context_json, llm_params=None):
+    def generate_full_emotional_intelligence(self, project_desc, context_json, llm_params=None, document_text=""):
+        doc_section = (
+            f"\n\nCONTEXTE SUPPLÉMENTAIRE (DOCUMENT UTILISATEUR) :\n{document_text[:3000]}\n"
+            "INSTRUCTION : Donne la priorité absolue à ces informations pour personnaliser l'analyse émotionnelle.\n"
+        ) if document_text.strip() else ""
+
         prompt = f"""Tu es un expert en psychologie comportementale et intelligence concurrentielle.
 
-PROJET : {project_desc}
+PROJET : {project_desc}{doc_section}
 
 CONTEXTE (données des agents Trend + Vision) :
 {context_json}
@@ -108,7 +113,10 @@ async def run_emotion_agent(state: dict):
     lang = state.get("lang", "fr")
     unit = EmotionalIntelligenceUnit(lang=lang)
     project_desc = state["project_description"]
+    document_text = state.get("document_text", "")
     llm_params = state_llm_params(state)
+    if document_text:
+        print(f"[EMOTION] 📄 Document RAG: {len(document_text)} chars injectés")
     print(f"[EMOTION] model={llm_params.get('model_override','défaut')} temp={llm_params.get('temperature')}")
     trend_data = state.get("trend_result", {})
     vision_data = state.get("vision_result", {})
@@ -142,6 +150,7 @@ async def run_emotion_agent(state: dict):
             project_desc,
             json.dumps(context, ensure_ascii=False, indent=2),
             llm_params,
+            document_text,
         )
 
         print("✅ EQ Agent : Analyse réussie.")
