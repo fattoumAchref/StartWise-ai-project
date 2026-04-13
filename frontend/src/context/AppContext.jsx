@@ -1,4 +1,5 @@
-// src/context/AppContext.jsx — WebSocket global + Language + State persistant
+'use client'
+// src/context/AppContext.jsx — WebSocket global + Language + State persistant (Next.js compatible)
 import { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react'
 
 // ==================== TRADUCTIONS ====================
@@ -204,15 +205,28 @@ export const TRANSLATIONS = {
 const AppContext = createContext(null)
 
 export function AppProvider({ children }) {
-  const [lang, setLang] = useState(() => localStorage.getItem('swLang') || 'fr')
+  const [lang, setLang] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('swLang') : null) || 'fr')
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    const saved = localStorage.getItem('swDark')
-    return saved === 'true'
+    if (typeof window === 'undefined') return false
+    return localStorage.getItem('swDark') === 'true'
   })
-  const [projectDesc, setProjectDesc] = useState(() => localStorage.getItem('lastProject') || '')
+  const [projectDesc, setProjectDesc] = useState(() => {
+    if (typeof window === 'undefined') return ''
+    // Priorité : résumé d'idéation > dernière description sauvegardée
+    return localStorage.getItem('sw_ideation_business_idea')
+      || localStorage.getItem('lastProject')
+      || ''
+  })
   const [isRunning, setIsRunning] = useState(false)
-  const [documentText, setDocumentText] = useState('')
-  const [documentFileName, setDocumentFileName] = useState('')
+  const [documentText, setDocumentText] = useState(() => {
+    // Injecter automatiquement le résumé d'idéation comme contexte RAG
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('sw_ideation_summary') || ''
+  })
+  const [documentFileName, setDocumentFileName] = useState(() => {
+    if (typeof window === 'undefined') return ''
+    return localStorage.getItem('sw_ideation_summary') ? '📋 Résumé Idéation' : ''
+  })
   const [agentsStatus, setAgentsStatus] = useState(() => {
     try { return JSON.parse(localStorage.getItem('agentsStatus') || '{}') } catch { return {} }
   })
@@ -303,7 +317,9 @@ export function AppProvider({ children }) {
   // WebSocket global — persiste à travers les navigations
   useEffect(() => {
     if (socketRef.current) return
-    const socket = new WebSocket('ws://localhost:8000/ws/agents')
+    const wsUrl = (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_WS_URL)
+      || 'ws://localhost:8000/ws/agents'
+    const socket = new WebSocket(wsUrl)
     socketRef.current = socket
 
     socket.onopen = () => console.log('✅ WebSocket global connecté')

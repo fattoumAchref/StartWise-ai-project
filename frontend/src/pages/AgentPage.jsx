@@ -1,5 +1,6 @@
-// src/pages/AgentPage.jsx - Version avec onglets spécifiques par agent
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+'use client'
+// src/pages/AgentPage.jsx - Version avec onglets spécifiques par agent (Next.js compatible)
+import { useParams, useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { useApp } from '../context/AppContext'
@@ -2939,19 +2940,18 @@ function KillerFeatureCard({ feature, index }) {
 // ==================== COMPOSANT PRINCIPAL ====================
 
 export default function AgentPage() {
-  const { agentId } = useParams()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const params = useParams()
+  const agentId = params?.id || params?.agentId
+  const router = useRouter()
 
   // Lecture depuis le contexte global — l'analyse continue même pendant la navigation
   const { agentsResults, agentsStatus, projectDesc: ctxProjectDesc, isRunning } = useApp()
 
-  // Priorité : données live du contexte > données passées via navigation state
-  const liveResult = agentsResults[agentId]
-  const { result: stateResult, projectDesc: stateProjectDesc, thoughts: stateThoughts } = location.state || {}
-  const result = liveResult || stateResult
-  const projectDesc = ctxProjectDesc || stateProjectDesc
-  const agentThoughts = result?.agent_thoughts || stateThoughts || []
+  // Données depuis le contexte global (pas de router state en Next.js)
+  const liveResult = agentsResults?.[agentId]
+  const result = liveResult
+  const projectDesc = ctxProjectDesc
+  const agentThoughts = result?.agent_thoughts || []
   const agentStatus = agentsStatus[agentId]?.status || 'idle'
 
   const [activeTab, setActiveTab] = useState(() => result?.activeTab || 'overview')
@@ -3061,7 +3061,7 @@ export default function AgentPage() {
             <p className="text-gray-700 dark:text-gray-300 font-semibold">Agent en cours d'analyse...</p>
             <p className="text-sm text-gray-400 mt-1">Les résultats apparaîtront dès que l'agent publie ses premières données</p>
           </div>
-          <button onClick={() => navigate('/')}
+          <button onClick={() => router.push('/dashboard')}
             className="flex items-center gap-2 mx-auto text-sm text-gray-500 hover:text-purple-500 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Retour au tableau de bord
           </button>
@@ -3076,7 +3076,7 @@ export default function AgentPage() {
       <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
           <button
-            onClick={() => navigate('/')}
+            onClick={() => router.push('/dashboard')}
             className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
           >
             <ArrowLeft className="w-4 h-4" />

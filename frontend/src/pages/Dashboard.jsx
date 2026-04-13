@@ -1,7 +1,8 @@
-// src/pages/Dashboard.jsx — Refonte complète StartWise
+'use client'
+// src/pages/Dashboard.jsx — StartWise (Next.js compatible)
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/navigation'
 import { useApp, TRANSLATIONS } from '../context/AppContext'
 import GlobeNetwork from '../components/GlobeNetwork'
 import { X, Download, ChevronLeft, ChevronRight, Target, Users, Zap, Radio, TrendingUp, DollarSign, Layers, Building2, ArrowRight, Printer } from 'lucide-react'
@@ -1748,7 +1749,7 @@ function NavItem({ icon, label, active, onClick }) {
 
 // ==================== MAIN DASHBOARD ====================
 export default function Dashboard() {
-  const navigate = useNavigate()
+  const router = useRouter()
   const { lang, setLang, t, isDarkMode, setIsDarkMode, projectDesc, setProjectDesc, isRunning, agentsStatus, agentsResults, currentThoughts, stats, analysisHistory, settings, setSettings, launchAnalysis, loadAnalysis, documentText, setDocumentText, documentFileName, setDocumentFileName } = useApp()
   const [activeNav, setActiveNav] = useState('dashboard')
   const [showLaunchOverlay, setShowLaunchOverlay] = useState(false)
@@ -1811,7 +1812,7 @@ export default function Dashboard() {
     // Permet de naviguer dès que l'agent a un résultat partiel OU est completed
     // Le WebSocket continue en background via le contexte global
     if (status === 'completed' || (status === 'running' && agentsResults[agentId])) {
-      navigate(`/agent/${agentId}`)
+      router.push(`/agent/${agentId}`)
     }
   }
 

@@ -19,5 +19,14 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # ── StartWise agents REST (upload-document, etc.) ─────────────────────
     path('api/', include('agents.urls')),
+
+    # ── Ideation module — ADK Q&A flow ────────────────────────────────────
+    # Routes: /health, /init, /respond, /keywords/…, /suggest, /summary/…
+    path('ideation/', include('ideation.urls')),
+
+    # ── Product Audit module — Gemini + Qdrant ────────────────────────────
+    path('product-audit/', include('product_audit.urls')),
 ]
