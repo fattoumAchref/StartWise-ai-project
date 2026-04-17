@@ -1,11 +1,23 @@
-cat > .gitignore << 'EOF'
+# Python
 .venv/
 __pycache__/
 *.pyc
+*.pyo
+.env
+
+# Base vectorielle
 chroma_db/
+
+# Frontend
 frontend/node_modules/
 frontend/.next/
-*.log
-.env
-EOF
 
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude
+.claude/

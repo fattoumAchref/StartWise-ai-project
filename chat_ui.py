@@ -31,45 +31,38 @@ LLM_BASE_URL = os.getenv("LLM_BASE_URL", "https://tokenfactory.esprit.tn/api")
 LLM_MODEL    = os.getenv("LLM_MODEL", "hosted_vllm/Llama-3.1-70B-Instruct")
 CHROMA_PATH  = os.getenv("CHROMA_PATH", "./chroma_db")
 
-STRICT_SYSTEM = """Tu es l'Agent Légal IA, conseiller juridique expert en droit tunisien des affaires.
+STRICT_SYSTEM = """Tu es StartWise AI, conseiller juridique spécialisé en droit tunisien des affaires et en écosystème startup.
 
-RÈGLE ABSOLUE :
-Tu ne peux répondre QUE sur la base des SOURCES FOURNIES ci-dessous.
-Si les sources ne contiennent pas l'information nécessaire, explique clairement pourquoi et oriente l'utilisateur.
-Tu n'as PAS le droit d'utiliser tes connaissances internes.
+RÈGLE ABSOLUE : Tu utilises UNIQUEMENT les informations des sources fournies. Si une info est absente, dis-le en une phrase.
+Langue : réponds dans la langue de la question.
 
-DOMAINES COUVERTS PAR LA BASE DE CONNAISSANCES :
-• MARQUES / PI : INNORPI (procédures, tarifs, délais, classes Nice, textes légaux), WIPO Lex (loi tunisienne PI)
-• STARTUP ACT : startup.gov.tn (procédure, critères, avantages, liste startups labellisées, FAQ, formulaires, textes juridiques)
-• CRÉATION D'ENTREPRISE : RNE (immatriculation), APII (guide création), formes juridiques SARL/SA/SUARL/GIE
-• FISCAL / CNSS : DGI, Jibaya, Douane, cotisations sociales
-• LICENCES OPEN SOURCE : SPDX (MIT, GPL, Apache, AGPL…)
-• TEXTES LÉGAUX : JORT (Journal Officiel), legislation-securite.tn
+STYLE DE RÉPONSE :
+Écris comme un conseiller qui parle à son client — naturel, professionnel, humain.
+Pas de listes à puces mécaniques. Utilise des paragraphes courts et fluides.
+Tu peux utiliser **gras** pour les termes clés, chiffres, dates importantes.
+Maximum 220 mots. Pas d'introduction générique, va droit au sujet.
 
-LOGIQUE DE RÉPONSE :
+STRUCTURE SELON LE TYPE DE QUESTION :
 
-Pour les MARQUES :
-- La base de données INNORPI (registre des marques déposées) est sur un réseau INTERNE non public.
-- La base indexée contient les PROCÉDURES, TARIFS, DÉLAIS, FORMULAIRES et TEXTES LÉGAUX d'INNORPI.
-- Pour vérifier si un nom est déjà déposé comme marque : recommande de consulter directement innorpi.tn ou de contacter l'INNORPI.
-- Pour les questions procédurales (comment déposer, combien ça coûte, quel délai) : réponds depuis les sources INNORPI disponibles.
+Si question sur une startup :
+→ Commence par présenter la startup en 2-3 phrases naturelles (ce qu'elle fait, quand créée, par qui).
+→ Ensuite mentionne le label Startup Act et ce que ça implique concrètement.
+→ Termine par 1-2 points de conseil juridique pertinents (protection IP, obligations légales, avantages fiscaux…).
 
-Pour le STARTUP ACT :
-- Le Startup Act (Décret-loi 2018-20 du 11 avril 2018) est la loi instituant le label startup en Tunisie.
-- La base contient la procédure complète, les critères d'éligibilité, les avantages fiscaux et sociaux, la liste des startups labellisées.
-- Explique les étapes, les avantages (exonérations fiscales, avantages CNSS, droit à l'échec, congé entrepreneuriat) depuis les sources.
+Si question juridique / procédurale :
+→ Réponds directement à la question en expliquant la procédure ou la règle.
+→ Cite les références légales entre parenthèses quand elles sont dans les sources.
+→ Termine par une recommandation concrète et l'organisme compétent.
 
-Pour les NOMS DE STARTUPS :
-- La base contient des noms de startups depuis deux sources : F6S (annuaire global) et startup.gov.tn (liste des labellisées Startup Act).
-- Si un nom apparaît dans la base F6S ou Startup Act, tu peux confirmer son existence.
-- Si un nom n'est PAS trouvé dans la base, précise que la base n'est pas exhaustive et recommande de vérifier directement sur f6s.com, startup.gov.tn, ou au RNE.
-- Ne prétends jamais qu'une startup n'existe pas si elle n'est pas dans la base — la base n'est pas un registre officiel complet.
+Si question fiscale / sociale :
+→ Donne les chiffres et taux exacts depuis les sources.
+→ Explique brièvement les obligations et délais.
 
-SOURCES DISPONIBLES :
-{context}
+Toujours terminer par : 📎 Source : [nom de la source]
+Si décision engageante → recommander un avocat spécialisé.
 
-Réponds directement à la question posée. Structure ta réponse avec des sections claires si nécessaire.
-Cite toujours les sources utilisées. Sois précis et concis."""
+SOURCES :
+{context}"""
 
 # ── Chargement du service d'embeddings local ─────────────────────────────────
 print("Initialisation du service d'embeddings local...")
@@ -83,6 +76,26 @@ collection = chroma_client.get_or_create_collection(
     metadata={"hnsw:space": "cosine"},
 )
 print("ChromaDB prêt.")
+
+# ── Session memory ────────────────────────────────────────────────────────────
+# Stockage en mémoire : { session_id: [{"role": "user"|"assistant", "content": str}, ...] }
+# Garde les 20 derniers messages (10 échanges) pour éviter de dépasser le contexte LLM.
+MAX_HISTORY = 20
+_sessions: dict[str, list[dict]] = {}
+
+def get_history(session_id: str) -> list[dict]:
+    return _sessions.get(session_id, [])
+
+def append_history(session_id: str, role: str, content: str):
+    if session_id not in _sessions:
+        _sessions[session_id] = []
+    _sessions[session_id].append({"role": role, "content": content})
+    # Tronque en gardant les messages les plus récents
+    if len(_sessions[session_id]) > MAX_HISTORY:
+        _sessions[session_id] = _sessions[session_id][-MAX_HISTORY:]
+
+def clear_history(session_id: str):
+    _sessions.pop(session_id, None)
 
 app = FastAPI(title="Agent Légal IA — API", version="1.0.0")
 
@@ -114,7 +127,7 @@ def chunk_text(text: str, size: int = 800, overlap: int = 100) -> list[str]:
         i += size - overlap
     return chunks
 
-async def search_docs(query: str, top_k: int = 5) -> list[dict]:
+async def search_docs(query: str, top_k: int = 5) -> tuple[list[dict], str, set, str]:
     """Recherche vectorielle dans ChromaDB avec ré-ordonnancement par pertinence lexicale."""
     count = collection.count()
     if count == 0:
@@ -169,6 +182,25 @@ async def search_docs(query: str, top_k: int = 5) -> list[dict]:
         ]):
             intents.add("legal")
 
+        # Détails startup : fondateurs, année, secteur
+        if any(k in low for k in [
+            "fondateur", "fondé par", "fondée par", "créé par", "créée par",
+            "fondateurs", "co-fondateur", "cofondateur", "founder",
+        ]):
+            intents.add("startup_founders")
+
+        if any(k in low for k in [
+            "année de création", "créé en", "créée en", "fondé en", "fondée en",
+            "depuis", "année", "date de création", "quand", "en quelle année",
+        ]) or re.search(r"\b(19|20)\d{2}\b", q):
+            intents.add("startup_year")
+
+        if any(k in low for k in [
+            "secteur", "domaine", "industrie", "activité", "domaine d'activité",
+            "spécialisé", "spécialisée", "spécialité", "type d'entreprise",
+        ]):
+            intents.add("startup_sector")
+
         if not intents:
             intents.add("general")
         return intents
@@ -213,7 +245,12 @@ async def search_docs(query: str, top_k: int = 5) -> list[dict]:
         meaningful = [t for t in all_toks if t.lower() not in FR_STOP]
         return meaningful[-1] if meaningful else ""
 
-    def keyword_boost(result: dict, entity: str, intents: set) -> float:
+    def extract_year_from_query(q: str) -> str:
+        """Extrait une année (1990-2030) mentionnée dans la query."""
+        m = re.search(r"\b(19[89]\d|20[0-2]\d)\b", q)
+        return m.group(1) if m else ""
+
+    def keyword_boost(result: dict, entity: str, intents: set, year: str = "") -> float:
         """
         Score bonus [0..1] basé sur la présence de mots-clés dans le contenu.
         Permet un ré-ordonnancement après la recherche vectorielle.
@@ -253,12 +290,34 @@ async def search_docs(query: str, top_k: int = 5) -> list[dict]:
             if any(k in content for k in ["cnss", "tva", "cotisation", "impôt", "fiscal"]):
                 boost += 0.10
 
-        return min(boost, 0.60)  # plafond pour ne pas écraser le score vectoriel
+        # Détails startup : année, fondateurs, secteur
+        if "startup_year" in intents:
+            if source_type == "STARTUPS_DB":
+                boost += 0.20
+            if year and year in content:
+                boost += 0.25  # correspondance exacte de l'année dans le contenu
+            if any(k in content for k in ["année de création", "creation_year", "fondé en", "créée en"]):
+                boost += 0.08
+        if "startup_founders" in intents:
+            if source_type == "STARTUPS_DB":
+                boost += 0.20
+            if any(k in content for k in ["fondateurs", "fondateur", "founder", "co-fondateur"]):
+                boost += 0.10
+        if "startup_sector" in intents:
+            if source_type == "STARTUPS_DB":
+                boost += 0.20
+            if any(k in content for k in ["secteur", "domaine", "industrie"]):
+                boost += 0.08
+
+        return min(boost, 0.65)  # plafond pour ne pas écraser le score vectoriel
 
     intents = detect_intents(query)
     entity = extract_named_entity(query)
+    year = extract_year_from_query(query)
     if entity:
         log.info("entity_detected", entity=entity, intents=list(intents))
+    if year:
+        log.info("year_detected", year=year)
 
     vector = await embed_query(query)
 
@@ -287,6 +346,9 @@ async def search_docs(query: str, top_k: int = 5) -> list[dict]:
         query_plan.append({"source_type": {"$eq": "SPDX"}})
     if "legal" in intents:
         query_plan.append({"domain": {"$eq": "LEGAL"}})
+        query_plan.append({"domain": {"$eq": "ENTREPRISES"}})
+    if any(i in intents for i in ("startup_year", "startup_founders", "startup_sector")):
+        query_plan.append({"source_type": {"$eq": "STARTUPS_DB"}})
         query_plan.append({"domain": {"$eq": "ENTREPRISES"}})
 
     # Toujours une passe sans filtre (capture les chunks multi-domaines)
@@ -334,11 +396,11 @@ async def search_docs(query: str, top_k: int = 5) -> list[dict]:
     # ── Ré-ordonnancement lexical ─────────────────────────────────────────────
     # Score final = score vectoriel + boost lexical basé sur l'entité et les intents
     for r in deduped:
-        r["_final_score"] = r["score"] + keyword_boost(r, entity, intents)
+        r["_final_score"] = r["score"] + keyword_boost(r, entity, intents, year)
 
     deduped.sort(key=lambda x: x["_final_score"], reverse=True)
 
-    return deduped[:20]
+    return deduped[:20], entity, intents, year
 
 
 # ── HTML ──────────────────────────────────────────────────────────────────────
@@ -426,15 +488,25 @@ async def favicon():
     return Response(status_code=204)
 
 
+@app.post("/session/clear")
+async def session_clear(request: Request):
+    body = await request.json()
+    sid  = body.get("session_id", "")
+    if sid:
+        clear_history(sid)
+    return {"ok": True}
+
+
 @app.post("/ask")
 async def ask(request: Request):
-    body     = await request.json()
-    question = body.get("question", "").strip()
+    body       = await request.json()
+    question   = body.get("question", "").strip()
+    session_id = body.get("session_id", "")
     if not question:
         return JSONResponse({"error": True, "detail": "Question vide."})
 
     # 1. Recherche dans ChromaDB
-    results = await search_docs(question)
+    results, entity, _intents, _year = await search_docs(question)
 
     def is_trademark_query(q: str) -> bool:
         low = q.lower()
@@ -647,6 +719,72 @@ async def ask(request: Request):
 
         return "\n".join(lines)
 
+    # ── Lookup direct startup (évite les hallucinations LLM) ─────────────────────
+    # Si la question porte sur un nom de startup précis et qu'on le trouve dans
+    # STARTUPS_DB, on construit la fiche directement depuis la source sans passer
+    # par le LLM pour la partie "données factuelles".
+    def build_startup_card(entity: str, items: list[dict]) -> str | None:
+        """Retourne une fiche startup formatée si l'entité est trouvée en DB."""
+        if not entity:
+            return None
+        for r in items:
+            meta = r.get("meta") or {}
+            if (meta.get("source_type") or "").upper() != "STARTUPS_DB":
+                continue
+            content = r.get("content") or ""
+            if entity.lower() not in content.lower():
+                continue
+            # Le contenu est une ligne unique : "Startup : X Secteur : Y Année : Z …"
+            # On délimite chaque champ par le suivant via lookahead.
+            NEXT = r"(?=\s+(?:Startup|Secteur|Année de création|Label Startup Act|Fondateurs|Site web|Description|Région|Services|Source)\s*:|\Z)"
+
+            def field(label: str) -> str:
+                m = re.search(rf"{re.escape(label)}\s*:\s*(.+?){NEXT}", content, re.I | re.S)
+                return m.group(1).strip() if m else "non renseigné"
+
+            name     = field("Startup")
+            sector   = field("Secteur")
+            year     = field("Année de création")
+            label_d  = field("Label Startup Act")
+            founders = field("Fondateurs")
+            website  = field("Site web")
+            desc_raw = field("Description")
+            desc     = desc_raw[:220] if desc_raw != "non renseigné" else "non renseigné"
+
+            lines = [f"**Startup :** {name}"]
+            if sector    != "non renseigné": lines.append(f"**Secteur :** {sector}")
+            if year       != "non renseigné": lines.append(f"**Année de création :** {year}")
+            if label_d    != "non renseigné": lines.append(f"**Label Startup Act :** {label_d}")
+            if founders   != "non renseigné": lines.append(f"**Fondateurs :** {founders}")
+            if website    != "non renseigné": lines.append(f"**Site web :** {website}")
+            if desc       != "non renseigné": lines.append(f"**Description :** {desc}")
+            lines.append(f"\n📎 Source : Base Startup Tunisia (STARTUPS_DB)")
+            return "\n".join(lines)
+        return None
+
+    # ── Fiche startup directe (court-circuit LLM pour les lookups simples) ───────
+    # Détecte si la question est une recherche directe d'une startup par nom.
+    # Si oui et que la startup est dans STARTUPS_DB, on retourne la fiche sans LLM.
+    def is_startup_lookup(q: str) -> bool:
+        low = q.lower()
+        lookup_triggers = [
+            "startup", "entreprise", "société", "c'est quoi", "c est quoi",
+            "info", "information", "détail", "fiche", "présente", "connais",
+            "existe", "labellisée", "label", "créée", "fondée", "fondateur",
+            "secteur", "site web", "description",
+        ]
+        # Lookup si on a une entité ET au moins un déclencheur, ou juste l'entité seule (≤5 mots)
+        has_trigger = any(t in low for t in lookup_triggers)
+        is_short = len(q.split()) <= 6
+        return bool(entity) and (has_trigger or is_short)
+
+    # Si startup trouvée → injecte la fiche en tête du contexte pour guider le LLM
+    startup_card_prefix = ""
+    if is_startup_lookup(question):
+        card = build_startup_card(entity, results)
+        if card:
+            startup_card_prefix = f"FICHE STARTUP TROUVÉE DANS LA BASE :\n{card}\n\n"
+
     # Audit déterministe — précède la réponse LLM mais ne la remplace pas
     audit_prefix = ""
     if is_multi_domain_check(question):
@@ -663,6 +801,10 @@ async def ask(request: Request):
             parts.append(f"[SOURCE {i} — {label} — pertinence {r['score']:.2f}]\n{r['content']}")
         context = "\n\n---\n\n".join(parts)
 
+    # Injecte la fiche startup en tête du contexte si disponible
+    if startup_card_prefix:
+        context = startup_card_prefix + context
+
     system = STRICT_SYSTEM.format(context=context)
 
     # 3. Appel LLM
@@ -672,19 +814,30 @@ async def ask(request: Request):
             base_url=LLM_BASE_URL,
             http_client=httpx.AsyncClient(verify=False, timeout=90.0),
         )
+        # Historique de session (10 échanges max)
+        history = get_history(session_id) if session_id else []
+
+        messages = [{"role": "system", "content": system}]
+        messages.extend(history)
+        messages.append({"role": "user", "content": question})
+
         resp = await llm.chat.completions.create(
             model=LLM_MODEL,
-            max_tokens=1500,
-            temperature=0.1,  # très bas pour rester collé aux sources
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user",   "content": question},
-            ],
+            max_tokens=1000,
+            temperature=0.1,
+            messages=messages,
         )
         answer = resp.choices[0].message.content
-        # Ajoute l'audit déterministe en bas de la réponse LLM si pertinent
+
+        # Ajoute l'audit déterministe en bas si pertinent
         if audit_prefix:
             answer = answer.rstrip() + "\n\n---\n\n" + audit_prefix
+
+        # Sauvegarde l'échange dans la session
+        if session_id:
+            append_history(session_id, "user", question)
+            append_history(session_id, "assistant", answer)
+
         sources = list({
             (r.get("meta") or {}).get("source_label")
             or (r.get("meta") or {}).get("source")
