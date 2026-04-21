@@ -369,11 +369,11 @@ QDRANT_URL=http://localhost:6333
 
 ## Équipe
 
-Projet réalisé dans le cadre du **Hackathon Google ADK** — ESPRIT School of Engineering
+Projet réalisé dans le cadre du **Projet Integration partenariat avec medianet** — ESPRIT School of Engineering
 
 | Nom | Rôle |
 |---|---|
-| **gninediarra** | Développeur Full-Stack — Architecture, intégration frontend/backend, agents LangGraph & ADK, image IA, Telegram |
+| **gninediarra** | Ingénieure en IA et Développeur Full-Stack — Architecture, intégration frontend/backend, agents LangGraph & ADK, image IA, Telegram |
 
 ---
 
