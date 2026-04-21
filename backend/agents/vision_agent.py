@@ -9,7 +9,7 @@ from typing import List, Dict
 from dotenv import load_dotenv
 from openai import OpenAI
 from ddgs import DDGS
-from .inference import inference as smart_llm, image_client as unified_image, state_llm_params
+from .inference import inference as smart_llm, flux_client, sdxl_client, state_llm_params
 
 load_dotenv()
 
@@ -284,40 +284,34 @@ TEXTE: {project_desc[:300]}"""
             return "StartWise"
 
     async def generate_logo_icons(self, project_desc: str, archetype: str, primary_color: str) -> Dict:
-        """Génère 3 icônes pures via FLUX.1 (brand marks sans texte).
-        Chaque icône sera combinée côté frontend avec le nom de l'entreprise."""
+        """Génère 1 icône principale via FLUX.1-schnell (brand mark sans texte).
+        L'icône sera combinée côté frontend avec le nom de l'entreprise."""
 
-        # Demande au LLM de formuler 3 prompts d'icônes distincts et adaptés au projet
         prompt_request = f"""Tu es un directeur artistique expert en brand identity.
 
 PROJET: {project_desc[:150]}
 ARCHÉTYPE: {archetype}
 COULEUR PRIMAIRE: {primary_color}
 
-Formule 3 prompts FLUX.1 pour générer 3 icônes de marque (brand marks) SANS TEXTE.
-Chaque icône représente un concept différent adapté au secteur du projet.
+Formule 1 prompt FLUX.1-schnell pour générer une icône de marque (brand mark) SANS TEXTE.
+L'icône représente le cœur du projet, adaptée au secteur.
 
-RÈGLES ABSOLUES pour chaque prompt:
+RÈGLES ABSOLUES:
 - En ANGLAIS
-- Un seul symbole/forme isolé, centré
-- Style flat icon pour A, modern icon pour B, premium emblem pour C
-- Fond uni (blanc pour A et C, foncé ou coloré pour B)
+- Un seul symbole/forme isolé, centré, style flat icon premium
+- Fond blanc pur (#ffffff)
 - Beaucoup d'espace négatif autour du symbole
-- Chaque prompt DOIT se terminer par: "single icon centered, flat vector style, isolated on solid background, large negative space, no text, no letters, no words, ultra sharp, high definition"
+- Le prompt DOIT se terminer par: "single icon centered, flat vector style, isolated on white background, large negative space, no text, no letters, no words, ultra sharp, high definition"
 
-Génère ce JSON avec 6 clés:
+Génère ce JSON:
 {{
   "icon_a_prompt": "...",
-  "icon_a_label": "Piste A · [style en français]",
-  "icon_b_prompt": "...",
-  "icon_b_label": "Piste B · [style en français]",
-  "icon_c_prompt": "...",
-  "icon_c_label": "Piste C · [style en français]"
+  "icon_a_label": "Logo Principal · [style en français]"
 }}"""
 
         icon_prompts = {}
         try:
-            raw = self._call_groq(prompt_request, max_tokens=1500)
+            raw = self._call_groq(prompt_request, max_tokens=600)
             content = raw.strip()
             if "```json" in content:
                 content = content.split("```json")[1].split("```")[0]
@@ -325,35 +319,24 @@ Génère ce JSON avec 6 clés:
                 content = content.split("```")[1].split("```")[0]
             icon_prompts = json.loads(content.strip())
         except Exception as e:
-            print(f"[LOGO ICON] Fallback prompts: {e}")
+            print(f"[LOGO ICON] Fallback prompt: {e}")
             sector = project_desc[:60]
             icon_prompts = {
-                "icon_a_prompt": f"Minimal flat icon symbol for {sector}, single geometric shape representing the sector, pure white background, centered. single icon centered, flat vector style, isolated on solid background, large negative space, no text, no letters, no words, ultra sharp, high definition",
-                "icon_a_label": "Piste A · Minimalisme Essentiel",
-                "icon_b_prompt": f"Modern bold icon for {sector}, {primary_color} solid color on dark navy #0f172a background, single strong geometric symbol, centered. single icon centered, flat vector style, isolated on solid background, large negative space, no text, no letters, no words, ultra sharp, high definition",
-                "icon_b_label": "Piste B · Modernité Contrastée",
-                "icon_c_prompt": f"Premium emblem icon for {sector}, circular badge shape, gold and neutral tones, institutional feel, single centered motif, white background. single icon centered, flat vector style, isolated on solid background, large negative space, no text, no letters, no words, ultra sharp, high definition",
-                "icon_c_label": "Piste C · Prestige Institutionnel",
+                "icon_a_prompt": f"Premium minimal flat icon symbol for {sector}, {primary_color} color on white background, single geometric shape evoking {archetype}, centered. single icon centered, flat vector style, isolated on white background, large negative space, no text, no letters, no words, ultra sharp, high definition",
+                "icon_a_label": "Logo Principal · FLUX.1",
             }
 
-        # Génère les 3 icônes en parallèle via UnifiedImageClient
-        icon_batch = {
-            "logo_a": icon_prompts.get("icon_a_prompt", ""),
-            "logo_b": icon_prompts.get("icon_b_prompt", ""),
-            "logo_c": icon_prompts.get("icon_c_prompt", ""),
-        }
-        seeds = {"logo_a": 1, "logo_b": 2, "logo_c": 3}
-        icons = await unified_image.generate_batch(icon_batch, seeds=seeds)
+        # Génère 1 icône principale via FLUX.1-schnell
+        icon_batch = {"logo_a": icon_prompts.get("icon_a_prompt", "")}
+        icons = await flux_client.generate_batch(icon_batch, seeds={"logo_a": 1})
 
         n = sum(1 for v in icons.values() if v)
-        print(f"[LOGO ICON] {n}/3 icônes générées (HF→Pollinations)")
+        print(f"[LOGO ICON] {n}/1 icône principale générée (FLUX.1-schnell)")
 
         return {
             "icons": icons,
             "labels": {
-                "logo_a": icon_prompts.get("icon_a_label", "Piste A · Minimalisme"),
-                "logo_b": icon_prompts.get("icon_b_label", "Piste B · Modernité"),
-                "logo_c": icon_prompts.get("icon_c_label", "Piste C · Premium"),
+                "logo_a": icon_prompts.get("icon_a_label", "Logo Principal · FLUX.1"),
             }
         }
 
@@ -533,18 +516,16 @@ Réponds UNIQUEMENT en JSON avec ces 6 clés exactes.
 
     async def generate_all_images(self, prompts: Dict) -> Dict:
         """
-        Lance les 3 générations moodboard en parallèle via UnifiedImageClient.
-        HuggingFace FLUX.1-schnell (40s) → Pollinations fallback automatique.
+        Génère 1 image moodboard principale (mood_1) via SDXL.
+        mood_2 et mood_3 supprimés — 1 seule image pleine largeur côté frontend.
         """
-        batch = {
-            k: prompts.get(f"{k}_prompt", "")
-            for k in ["mood_1", "mood_2", "mood_3"]
-            if prompts.get(f"{k}_prompt")
-        }
-        seeds = {"mood_1": 10, "mood_2": 20, "mood_3": 30}
-        images = await unified_image.generate_batch(batch, seeds=seeds)
+        batch = {}
+        if prompts.get("mood_1_prompt"):
+            batch["mood_1"] = prompts["mood_1_prompt"]
+        images = await sdxl_client.generate_batch(batch, seeds={"mood_1": 10})
+        images.setdefault("mood_1", "")
         n = sum(1 for v in images.values() if v)
-        print(f"[VISION IMAGE] {n}/3 images moodboard générées (HF→Pollinations)")
+        print(f"[VISION IMAGE] {n}/1 image moodboard générée (SDXL)")
         return images
 
     # ==================== ANALYSE COMPLÈTE ====================
@@ -631,8 +612,8 @@ Réponds UNIQUEMENT en JSON avec ces 6 clés exactes.
 
         n_icons = sum(1 for v in logo_result["icons"].values() if v)
         n_mood = sum(1 for v in mood_images.values() if v)
-        thoughts.append(f"[OK] {n_icons}/3 icônes brand mark générées")
-        thoughts.append(f"[OK] {n_mood}/3 visuels moodboard générés")
+        thoughts.append(f"[OK] {n_icons}/1 logo principal FLUX.1-schnell généré")
+        thoughts.append(f"[OK] {n_mood}/1 visuel moodboard SDXL généré")
 
         # Les icônes seront assemblées côté frontend avec le nom de l'entreprise
         images = {**logo_result["icons"], **mood_images}
@@ -640,8 +621,6 @@ Réponds UNIQUEMENT en JSON avec ces 6 clés exactes.
         image_labels = {
             **logo_result["labels"],
             "mood_1": mood_prompts.get("mood_1_label", "Ambiance · Atmosphère"),
-            "mood_2": mood_prompts.get("mood_2_label", "Univers · Mise en Situation"),
-            "mood_3": mood_prompts.get("mood_3_label", "Texture · Signal de Marque"),
         }
 
         confidence_score = (vibe.get("aesthetic_score", 80) / 100) * 10

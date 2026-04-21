@@ -712,13 +712,23 @@ function VisionImageCard({ src, label, tall = false }) {
   }
 
   if (!src) {
+    // Placeholder élégant avec dégradé stylé — pas de carré vide
+    const gradients = [
+      'from-purple-600/30 via-pink-500/20 to-indigo-600/30',
+      'from-blue-600/30 via-teal-500/20 to-purple-600/30',
+      'from-orange-500/20 via-pink-400/20 to-rose-600/30',
+    ]
+    const gradIdx = label ? label.charCodeAt(0) % 3 : 0
     return (
-      <div className={`rounded-xl border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center gap-2 ${tall ? 'min-h-[340px]' : 'min-h-[180px]'}`}>
-        <div className="w-8 h-8 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-700 flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-gray-400" />
+      <div className={`rounded-xl overflow-hidden bg-gradient-to-br ${gradients[gradIdx]} border border-white/10 flex flex-col items-center justify-center gap-3 ${tall ? 'min-h-[340px]' : 'min-h-[180px]'}`}
+        style={{ backdropFilter: 'blur(8px)' }}>
+        <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center">
+          <Sparkles className="w-6 h-6 text-white/60" />
         </div>
-        <p className="text-xs text-gray-400">Génération en cours...</p>
-        {label && <p className="text-xs text-gray-500 font-medium px-3 text-center">{label}</p>}
+        <div className="text-center px-4">
+          {label && <p className="text-xs font-semibold text-white/80 mb-0.5">{label}</p>}
+          <p className="text-[10px] text-white/40">Visuel non disponible</p>
+        </div>
       </div>
     )
   }
@@ -2937,6 +2947,55 @@ function KillerFeatureCard({ feature, index }) {
   )
 }
 
+// ==================== AGENT STEPS (remplace terminal brut) ====================
+
+function AgentSteps({ thoughts }) {
+  if (!thoughts?.length) return null
+  const getConfig = (thought) => {
+    const tag = thought.match(/^\[([A-Z_]+)\s*\]/)?.[1] || 'OK'
+    const text = thought.replace(/^\[[A-Z_\s]+\]\s*/, '') || thought
+    const map = {
+      OK:        { icon: CheckCircle2, cls: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/30' },
+      ERROR:     { icon: XCircle,      cls: 'text-red-500',     bg: 'bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30' },
+      THINKING:  { icon: Brain,        cls: 'text-blue-500',    bg: 'bg-blue-50 dark:bg-blue-950/20 border-blue-100 dark:border-blue-900/30' },
+      SEARCH:    { icon: Search,       cls: 'text-purple-500',  bg: 'bg-purple-50 dark:bg-purple-950/20 border-purple-100 dark:border-purple-900/30' },
+      ANALYSIS:  { icon: BarChart3,    cls: 'text-amber-500',   bg: 'bg-amber-50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-900/30' },
+      IMAGE:     { icon: Sparkles,     cls: 'text-pink-500',    bg: 'bg-pink-50 dark:bg-pink-950/20 border-pink-100 dark:border-pink-900/30' },
+      LOGO:      { icon: Palette,      cls: 'text-violet-500',  bg: 'bg-violet-50 dark:bg-violet-950/20 border-violet-100 dark:border-violet-900/30' },
+      SIGNALS:   { icon: TrendingUp,   cls: 'text-teal-500',    bg: 'bg-teal-50 dark:bg-teal-950/20 border-teal-100 dark:border-teal-900/30' },
+      SYNTHESIS: { icon: Zap,          cls: 'text-orange-500',  bg: 'bg-orange-50 dark:bg-orange-950/20 border-orange-100 dark:border-orange-900/30' },
+    }
+    return { ...(map[tag] || map.OK), text }
+  }
+  return (
+    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-5 shadow-sm">
+      <div className="flex items-center gap-2 mb-4">
+        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Analyse complète</h3>
+        <span className="ml-auto text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500">
+          {thoughts.length} étapes
+        </span>
+      </div>
+      <div className="space-y-1.5">
+        {thoughts.map((thought, idx) => {
+          const { icon: Icon, cls, bg, text } = getConfig(thought)
+          return (
+            <motion.div key={idx}
+              initial={{ opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: idx * 0.025 }}
+              className={`flex items-center gap-3 px-3 py-2 rounded-lg border ${bg}`}
+            >
+              <Icon className={`w-3.5 h-3.5 ${cls} flex-shrink-0`} />
+              <span className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{text}</span>
+            </motion.div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ==================== COMPOSANT PRINCIPAL ====================
 
 export default function AgentPage() {
@@ -2954,7 +3013,141 @@ export default function AgentPage() {
   const agentThoughts = result?.agent_thoughts || []
   const agentStatus = agentsStatus[agentId]?.status || 'idle'
 
-  const [activeTab, setActiveTab] = useState(() => result?.activeTab || 'overview')
+  const [activeTab, setActiveTab] = useState(() => {
+    const defaultTab = agentId === 'trend_hunter' ? 'risks' : 'overview'
+    return result?.activeTab || defaultTab
+  })
+
+  // ── Notion export state ──────────────────────────────────────
+  const [notionExporting, setNotionExporting] = useState(false)
+  const [notionResult, setNotionResult]       = useState(null) // { success, tasks_created, notion_url, errors }
+
+  // ── Telegram state ───────────────────────────────────────────
+  const [tgSending, setTgSending]   = useState(false)
+  const [tgResult,  setTgResult]    = useState(null) // { success, message_id } | { success: false, error }
+
+  // ── Logo feedback loop (Visionary) ───────────────────────────
+  const [logoFeedback,  setLogoFeedback]  = useState('')
+  const [logoRegening,  setLogoRegening]  = useState(false)
+  // Logo personnalisé — persisté dans localStorage pour survivre à la navigation
+  const [customLogoSrc, setCustomLogoSrc] = useState(() => {
+    try { return localStorage.getItem('sw_custom_logo') || null } catch { return null }
+  })
+
+  // Sauvegarde du logo custom à chaque modification
+  useEffect(() => {
+    try {
+      if (customLogoSrc) localStorage.setItem('sw_custom_logo', customLogoSrc)
+      else localStorage.removeItem('sw_custom_logo')
+    } catch { /* quota */ }
+  }, [customLogoSrc])
+
+  // ── Prototype (Commercial Agent) ─────────────────────────────
+  const [protoGenerating, setProtoGenerating] = useState(false)
+  const [protoImageSrc,   setProtoImageSrc]   = useState(null)
+
+  const handleExportNotion = async () => {
+    setNotionExporting(true)
+    setNotionResult(null)
+    try {
+      const resp = await fetch('http://localhost:8000/api/export-notion/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          project_description: projectDesc || '',
+          agents_results: agentsResults || {},
+          lang: 'fr',
+        }),
+      })
+      const contentType = resp.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) {
+        throw new Error(`Serveur inaccessible (${resp.status}). Vérifiez que Django tourne sur :8000.`)
+      }
+      const data = await resp.json()
+      setNotionResult(data)
+    } catch (err) {
+      setNotionResult({ success: false, error: String(err) })
+    } finally {
+      setNotionExporting(false)
+    }
+  }
+
+  const handleLogoFeedback = async (e) => {
+    e.preventDefault()
+    if (!logoFeedback.trim()) return
+    setLogoRegening(true)
+    try {
+      // Récupère le prompt original du logo A depuis les résultats Vision
+      const originalPrompt = agentsResults?.visual_semiotics?.image_prompts?.icon_a_prompt
+        || `minimalist brand icon for ${projectDesc?.slice(0, 60)}`
+      const resp = await fetch('http://localhost:8000/api/regenerate-logo/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          original_prompt: originalPrompt,
+          feedback: logoFeedback,
+          brand_primary: agentsResults?.visual_semiotics?.brand_primary_color || '#6366f1',
+        }),
+      })
+      const ct = resp.headers.get('content-type') || ''
+      if (!ct.includes('application/json')) throw new Error(`Serveur inaccessible (${resp.status})`)
+      const data = await resp.json()
+      if (data.image_uri) {
+        setCustomLogoSrc(data.image_uri)
+        setLogoFeedback('')
+      }
+    } catch (err) {
+      console.error('[LOGO FEEDBACK]', err)
+    } finally {
+      setLogoRegening(false)
+    }
+  }
+
+  const handleGeneratePrototype = async () => {
+    setProtoGenerating(true)
+    try {
+      const resp = await fetch('http://localhost:8000/api/generate-prototype/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project_description: projectDesc || '' }),
+      })
+      const ct = resp.headers.get('content-type') || ''
+      if (!ct.includes('application/json')) throw new Error(`Serveur inaccessible (${resp.status})`)
+      const data = await resp.json()
+      if (data.image_uri) setProtoImageSrc(data.image_uri)
+    } catch (err) {
+      console.error('[PROTOTYPE]', err)
+    } finally {
+      setProtoGenerating(false)
+    }
+  }
+
+  const handleSendTelegram = async () => {
+    setTgSending(true)
+    setTgResult(null)
+    try {
+      const resp = await fetch('http://localhost:8000/api/send-telegram/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          project_description: projectDesc || '',
+          creative_result: agentsResults?.creative_director || {},
+          prototype_url: protoImageSrc || '',
+        }),
+      })
+      const contentType = resp.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) {
+        const text = await resp.text()
+        throw new Error(`Serveur inaccessible (${resp.status}). Vérifiez que Django tourne sur :8000.\n${text.slice(0, 100)}`)
+      }
+      const data = await resp.json()
+      setTgResult(data)
+    } catch (err) {
+      setTgResult({ success: false, error: String(err) })
+    } finally {
+      setTgSending(false)
+    }
+  }
 
   const isVisionAgent = agentId === 'visual_semiotics'
 
@@ -2979,10 +3172,18 @@ export default function AgentPage() {
       return [
         { id: 'overview', label: 'Vue d\'ensemble', icon: BarChart3 },
         { id: 'execution', label: '🛠️ Plan d\'Exécution', icon: Rocket },
-      ];
+      ]
     }
+
+    if (agentId === 'commercial_agent') {
+      return [
+        { id: 'overview',   label: 'Vue d\'ensemble', icon: BarChart3 },
+        { id: 'prospects',  label: '🎯 Prospects',     icon: Target },
+        { id: 'emails',     label: '📧 Emails',         icon: MessageSquare },
+      ]
+    }
+
     return [
-      { id: 'overview', label: 'Vue d\'ensemble', icon: BarChart3 },
       { id: 'risks', label: 'Risques', icon: AlertTriangle },
       { id: 'strategy', label: 'Stratégie & Signaux', icon: Lightbulb },
       { id: 'opportunities', label: 'Opportunités', icon: Target },
@@ -3040,7 +3241,8 @@ export default function AgentPage() {
     trend_hunter: { name: 'TREND HUNTER', icon: TrendingUp, iconColor: 'text-blue-500', bgGradient: 'from-blue-500/20 to-cyan-500/20' },
     visual_semiotics: { name: 'VISUAL SEMIOTICS', icon: Eye, iconColor: 'text-purple-500', bgGradient: 'from-purple-500/20 to-pink-500/20' },
     emotional_intelligence: { name: 'EMOTIONAL AI', icon: Brain, iconColor: 'text-emerald-500', bgGradient: 'from-emerald-500/20 to-teal-500/20' },
-    creative_director: { name: 'CREATIVE UNIT', icon: Sparkles, iconColor: 'text-orange-500', bgGradient: 'from-orange-500/20 to-red-500/20' }
+    creative_director: { name: 'CREATIVE UNIT', icon: Sparkles, iconColor: 'text-orange-500', bgGradient: 'from-orange-500/20 to-red-500/20' },
+    commercial_agent:  { name: 'THE DEALMAKER', icon: Users,    iconColor: 'text-pink-500',   bgGradient: 'from-pink-500/20 to-purple-500/20' },
   }[agentId] || { name: 'AGENT', icon: Target, iconColor: 'text-gray-500', bgGradient: '' }
 
   const Icon = config.icon
@@ -3115,14 +3317,17 @@ export default function AgentPage() {
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{config.name}</h1>
               </div>
               <p className="text-gray-600 dark:text-gray-400 max-w-xl">
-                {isVisionAgent
-                  ? "Analyse sémiotique avancée : identité visuelle, stratégie et design system"
-                  : "Analyse stratégique avancée du marché, des risques et des opportunités"}
+                {agentId === 'commercial_agent'
+                  ? "Prospection commerciale intelligente : prospects ciblés, emails personnalisés, posts réseaux sociaux — validez avant envoi"
+                  : isVisionAgent
+                    ? "Analyse sémiotique avancée : identité visuelle, stratégie et design system"
+                    : "Analyse stratégique avancée du marché, des risques et des opportunités"}
               </p>
               <div className="flex items-center gap-2 mt-4">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs text-gray-500">
-                  Modèle: {result.model_used || "Groq/Llama-4-Scout-17B"}
+                <span className="text-xs text-gray-500 font-medium">Analyse complète</span>
+                <span className="text-xs px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400 border border-green-200 dark:border-green-800">
+                  ✓ Prêt
                 </span>
               </div>
             </div>
@@ -3132,25 +3337,31 @@ export default function AgentPage() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-[73px] z-10">
+      <div className="border-b border-gray-100 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-[57px] z-10">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="flex gap-6 overflow-x-auto">
+          <div className="flex gap-1 overflow-x-auto">
             {tabs.map((tab) => {
               const TabIcon = tab.icon
+              const isActive = activeTab === tab.id
               return (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`
-                    flex items-center gap-2 py-3 border-b-2 transition-all whitespace-nowrap
-                    ${activeTab === tab.id
-                      ? 'border-purple-500 text-purple-500'
-                      : 'border-transparent text-gray-500 hover:text-gray-700'
-                    }
-                  `}
+                  className={`relative flex items-center gap-2 px-4 py-3.5 text-sm font-medium whitespace-nowrap transition-all rounded-t-lg
+                    ${isActive
+                      ? 'text-gray-900 dark:text-white'
+                      : 'text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                    }`}
                 >
-                  <TabIcon className="w-4 h-4" />
-                  <span className="text-sm font-medium">{tab.label}</span>
+                  <TabIcon className="w-3.5 h-3.5" />
+                  <span>{tab.label}</span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="tab-indicator"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
                 </button>
               )
             })}
@@ -3208,62 +3419,105 @@ export default function AgentPage() {
                 </div>
               </div>
 
-              {/* Terminal de raisonnement */}
-              {agentThoughts && agentThoughts.length > 0 && (
-                <div className="rounded-xl border border-gray-200 overflow-hidden">
-                  <div className="bg-gray-800 px-4 py-2.5 flex items-center gap-3">
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+              {/* ── Notion Roadmap Export (Visionary only) ── */}
+              {isVisionAgent && (
+                <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gray-900 dark:bg-white flex items-center justify-center flex-shrink-0">
+                        {/* Notion N logo */}
+                        <svg viewBox="0 0 24 24" className="w-6 h-6 fill-white dark:fill-gray-900" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 dark:text-white">Exporter vers ma Roadmap Notion</h3>
+                        <p className="text-sm text-gray-500 mt-0.5">
+                          Génère ~15 tâches marketing actionnables et les ajoute à votre base "Roadmap StartWise"
+                        </p>
+                      </div>
                     </div>
-                    <span className="text-xs text-gray-400 font-mono">trend_hunter.log — agent raisonnement</span>
-                    <div className="ml-auto flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                      <span className="text-[10px] text-gray-500 font-mono">{agentThoughts.length} lignes</span>
-                    </div>
+
+                    <button
+                      onClick={handleExportNotion}
+                      disabled={notionExporting}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all
+                        ${notionExporting
+                          ? 'bg-gray-200 dark:bg-gray-700 text-gray-400 cursor-not-allowed'
+                          : notionResult?.success
+                            ? 'bg-green-500 hover:bg-green-600 text-white'
+                            : 'bg-gray-900 hover:bg-gray-700 dark:bg-white dark:hover:bg-gray-100 text-white dark:text-gray-900'
+                        }`}
+                    >
+                      {notionExporting ? (
+                        <>
+                          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                            className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full" />
+                          <span>Export en cours...</span>
+                        </>
+                      ) : notionResult?.success ? (
+                        <>
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>{notionResult.tasks_created} tâches créées !</span>
+                        </>
+                      ) : (
+                        <>
+                          <Database className="w-4 h-4" />
+                          <span>Exporter vers Notion</span>
+                        </>
+                      )}
+                    </button>
                   </div>
-                  <div className="bg-gray-950 p-4 space-y-1 max-h-96 overflow-y-auto font-mono text-xs">
-                    {agentThoughts.map((thought, idx) => {
-                      const tag = thought.match(/^\[([A-Z_]+)\s*\]/)?.[1] || ''
-                      const tagColors = {
-                        'THINKING': 'text-cyan-400',
-                        'SEARCH':   'text-yellow-400',
-                        'READ':     'text-blue-400',
-                        'GREP':     'text-blue-400',
-                        'CHECK':    'text-violet-400',
-                        'FILTER':   'text-violet-400',
-                        'ANALYSIS': 'text-amber-400',
-                        'SIGNALS':  'text-teal-400',
-                        'OK':       'text-green-400',
-                        'ERROR':    'text-red-400',
-                        'SYNTHESIS':'text-emerald-400',
-                      }
-                      const tagColor = tagColors[tag] || 'text-gray-400'
-                      const rest = thought.replace(/^\[[A-Z_\s]+\]\s*/, '')
-                      return (
-                        <motion.div key={idx}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: idx * 0.02 }}
-                          className="flex gap-2 leading-relaxed">
-                          <span className="text-gray-600 select-none w-6 text-right flex-shrink-0">{idx + 1}</span>
-                          <span className="text-gray-600">│</span>
-                          {tag && (
-                            <span className={`font-bold flex-shrink-0 ${tagColor}`}>
-                              [{tag}]
-                            </span>
+
+                  {/* Résultat de l'export */}
+                  {notionResult && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="mt-4"
+                    >
+                      {notionResult.success ? (
+                        <div className="rounded-xl bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 p-4 space-y-3">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                            <p className="text-sm font-semibold text-green-700 dark:text-green-400">
+                              {notionResult.tasks_created} tâches ajoutées sur {notionResult.tasks_total} générées
+                            </p>
+                          </div>
+                          <a
+                            href={notionResult.notion_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            Ouvrir ma Roadmap Notion
+                          </a>
+                          {notionResult.errors?.length > 0 && (
+                            <details className="mt-2">
+                              <summary className="text-xs text-amber-600 cursor-pointer">
+                                {notionResult.errors.length} erreur(s) mineures
+                              </summary>
+                              <ul className="mt-1 space-y-1">
+                                {notionResult.errors.map((e, i) => (
+                                  <li key={i} className="text-xs text-gray-500 font-mono">{e}</li>
+                                ))}
+                              </ul>
+                            </details>
                           )}
-                          <span className="text-gray-300">{rest || thought}</span>
-                        </motion.div>
-                      )
-                    })}
-                    <div className="flex gap-2 leading-relaxed mt-1">
-                      <span className="text-gray-600 select-none w-6 text-right">_</span>
-                      <span className="text-gray-600">│</span>
-                      <span className="text-green-400 animate-pulse">█</span>
-                    </div>
-                  </div>
+                        </div>
+                      ) : (
+                        <div className="rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 p-4">
+                          <div className="flex items-center gap-2">
+                            <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                            <p className="text-sm text-red-600 dark:text-red-400">
+                              {notionResult.error || "Erreur lors de l'export. Vérifiez vos credentials Notion dans le .env"}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
                 </div>
               )}
 
@@ -3272,11 +3526,10 @@ export default function AgentPage() {
                 <CognitivePathway load={cognitiveLoad} />
               )}
 
-              {/* Contexte du projet */}
-              <div className="bg-white dark:bg-gray-900 rounded-xl p-5 border border-gray-200 dark:border-gray-800">
-                <h3 className="font-semibold mb-3">Contexte du projet</h3>
-                <p className="text-gray-600 dark:text-gray-400">{projectDesc}</p>
-              </div>
+              {/* CognitiveStrategy — Persona, Différenciateurs, A/B Tests (emotion uniquement) */}
+              {agentId === 'emotional_intelligence' && (
+                <CognitiveStrategyBanner strategy={cognitiveStrategy} />
+              )}
 
               {/* Benchmark concurrents — affiché AVANT le modèle IA pour Vision */}
               {isVisionAgent && competitors.length > 0 && (
@@ -3345,13 +3598,6 @@ export default function AgentPage() {
                 </div>
               )}
 
-              {/* Modèle utilisé */}
-              {result.model_used && (
-                <div className="bg-gradient-to-r from-purple-500/5 to-pink-500/5 rounded-xl p-4 border border-purple-500/20">
-                  <p className="text-xs text-gray-500">Modèle d'IA utilisé</p>
-                  <p className="text-sm font-mono text-purple-600 dark:text-purple-400">{result.model_used}</p>
-                </div>
-              )}
             </motion.div>
           )}
 
@@ -3370,38 +3616,103 @@ export default function AgentPage() {
               {/* Style visuel */}
               <StyleCard style={visualStyle} />
 
-              {/* Concepts Graphiques — logos hybrides (icône FLUX.1 + texte HTML) */}
-              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+              {/* Logo principal + Boucle de Feedback */}
+              <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-3">
-                  <Sparkles className="w-5 h-5 text-purple-500" />
-                  <h3 className="font-semibold">Concepts Graphiques</h3>
-                  <span className="ml-auto text-xs text-gray-400 font-mono bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">FLUX.1 × HTML · Logo Hybride</span>
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white">Logo Principal</h3>
+                    <p className="text-xs text-gray-400 mt-0.5">Généré par IA · affinez avec vos instructions</p>
+                  </div>
                 </div>
-                <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <LogoHybride
-                    iconSrc={visionImages.logo_a}
-                    companyName={companyName}
-                    label={imageLabels.logo_a || 'Piste A · Minimalisme'}
-                    variant="light"
-                    primaryColor={brandPrimary}
-                    fontFamily={brandFont}
-                  />
-                  <LogoHybride
-                    iconSrc={visionImages.logo_b}
-                    companyName={companyName}
-                    label={imageLabels.logo_b || 'Piste B · Modernité'}
-                    variant="dark"
-                    primaryColor={brandPrimary}
-                    fontFamily={brandFont}
-                  />
-                  <LogoHybride
-                    iconSrc={visionImages.logo_c}
-                    companyName={companyName}
-                    label={imageLabels.logo_c || 'Piste C · Premium'}
-                    variant="badge"
-                    primaryColor={brandPrimary}
-                    fontFamily={brandFont}
-                  />
+                <div className="p-6 space-y-6">
+                  {/* Logo FLUX — grand format pleine largeur */}
+                  <div className="rounded-2xl bg-white border border-gray-100 shadow-sm overflow-hidden">
+                    {(customLogoSrc || visionImages.logo_a) ? (
+                      <div className="flex flex-col items-center">
+                        <img
+                          src={customLogoSrc || visionImages.logo_a}
+                          alt="Logo principal"
+                          className="w-full object-contain"
+                          style={{ maxHeight: 320, background: '#fff' }}
+                        />
+                        <div className="w-full px-4 py-3 border-t border-gray-100 flex items-center justify-between">
+                          <div>
+                            <span className="text-xs text-gray-400 font-mono">
+                              {customLogoSrc ? 'Variante personnalisée · FLUX.1' : (imageLabels.logo_a || 'Logo Principal · FLUX.1')}
+                            </span>
+                            {companyName && (
+                              <p className="text-sm font-bold mt-0.5" style={{ color: brandPrimary }}>
+                                {companyName}
+                              </p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => {
+                              const src = customLogoSrc || visionImages.logo_a
+                              const a = document.createElement('a')
+                              a.href = src
+                              a.download = `logo_${companyName || 'brand'}.webp`
+                              a.click()
+                            }}
+                            className="text-xs text-gray-400 hover:text-gray-700 transition-colors px-2 py-1 rounded"
+                          >
+                            ↓ Télécharger
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center h-56 bg-gray-50">
+                        <div className="text-center space-y-2">
+                          <div className="w-12 h-12 rounded-xl mx-auto flex items-center justify-center" style={{ background: brandPrimary + '20' }}>
+                            <Sparkles className="w-6 h-6" style={{ color: brandPrimary }} />
+                          </div>
+                          <p className="text-sm text-gray-400">Logo en cours de génération…</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Input de feedback */}
+                  <form onSubmit={handleLogoFeedback} className="space-y-3">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Comment souhaitez-vous modifier ce logo ?
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={logoFeedback}
+                        onChange={e => setLogoFeedback(e.target.value)}
+                        placeholder="Ex: Plus arrondi, couleur dorée, style tech futuriste..."
+                        className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-400 transition-all"
+                        disabled={logoRegening}
+                      />
+                      <button
+                        type="submit"
+                        disabled={logoRegening || !logoFeedback.trim()}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm shadow-purple-500/20"
+                      >
+                        {logoRegening ? (
+                          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                            className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                        ) : (
+                          <Sparkles className="w-4 h-4" />
+                        )}
+                        {logoRegening ? 'Génération...' : 'Régénérer'}
+                      </button>
+                    </div>
+                    {customLogoSrc && (
+                      <button type="button" onClick={() => setCustomLogoSrc(null)}
+                        className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+                        ← Revenir au logo original
+                      </button>
+                    )}
+                  </form>
+
+                  {/* Powered by */}
+                  <p className="text-center text-xs text-gray-400">Généré par FLUX.1-schnell · Affinez avec vos instructions ci-dessus</p>
                 </div>
               </div>
             </motion.div>
@@ -3424,29 +3735,15 @@ export default function AgentPage() {
                     Atmosphères visuelles générées selon l'archétype{semioticsAnalysis.recommended_archetype ? ` "${semioticsAnalysis.recommended_archetype}"` : ''} détecté
                   </p>
                 </div>
-                <span className="text-xs text-gray-400 font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">FLUX.1 · IA</span>
+                <span className="text-xs text-gray-400 font-mono bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full">SDXL · IA</span>
               </div>
 
-              {/* Grille asymétrique moodboard */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Image 1 — grande, colonne gauche */}
-                <div className="row-span-2">
-                  <VisionImageCard
-                    src={visionImages.mood_1}
-                    label={imageLabels.mood_1 || "Ambiance · Atmosphère"}
-                    tall
-                  />
-                </div>
-                {/* Images 2 et 3 — colonne droite */}
-                <VisionImageCard
-                  src={visionImages.mood_2}
-                  label={imageLabels.mood_2 || "Univers · Mise en Situation"}
-                />
-                <VisionImageCard
-                  src={visionImages.mood_3}
-                  label={imageLabels.mood_3 || "Texture · Signal de Marque"}
-                />
-              </div>
+              {/* Moodboard — 1 image pleine largeur */}
+              <VisionImageCard
+                src={visionImages.mood_1}
+                label={imageLabels.mood_1 || "Ambiance · Atmosphère"}
+                tall
+              />
 
               {/* Analyse sémiotique (contexte stratégique) */}
               {semioticsAnalysis.dominant_signifiers?.length > 0 && (
@@ -3714,12 +4011,6 @@ export default function AgentPage() {
                 </div>
               </div>
 
-              {/* Customer Journey Map */}
-              <CustomerJourneyMap journey={result?.customer_journey || []} />
-
-              {/* Cognitive Strategy */}
-              <CognitiveStrategyBanner strategy={cognitiveStrategy} />
-
               {/* OCEAN Radar + Ethical Hook Infinity Loop côte à côte */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <OceanRadarChart profile={oceanProfile} />
@@ -3808,8 +4099,340 @@ export default function AgentPage() {
 
             </motion.div>
           )}
+
+          {/* ==================== COMMERCIAL AGENT PAGES ==================== */}
+
+          {agentId === 'commercial_agent' && activeTab === 'overview' && (
+            <motion.div key="commercial-overview" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              className="space-y-6">
+
+              {/* ── Prototype visuel FLUX.1 ── */}
+              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 space-y-4">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)' }}>
+                      <Sparkles className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">Visuel Prototype</h3>
+                      <p className="text-sm text-gray-500 mt-0.5">
+                        Image ultra-réaliste de votre produit · incluse dans le rapport Telegram
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleGeneratePrototype}
+                    disabled={protoGenerating}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+                    style={{ background: 'linear-gradient(135deg, #f97316 0%, #ec4899 100%)' }}
+                  >
+                    {protoGenerating ? (
+                      <>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                          className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                        <span>Génération FLUX.1...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Générer un visuel prototype</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                {protoImageSrc && (
+                  <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
+                    className="rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800">
+                    <img src={protoImageSrc} alt="Prototype produit"
+                      className="w-full object-cover max-h-72 rounded-xl" />
+                    <p className="text-xs text-gray-400 text-center py-2 bg-gray-50 dark:bg-gray-800/50">
+                      Prototype FLUX.1-schnell · Sera envoyé comme visuel principal sur Telegram
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* ── Telegram CTA ── */}
+              <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)' }}>
+                      <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900 dark:text-white">Propulser sur Telegram</h3>
+                      <p className="text-sm text-gray-500 mt-0.5">
+                        Envoie le rapport stratégique du Creative Director sur votre canal Telegram
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleSendTelegram}
+                    disabled={tgSending}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white transition-all
+                      ${tgSending
+                        ? 'opacity-50 cursor-not-allowed'
+                        : tgResult?.success
+                          ? 'bg-green-500 hover:bg-green-600'
+                          : 'hover:opacity-90'
+                      }`}
+                    style={!tgSending && !tgResult?.success ? { background: 'linear-gradient(135deg, #2AABEE 0%, #229ED9 100%)' } : {}}
+                  >
+                    {tgSending ? (
+                      <>
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                          className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                        <span>Envoi...</span>
+                      </>
+                    ) : tgResult?.success ? (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span>Envoyé !</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg viewBox="0 0 24 24" className="w-4 h-4 fill-white" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                        </svg>
+                        <span>Propulser sur Telegram</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                {tgResult && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-4">
+                    {tgResult.success ? (
+                      <div className="rounded-xl p-4 flex items-center gap-3" style={{ background: 'rgba(42,171,238,0.1)', border: '1px solid rgba(42,171,238,0.3)' }}>
+                        <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: '#2AABEE' }} />
+                        <p className="text-sm font-semibold" style={{ color: '#2AABEE' }}>
+                          Rapport envoyé sur Telegram !
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="rounded-xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 p-4 flex items-center gap-3">
+                        <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                        <p className="text-sm text-red-600 dark:text-red-400">{tgResult.error}</p>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </div>
+
+              {/* ── Posts Sociaux inline ── */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-pink-500" />
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Posts Réseaux Sociaux</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <CommercialSocialCard
+                    platform="facebook"
+                    icon="📘"
+                    color="bg-blue-600 hover:bg-blue-700"
+                    initialContent={result?.social_posts?.facebook?.post || ''}
+                    openUrl="https://www.facebook.com/"
+                  />
+                  <CommercialSocialCard
+                    platform="instagram"
+                    icon="📸"
+                    color="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600"
+                    initialContent={result?.social_posts?.instagram?.caption || ''}
+                    hashtags={(result?.social_posts?.instagram?.hashtags || []).join(' ')}
+                    openUrl="https://www.instagram.com/"
+                  />
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-4">
+                <p className="text-sm font-semibold text-yellow-800 dark:text-yellow-300 flex items-center gap-2">
+                  ⚠️ Validation requise avant toute action
+                </p>
+                <p className="text-xs text-yellow-700 dark:text-yellow-400 mt-1">
+                  Tous les emails et posts sont en attente de votre approbation. Aucun envoi n'est effectué automatiquement.
+                </p>
+              </div>
+            </motion.div>
+          )}
+
+          {agentId === 'commercial_agent' && activeTab === 'prospects' && (
+            <motion.div key="commercial-prospects" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+              className="space-y-4">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">🎯 Prospects identifiés</h2>
+              {(result?.prospects || []).length === 0 && (
+                <p className="text-gray-400 text-sm">Aucun prospect généré. Relancez une analyse.</p>
+              )}
+              {(result?.prospects || []).map((p, i) => (
+                <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1 }}
+                  className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="flex items-start justify-between flex-wrap gap-3">
+                    <div>
+                      <p className="text-base font-bold text-gray-900 dark:text-white">{p.name}</p>
+                      <p className="text-sm text-gray-500">{p.role} · <span className="text-pink-600 dark:text-pink-400">{p.company}</span></p>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span className="text-xs font-mono text-gray-400">{p.email}</span>
+                        {p.email_source === 'hunter.io' && (
+                          <span className="px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold">Hunter.io ✓</span>
+                        )}
+                      </div>
+                    </div>
+                    <span className="px-3 py-1 rounded-full bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400 text-xs font-semibold">{p.sector}</span>
+                  </div>
+                  <div className="mt-3 p-3 rounded-lg bg-gray-50 dark:bg-gray-800 text-sm text-gray-600 dark:text-gray-400 italic">
+                    💡 {p.why_fit}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+
+          {agentId === 'commercial_agent' && activeTab === 'emails' && (() => {
+            // Seuls les emails vérifiés par Hunter.io sont affichés
+            const verifiedDrafts = (result?.email_drafts || []).filter(
+              d => d.prospect?.email_source === 'hunter.io'
+            )
+            const totalDrafts = (result?.email_drafts || []).length
+            return (
+              <motion.div key="commercial-emails" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                className="space-y-6">
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-white">📧 Emails de prospection</h2>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold">
+                      Hunter.io ✓ {verifiedDrafts.length}/{totalDrafts}
+                    </span>
+                    <span className="text-xs text-gray-400">Seuls les emails vérifiés sont affichés</span>
+                  </div>
+                </div>
+                {verifiedDrafts.length === 0 && (
+                  <div className="rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-5 text-center">
+                    <p className="text-sm font-semibold text-amber-700 dark:text-amber-400">Aucun email vérifié disponible</p>
+                    <p className="text-xs text-amber-600 dark:text-amber-500 mt-1">
+                      Les {totalDrafts} emails générés utilisent des adresses estimées (non confirmées par Hunter.io).<br/>
+                      Vérifiez les prospects dans l'onglet 🎯 Prospects et envoyez manuellement si besoin.
+                    </p>
+                  </div>
+                )}
+                {verifiedDrafts.map((draft, idx) => (
+                  <CommercialEmailCard key={idx} draft={draft} idx={idx} />
+                ))}
+              </motion.div>
+            )
+          })()}
+
         </AnimatePresence>
       </div>
+    </div>
+  )
+}
+
+// ── Sub-components for commercial agent tabs ─────────────────────────
+
+function CommercialEmailCard({ draft, idx }) {
+  const [subject, setSubject] = useState(draft.subject || '')
+  const [body, setBody] = useState(draft.body || '')
+  const [sending, setSending] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+  const [copied, setCopied] = useState(false)
+
+  const handleSend = async () => {
+    if (!draft.prospect?.email || !subject || !body) return
+    setSending(true); setError('')
+    try {
+      const res = await fetch('http://localhost:8000/api/send-email/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ to_email: draft.prospect.email, subject, body, from_name: 'StartWise' }),
+      })
+      const data = await res.json()
+      if (data.success) setSent(true)
+      else setError(data.error || 'Erreur inconnue')
+    } catch (e) { setError(e.message) }
+    finally { setSending(false) }
+  }
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(`${subject}\n\n${body}`)
+    setCopied(true); setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
+      className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 space-y-4">
+      <div className="flex items-start justify-between flex-wrap gap-2">
+        <div>
+          <p className="font-bold text-gray-900 dark:text-white">{draft.prospect?.name}</p>
+          <p className="text-sm text-gray-500">{draft.prospect?.role} · {draft.prospect?.company}</p>
+          <p className="text-xs font-mono text-pink-500 mt-0.5">{draft.prospect?.email}</p>
+        </div>
+        <p className="text-xs text-gray-400 italic max-w-xs">{draft.prospect?.why_fit}</p>
+      </div>
+      <div>
+        <label className="text-xs text-gray-400 uppercase tracking-wide mb-1 block">Objet</label>
+        <input type="text" value={subject} onChange={e => setSubject(e.target.value)} disabled={sent}
+          className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400 disabled:opacity-60" />
+      </div>
+      <div>
+        <label className="text-xs text-gray-400 uppercase tracking-wide mb-1 block">Corps du mail</label>
+        <textarea value={body} onChange={e => setBody(e.target.value)} disabled={sent} rows={6}
+          className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none disabled:opacity-60" />
+      </div>
+      {error && <p className="text-xs text-red-500">{error}</p>}
+      <div className="flex gap-3">
+        {sent ? (
+          <span className="text-green-600 dark:text-green-400 font-semibold text-sm">✅ Envoyé !</span>
+        ) : (
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+            onClick={handleSend} disabled={sending || !subject || !body}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold disabled:opacity-50">
+            {sending ? '⏳ Envoi...' : '📨 Envoyer ce mail'}
+          </motion.button>
+        )}
+        <button onClick={handleCopy}
+          className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white text-sm transition-colors">
+          {copied ? '✓ Copié' : '📋 Copier'}
+        </button>
+      </div>
+    </motion.div>
+  )
+}
+
+function CommercialSocialCard({ platform, icon, color, initialContent, hashtags = '', openUrl }) {
+  const [content, setContent] = useState(initialContent)
+  const [tags, setTags] = useState(hashtags)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyOpen = async () => {
+    const full = platform === 'instagram' ? `${content}\n\n${tags}` : content
+    try { await navigator.clipboard.writeText(full) } catch (_) {}
+    setCopied(true)
+    setTimeout(() => { setCopied(false) }, 3000)
+    setTimeout(() => window.open(openUrl, '_blank'), 400)
+  }
+
+  return (
+    <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 space-y-3">
+      <div className="flex items-center gap-2">
+        <span className="text-lg">{icon}</span>
+        <span className="font-bold text-sm text-gray-900 dark:text-white capitalize">{platform}</span>
+        <span className="ml-auto text-xs text-gray-400">{content.length} car.</span>
+      </div>
+      <textarea value={content} onChange={e => setContent(e.target.value)} rows={7}
+        className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none" />
+      {platform === 'instagram' && (
+        <input type="text" value={tags} onChange={e => setTags(e.target.value)} placeholder="#hashtag1 #hashtag2..."
+          className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-pink-500 dark:text-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400" />
+      )}
+      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+        onClick={handleCopyOpen}
+        className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-white text-sm font-semibold transition-all ${color}`}>
+        {copied ? `✅ Copié — ouverture ${platform}...` : `📋 Copier & ouvrir ${platform.charAt(0).toUpperCase() + platform.slice(1)}`}
+      </motion.button>
+      <p className="text-[11px] text-gray-400 text-center">Le texte est copié dans le presse-papier — colle-le directement dans {platform}.</p>
     </div>
   )
 }

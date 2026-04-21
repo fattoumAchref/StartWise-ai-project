@@ -393,14 +393,15 @@ class PromptGuard:
 class UnifiedImageClient:
     """
     Client d'image unifié haute disponibilité.
-      Priorité 1 : HuggingFace Inference API (FLUX.1-schnell)
+      Priorité 1 : HuggingFace Inference API
       Priorité 2 : Pollinations.ai (FLUX, gratuit, sans clé)
 
     Retourne toujours une data URI WebP base64 ou "" si les deux échouent.
+    Sous-classable : redéfinir HF_MODEL pour changer le modèle.
     """
 
-    HF_MODEL       = "black-forest-labs/FLUX.1-schnell"
-    HF_TIMEOUT_SEC = 40          # strictement 40s comme demandé
+    HF_MODEL       = "stabilityai/stable-diffusion-xl-base-1.0"  # défaut = SDXL
+    HF_TIMEOUT_SEC = 90          # SDXL est plus lent que FLUX
     POLL_TIMEOUT   = 70          # Pollinations peut être lent
 
     def __init__(self):
@@ -425,6 +426,8 @@ class UnifiedImageClient:
     def _pollinations_generate(self, prompt: str, seed: int = 42) -> str:
         """Appel synchrone Pollinations — dernier recours."""
         import urllib.parse
+        # Délai anti-rate-limit (429) — espace les appels Pollinations
+        time.sleep(2)
         safe = prompt.encode("ascii", errors="ignore").decode("ascii")[:280]
         if len(safe) < 20:
             safe = "hyper-realistic 3D render cinematic dark technology concept"
@@ -438,8 +441,8 @@ class UnifiedImageClient:
                 resp = requests.get(url, timeout=self.POLL_TIMEOUT)
                 if resp.status_code == 429:
                     if attempt == 0:
-                        print("[IMAGE FALLBACK] Pollinations 429 — attente 40s puis retry...")
-                        time.sleep(40)
+                        print("[IMAGE FALLBACK] Pollinations 429 — attente 30s puis retry...")
+                        time.sleep(30)
                         continue
                     return ""
                 if resp.status_code != 200:
@@ -492,21 +495,22 @@ class UnifiedImageClient:
 
     async def generate_batch(self, prompts: dict[str, str], seeds: dict[str, int] | None = None) -> dict[str, str]:
         """
-        Génère plusieurs images en parallèle.
+        Génère plusieurs images SÉQUENTIELLEMENT (anti-rate-limit Pollinations 429).
+        Un délai de 2s est injecté entre chaque appel par _pollinations_generate.
         prompts = {"label": "prompt text", ...}
         seeds   = {"label": seed_int, ...}  (optionnel)
         Retourne {"label": "data:image/webp;base64,...", ...}
         """
         seeds = seeds or {}
-        tasks = [
-            self.generate(prompt, seed=seeds.get(label, 42), label=label)
-            for label, prompt in prompts.items()
-        ]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        return {
-            label: (r if isinstance(r, str) else "")
-            for label, r in zip(prompts.keys(), results)
-        }
+        results = {}
+        for label, prompt in prompts.items():
+            try:
+                uri = await self.generate(prompt, seed=seeds.get(label, 42), label=label)
+                results[label] = uri
+            except Exception as e:
+                print(f"[IMAGE BATCH] ❌ {label} — exception: {e}")
+                results[label] = ""
+        return results
 
 
 # ─────────────────────────────────────────────────────────────
@@ -534,6 +538,25 @@ def state_llm_params(state: dict) -> dict:
 #  Singletons exportés (instanciation unique par processus)
 # ─────────────────────────────────────────────────────────────
 
+# ─────────────────────────────────────────────────────────────
+#  Clients image spécialisés
+# ─────────────────────────────────────────────────────────────
+
+class FluxImageClient(UnifiedImageClient):
+    """FLUX.1-schnell (black-forest-labs) — logo & prototype ultra-réaliste."""
+    HF_MODEL       = "black-forest-labs/FLUX.1-schnell"
+    HF_TIMEOUT_SEC = 60   # FLUX est plus rapide
+
+class SDXLImageClient(UnifiedImageClient):
+    """Stable Diffusion XL base 1.0 — moodboard atmosphérique haute qualité."""
+    HF_MODEL       = "stabilityai/stable-diffusion-xl-base-1.0"
+    HF_TIMEOUT_SEC = 90   # SDXL prend plus de temps
+
+
+# ─────────────────────────────────────────────────────────────
+#  Singletons exportés (instanciation unique par processus)
+# ─────────────────────────────────────────────────────────────
+
 # Provider standard (Groq 8B → ESPRIT) — pour Vision + Emotion
 inference     = SmartInferenceProvider(prefer_quality=False)
 
@@ -543,5 +566,11 @@ inference_pro = SmartInferenceProvider(prefer_quality=True)
 # Guard
 prompt_guard  = PromptGuard()
 
-# Image client
+# Image client générique (legacy, garde SDXL par défaut)
 image_client  = UnifiedImageClient()
+
+# FLUX.1-schnell — logos + prototypes
+flux_client   = FluxImageClient()
+
+# SDXL — moodboard atmosphérique
+sdxl_client   = SDXLImageClient()

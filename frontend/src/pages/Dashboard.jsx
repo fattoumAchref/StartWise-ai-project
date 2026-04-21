@@ -8,10 +8,11 @@ import GlobeNetwork from '../components/GlobeNetwork'
 import { X, Download, ChevronLeft, ChevronRight, Target, Users, Zap, Radio, TrendingUp, DollarSign, Layers, Building2, ArrowRight, Printer } from 'lucide-react'
 
 const AGENT_CONFIG = {
-  trend_hunter:          { name: 'The Hunter',      emoji: '📡', color: '#3b82f6', role: 'Trend Agent',      model: 'Mistral Large', speed: '45-60s', skills: ['Web Research','FAISS Vector DB','Weak Signals','Risk Analysis','Pre-Mortem'] },
-  visual_semiotics:      { name: 'The Artist',       emoji: '🎨', color: '#a855f7', role: 'Visual Agent',     model: 'Llama-3.1-70B', speed: '30-45s', skills: ['Semiotics','Color Psychology','Typography','Logo Gen','Moodboard'] },
-  emotional_intelligence:{ name: 'The Psychologist', emoji: '🧠', color: '#10b981', role: 'Emotion Agent',    model: 'Llama-3.1-70B', speed: '15-25s', skills: ['OCEAN Profile','Sentiment Analysis','Journey Map','Behavioral Nudges','Cognitive Load'] },
-  creative_director:     { name: 'The Architect',    emoji: '⚡', color: '#f97316', role: 'Creative Unit',    model: 'Llama-3.1-70B', speed: '60-90s', skills: ['Strategy Synthesis','Roadmap Gen','Disruption Score','Killer Features','FLUX.1 Images'] },
+  trend_hunter:          { name: 'The Hunter',      emoji: '📡', color: '#3b82f6', role: 'Trend Agent',       model: 'Mistral Large', speed: '45-60s', skills: ['Web Research','FAISS Vector DB','Weak Signals','Risk Analysis','Pre-Mortem'] },
+  visual_semiotics:      { name: 'The Artist',       emoji: '🎨', color: '#a855f7', role: 'Visual Agent',      model: 'Llama-3.1-70B', speed: '30-45s', skills: ['Semiotics','Color Psychology','Typography','Logo Gen','Moodboard'] },
+  emotional_intelligence:{ name: 'The Psychologist', emoji: '🧠', color: '#10b981', role: 'Emotion Agent',     model: 'Llama-3.1-70B', speed: '15-25s', skills: ['OCEAN Profile','Sentiment Analysis','Journey Map','Behavioral Nudges','Cognitive Load'] },
+  creative_director:     { name: 'The Architect',    emoji: '⚡', color: '#f97316', role: 'Creative Unit',     model: 'Llama-3.1-70B', speed: '60-90s', skills: ['Strategy Synthesis','Roadmap Gen','Disruption Score','Killer Features','FLUX.1 Images'] },
+  commercial_agent:      { name: 'The Dealmaker',    emoji: '🤝', color: '#ec4899', role: 'Commercial Agent',  model: 'Llama-3.3-70B', speed: '30-50s', skills: ['Prospect Finding','Email Drafting','Facebook Posts','Instagram Posts','Hunter.io','Resend'] },
 }
 
 // ==================== TYPEWRITER INPUT ====================
@@ -119,11 +120,9 @@ function LaunchOverlay({ messages, t }) {
   )
 }
 
-// ==================== AGENT CARD WITH REAL PROGRESS ====================
+// ==================== AGENT CARD — SaaS Minimaliste ====================
 function AgentCard({ agentId, status, progress, onClick, t }) {
   const cfg = AGENT_CONFIG[agentId]
-  const statusLabel = { idle: t.ready, running: t.running, completed: t.completed }
-  const statusColor = { idle: 'text-gray-400', running: 'text-blue-400', completed: 'text-emerald-400' }
   const [simulatedProgress, setSimulatedProgress] = useState(0)
 
   useEffect(() => {
@@ -132,49 +131,63 @@ function AgentCard({ agentId, status, progress, onClick, t }) {
     const iv = setInterval(() => {
       setSimulatedProgress(prev => {
         if (prev >= 92) return prev
-        const inc = prev < 30 ? 4 : prev < 60 ? 2 : 0.8
-        return Math.min(prev + inc, 92)
+        return Math.min(prev + (prev < 30 ? 4 : prev < 60 ? 2 : 0.8), 92)
       })
     }, 600)
     return () => clearInterval(iv)
   }, [status])
 
-  useEffect(() => {
-    if (status === 'completed') setSimulatedProgress(100)
-  }, [status])
+  useEffect(() => { if (status === 'completed') setSimulatedProgress(100) }, [status])
 
   const pct = status === 'completed' ? 100 : simulatedProgress
+  const isCompleted = status === 'completed'
+  const isRunning   = status === 'running'
 
   return (
-    <motion.button whileHover={{ y: -3, boxShadow: `0 12px 40px ${cfg.color}22` }}
+    <motion.button
+      whileHover={{ y: -2, boxShadow: `0 8px 30px ${cfg.color}18` }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="w-full text-left p-5 rounded-2xl border bg-white dark:bg-gray-900 transition-all"
-      style={{ borderColor: status === 'completed' ? `${cfg.color}66` : status === 'running' ? `${cfg.color}44` : 'transparent', borderWidth: '1.5px' }}>
-      <div className="flex items-start justify-between mb-3">
-        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shadow-lg"
-          style={{ background: `${cfg.color}18`, border: `1px solid ${cfg.color}33` }}>
+      className={`w-full text-left p-5 rounded-2xl border bg-white dark:bg-gray-900 transition-all shadow-sm
+        ${isCompleted ? 'border-gray-200 dark:border-gray-700' : isRunning ? 'border-gray-200 dark:border-gray-700' : 'border-gray-100 dark:border-gray-800'}`}
+    >
+      {/* Top row */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg"
+          style={{ background: `${cfg.color}12` }}>
           {cfg.emoji}
         </div>
-        <span className={`text-xs font-semibold ${statusColor[status] || 'text-gray-400'}`}>
-          {statusLabel[status] || t.ready}
-        </span>
-      </div>
-      <p className="font-bold text-sm text-gray-900 dark:text-white">{cfg.name}</p>
-      <p className="text-xs text-gray-500 mt-0.5">{cfg.role}</p>
-      <div className="mt-3">
-        <div className="flex items-center justify-between mb-1">
-          <span className="text-[10px] text-gray-400">{status === 'idle' ? '—' : `${Math.round(pct)}%`}</span>
-          {status === 'running' && (
-            <motion.div animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.2, repeat: Infinity }}
+        {isCompleted ? (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
+            <svg className="w-3 h-3 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">Prêt</span>
+          </div>
+        ) : isRunning ? (
+          <div className="flex items-center gap-1.5">
+            <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 1, repeat: Infinity }}
               className="w-1.5 h-1.5 rounded-full" style={{ background: cfg.color }} />
-          )}
-        </div>
-        <div className="h-1.5 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800">
-          <motion.div className="h-full rounded-full"
-            animate={{ width: `${pct}%` }}
-            transition={{ duration: 0.6 }}
-            style={{ background: `linear-gradient(90deg, ${cfg.color}99, ${cfg.color})` }} />
-        </div>
+            <span className="text-[10px] font-semibold text-blue-500">{Math.round(pct)}%</span>
+          </div>
+        ) : (
+          <span className="text-[10px] font-medium text-gray-300 dark:text-gray-600">—</span>
+        )}
+      </div>
+
+      {/* Name + role */}
+      <p className="font-semibold text-sm text-gray-900 dark:text-white leading-tight">{cfg.name}</p>
+      <p className="text-xs text-gray-400 mt-0.5">{cfg.role}</p>
+
+      {/* Progress bar */}
+      <div className="mt-4 h-1 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <motion.div className="h-full rounded-full"
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ background: isCompleted
+            ? `linear-gradient(90deg, #10b981, #059669)`
+            : `linear-gradient(90deg, ${cfg.color}80, ${cfg.color})` }}
+        />
       </div>
     </motion.button>
   )
@@ -219,7 +232,7 @@ function ActivityFeedPanel({ activities, t }) {
       <div className="flex-1 overflow-y-auto space-y-2 p-4">
         <AnimatePresence>
           {activities.slice(-30).map((a, i) => (
-            <motion.div key={a.id || i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+            <motion.div key={`${a.id}-${i}`} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
               className="flex gap-2 items-start">
               <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0"
                 style={{ background: agentColors[a.agent] || '#6b7280' }} />
@@ -1053,7 +1066,7 @@ function buildNarrativeSynthesis(trend, vision, emotion, creative, masterScore, 
 
 function ExecutiveSynthesis({ agentsResults, agentsStatus, t, lang, isDarkMode, onOpenBPlan, onOpenPitch }) {
   const completed = Object.values(agentsStatus).filter(a => a?.status === 'completed').length
-  const allDone = completed === 4
+  const allDone = completed === 5
   const trend = agentsResults.trend_hunter || {}
   const emotion = agentsResults.emotional_intelligence || {}
   const creative = agentsResults.creative_director || {}
@@ -1104,7 +1117,7 @@ function ExecutiveSynthesis({ agentsResults, agentsStatus, t, lang, isDarkMode, 
                   style={{ borderColor: done ? cfg.color : '#374151', background: done ? `${cfg.color}22` : 'transparent' }}>
                   {done ? cfg.emoji : <span className="text-xs text-gray-500">{cfg.emoji}</span>}
                 </motion.div>
-                <div className="h-1 w-full rounded-full" style={{ background: done ? cfg.color : '#1f2937' }}/>
+                <div className="h-1 w-full rounded-full" style={{ background: done ? cfg.color : (isDarkMode ? '#1f2937' : '#e5e7eb') }}/>
               </div>
             )
           })}
@@ -1113,7 +1126,7 @@ function ExecutiveSynthesis({ agentsResults, agentsStatus, t, lang, isDarkMode, 
               <motion.div className="h-full rounded-full" style={{ background: 'linear-gradient(90deg, #3b82f6, #ec4899, #f97316, #a855f7)' }}
                 animate={{ width: `${completed * 25}%` }} transition={{ duration: 0.6 }} />
             </div>
-            <p className="text-xs text-gray-400 mt-1 text-right">{completed}/4</p>
+            <p className="text-xs text-gray-400 mt-1 text-right">{completed}/5</p>
           </div>
         </div>
 
@@ -1236,7 +1249,7 @@ function ArchiveView({ history, agentsResults, agentsStatus, t, onReload }) {
       <div className="relative">
         <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
           {[...Array(40)].map((_, i) => (
-            <motion.div key={i} className="absolute w-0.5 h-0.5 rounded-full bg-white"
+            <motion.div key={i} className="absolute w-0.5 h-0.5 rounded-full bg-gray-400 dark:bg-white"
               style={{ left: `${Math.random()*100}%`, top: `${Math.random()*100}%`, opacity: Math.random()*0.6+0.1 }}
               animate={{ opacity: [0.1, 0.8, 0.1] }}
               transition={{ duration: 2+Math.random()*3, repeat: Infinity, delay: Math.random()*2 }} />
@@ -1244,7 +1257,7 @@ function ArchiveView({ history, agentsResults, agentsStatus, t, onReload }) {
         </div>
 
         {!hasData ? (
-          <div className="h-64 flex items-center justify-center rounded-3xl border border-dashed border-gray-700 bg-gray-950/50">
+          <div className="h-64 flex items-center justify-center rounded-3xl border border-dashed border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950/50">
             <div className="text-center">
               <span className="text-5xl mb-4 block">🔮</span>
               <p className="text-gray-400 text-sm">{t.noArchive}</p>
@@ -1253,25 +1266,24 @@ function ArchiveView({ history, agentsResults, agentsStatus, t, onReload }) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {allItems.map((item, idx) => (
-              <motion.div key={item.id || idx}
+              <motion.div key={`${item.id}-${idx}`}
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.1 }}
                 whileHover={{ y: -5 }}
-                className="group relative rounded-2xl overflow-hidden cursor-pointer"
-                style={{ background: 'rgba(17,24,39,0.8)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)' }}>
+                className="group relative rounded-2xl overflow-hidden cursor-pointer bg-white dark:bg-gray-900/80 border border-gray-200 dark:border-white/10 backdrop-blur-md">
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-4">
                     <Crystal score={item.confidence || 0} risk={item.riskScore || 0} size={70} />
                     <div className="text-right">
                       <p className="text-xs text-gray-500">{new Date(item.date).toLocaleDateString()}</p>
-                      <p className="text-2xl font-black text-white mt-1">{item.confidence || 0}<span className="text-sm text-gray-400">%</span></p>
-                      <p className="text-[10px] uppercase tracking-widest text-purple-400">{t.confidence}</p>
+                      <p className="text-2xl font-black text-gray-900 dark:text-white mt-1">{item.confidence || 0}<span className="text-sm text-gray-400">%</span></p>
+                      <p className="text-[10px] uppercase tracking-widest text-purple-500 dark:text-purple-400">{t.confidence}</p>
                     </div>
                   </div>
-                  <p className="text-sm font-semibold text-white line-clamp-2 mb-2">{item.project}</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white line-clamp-2 mb-2">{item.project}</p>
                   {(item.archetype || item.persona) && (
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {item.archetype && <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-900/50 text-purple-300 border border-purple-800">{item.archetype}</span>}
-                      {item.persona && <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-900/50 text-blue-300 border border-blue-800">{item.persona}</span>}
+                      {item.archetype && <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 border border-purple-300 dark:border-purple-800">{item.archetype}</span>}
+                      {item.persona && <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border border-blue-300 dark:border-blue-800">{item.persona}</span>}
                     </div>
                   )}
 
@@ -1296,7 +1308,7 @@ function ArchiveView({ history, agentsResults, agentsStatus, t, onReload }) {
                       {t.reloadAnalysis}
                     </motion.button>
                   ) : (
-                    <div className="mt-4 w-full py-2 rounded-xl text-xs font-bold text-center text-gray-500 border border-dashed border-gray-700">
+                    <div className="mt-4 w-full py-2 rounded-xl text-xs font-bold text-center text-gray-500 border border-dashed border-gray-300 dark:border-gray-700">
                       Données non disponibles — relancez
                     </div>
                   )}
@@ -1424,7 +1436,7 @@ function AgentTeamView({ t }) {
 // ==================== BRAIN MAP — Documentation ====================
 const NODES_I18N = {
   fr: {
-    center: 'Plateforme multi-agent d\'intelligence stratégique. 4 agents IA orchestrés par LangGraph en parallèle : Trend + Vision + Emotion → Creative. Backend Django + Channels, frontend React + Framer Motion. Stack : Python 3.11, Django 4.2, React 18, Tailwind CSS, WebSocket temps réel.',
+    center: 'Plateforme multi-agent d\'intelligence stratégique. 5 agents IA orchestrés par LangGraph : Trend + Vision + Emotion → Creative → Commercial. Backend Django + Channels, frontend React + Framer Motion. Stack : Python 3.11, Django 5, React 18, Tailwind CSS, WebSocket temps réel.',
     trend: 'Agent de veille marché en temps réel. Scrape DuckDuckGo (15–20 sources). Calcule un score de marché (0–10). Détecte les signaux faibles. Utilise Groq 70B → ESPRIT en secours. Génère une analyse de risques + pre-mortem + gap analysis concurrentielle.',
     vision: 'Agent de sémiotique visuelle et branding. Analyse l\'archétype visuel du secteur (Glassmorphism, Brutalism…). Génère : palettes hex, paires typographiques, icône SVG, moodboard 4 visuels. Modèle : Groq 8B → ESPRIT. Images : HuggingFace FLUX.1 → Pollinations.',
     emotion: 'Agent de psychologie comportementale. Construit un profil OCEAN (Big Five). Produit : Customer Journey Map, Sentiment Velocity, Hall of Shame, nudges comportementaux, Tone of Voice. Modèle : Groq 8B → ESPRIT.',
@@ -1701,6 +1713,280 @@ function SettingsView({ settings, setSettings, t }) {
   )
 }
 
+// ==================== COMMERCIAL VALIDATION PANEL ====================
+function CommercialValidationPanel({ commercialResult, t, lang }) {
+  const cr = commercialResult || {}
+  const emailDrafts   = cr.email_drafts  || []
+  const socialPosts   = cr.social_posts  || {}
+  const fbPost        = socialPosts.facebook  || {}
+  const igPost        = socialPosts.instagram || {}
+
+  // Local editable state
+  const [emails, setEmails]     = useState(() => emailDrafts.map(d => ({ ...d })))
+  const [fb, setFb]             = useState(fbPost.post || '')
+  const [ig, setIg]             = useState(igPost.caption || '')
+  const [igTags, setIgTags]     = useState((igPost.hashtags || []).join(' '))
+  const [sending, setSending]   = useState({})
+  const [sent, setSent]         = useState({})
+  const [error, setError]       = useState({})
+  const [copied, setCopied]     = useState({})
+  const [postCopied, setPostCopied] = useState({})
+
+  useEffect(() => {
+    setEmails(emailDrafts.map(d => ({ ...d })))
+    setFb(fbPost.post || '')
+    setIg(igPost.caption || '')
+    setIgTags((igPost.hashtags || []).join(' '))
+  }, [commercialResult])
+
+  const updateEmail = (idx, field, val) =>
+    setEmails(prev => prev.map((e, i) => i === idx ? { ...e, [field]: val } : e))
+
+  const handleSendEmail = async (idx) => {
+    const draft = emails[idx]
+    if (!draft.prospect?.email) return
+    setSending(p => ({ ...p, [idx]: true }))
+    setError(p => ({ ...p, [idx]: '' }))
+    try {
+      const res = await fetch('http://localhost:8000/api/send-email/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to_email:  draft.prospect.email,
+          subject:   draft.subject,
+          body:      draft.body,
+          from_name: 'StartWise',
+        }),
+      })
+      const data = await res.json()
+      if (data.success) setSent(p => ({ ...p, [idx]: true }))
+      else setError(p => ({ ...p, [idx]: data.error || 'Erreur inconnue' }))
+    } catch (e) {
+      setError(p => ({ ...p, [idx]: e.message }))
+    } finally {
+      setSending(p => ({ ...p, [idx]: false }))
+    }
+  }
+
+  const handleCopyAndOpen = async (platform) => {
+    const content = platform === 'instagram' ? `${ig}\n\n${igTags}` : fb
+    const url = platform === 'facebook'
+      ? 'https://www.facebook.com/'
+      : 'https://www.instagram.com/'
+    try {
+      await navigator.clipboard.writeText(content)
+      setPostCopied(p => ({ ...p, [platform]: true }))
+      setTimeout(() => setPostCopied(p => ({ ...p, [platform]: false })), 3000)
+      setTimeout(() => window.open(url, '_blank'), 400)
+    } catch (_) {
+      window.open(url, '_blank')
+    }
+  }
+
+  const copyToClipboard = async (key, text) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(p => ({ ...p, [key]: true }))
+      setTimeout(() => setCopied(p => ({ ...p, [key]: false })), 2000)
+    } catch (_) {}
+  }
+
+  if (!emailDrafts.length && !fbPost.post && !igPost.caption) return null
+
+  const tc = t.commercial || {}
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mx-6 mb-8 rounded-3xl border border-pink-200 dark:border-pink-900/40 bg-gradient-to-br from-pink-50/60 to-white dark:from-gray-900 dark:to-gray-950 overflow-hidden"
+    >
+      {/* Header */}
+      <div className="flex items-center gap-3 px-6 py-4 border-b border-pink-100 dark:border-pink-900/30 bg-gradient-to-r from-pink-500/10 to-transparent">
+        <div className="w-10 h-10 rounded-xl bg-pink-500/15 border border-pink-400/30 flex items-center justify-center text-xl">🤝</div>
+        <div>
+          <h2 className="font-bold text-gray-900 dark:text-white text-sm">{tc.title || 'Agent Commercial — Tableau de Validation'}</h2>
+          <p className="text-xs text-gray-500">{tc.subtitle || 'Vérifiez et approuvez chaque action avant envoi'}</p>
+        </div>
+        <div className="ml-auto px-3 py-1 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400 text-xs font-semibold">
+          {tc.awaitingValidation || 'En attente de validation'}
+        </div>
+      </div>
+
+      <div className="p-6 space-y-8">
+
+        {/* ── EMAILS ─────────────────────────────────────────── */}
+        {emails.length > 0 && (
+          <div>
+            <h3 className="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+              <span className="text-base">📧</span>
+              {tc.emailsTitle || `Mails de prospection (${emails.length} prospects)`}
+            </h3>
+            <div className="grid gap-4">
+              {emails.map((draft, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 space-y-3"
+                >
+                  {/* Prospect badge */}
+                  <div className="flex items-start justify-between flex-wrap gap-2">
+                    <div>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white">{draft.prospect?.name}</p>
+                      <p className="text-xs text-gray-500">{draft.prospect?.role} · {draft.prospect?.company}</p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="text-xs text-pink-600 dark:text-pink-400 font-mono">{draft.prospect?.email}</span>
+                        {draft.prospect?.email_source === 'hunter.io' && (
+                          <span className="px-1.5 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-semibold">Hunter.io ✓</span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-400 italic max-w-xs">{draft.prospect?.why_fit}</p>
+                  </div>
+
+                  {/* Subject */}
+                  <div>
+                    <label className="text-xs text-gray-400 uppercase tracking-wide mb-1 block">{tc.subject || 'Objet'}</label>
+                    <input
+                      type="text"
+                      value={draft.subject}
+                      onChange={e => updateEmail(idx, 'subject', e.target.value)}
+                      disabled={sent[idx]}
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400 disabled:opacity-60"
+                    />
+                  </div>
+
+                  {/* Body */}
+                  <div>
+                    <label className="text-xs text-gray-400 uppercase tracking-wide mb-1 block">{tc.body || 'Corps du mail'}</label>
+                    <textarea
+                      value={draft.body}
+                      onChange={e => updateEmail(idx, 'body', e.target.value)}
+                      disabled={sent[idx]}
+                      rows={5}
+                      className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none disabled:opacity-60"
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  {error[idx] && <p className="text-xs text-red-500">{error[idx]}</p>}
+                  <div className="flex items-center gap-3">
+                    {sent[idx] ? (
+                      <span className="flex items-center gap-1.5 text-green-600 dark:text-green-400 text-sm font-semibold">
+                        ✅ {tc.sent || 'Envoyé !'}
+                      </span>
+                    ) : (
+                      <motion.button
+                        whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                        onClick={() => handleSendEmail(idx)}
+                        disabled={sending[idx] || !draft.subject || !draft.body}
+                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-sm font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {sending[idx] ? (
+                          <><motion.span animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}>⏳</motion.span> {tc.sending || 'Envoi...'}</>
+                        ) : (
+                          <><span>📨</span> {tc.sendEmail || 'Envoyer ce mail'}</>
+                        )}
+                      </motion.button>
+                    )}
+                    <button
+                      onClick={() => copyToClipboard(`email_${idx}`, `${draft.subject}\n\n${draft.body}`)}
+                      className="px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-500 hover:text-gray-900 dark:hover:text-white text-sm transition-colors"
+                    >
+                      {copied[`email_${idx}`] ? '✓ Copié' : '📋 Copier'}
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── SOCIAL POSTS ──────────────────────────────────── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          {/* Facebook */}
+          {fb && (
+            <div className="rounded-2xl border border-blue-200 dark:border-blue-900/40 bg-white dark:bg-gray-900 p-5 space-y-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-lg">📘</span>
+                <span className="font-bold text-sm text-gray-900 dark:text-white">Facebook</span>
+                <span className="ml-auto text-xs text-gray-400">{fb.length} {tc.chars || 'car.'}</span>
+              </div>
+              <textarea
+                value={fb}
+                onChange={e => setFb(e.target.value)}
+                disabled={sent['facebook']}
+                rows={7}
+                className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none disabled:opacity-60"
+              />
+              <div className="flex gap-2 flex-wrap">
+                <motion.button
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  onClick={() => handleCopyAndOpen('facebook')}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors"
+                >
+                  {postCopied['facebook']
+                    ? '✅ Copié — ouverture Facebook...'
+                    : '📋 Copier & ouvrir Facebook'}
+                </motion.button>
+              </div>
+              <p className="text-[11px] text-gray-400 mt-1">Le texte est copié dans le presse-papier, Facebook s'ouvre dans un nouvel onglet — colle et publie.</p>
+            </div>
+          )}
+
+          {/* Instagram */}
+          {ig && (
+            <div className="rounded-2xl border border-pink-200 dark:border-pink-900/40 bg-white dark:bg-gray-900 p-5 space-y-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-lg">📸</span>
+                <span className="font-bold text-sm text-gray-900 dark:text-white">Instagram</span>
+                <span className="ml-auto text-xs text-gray-400">{ig.length} {tc.chars || 'car.'}</span>
+              </div>
+              <textarea
+                value={ig}
+                onChange={e => setIg(e.target.value)}
+                disabled={sent['instagram']}
+                rows={4}
+                className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none disabled:opacity-60"
+              />
+              <div>
+                <label className="text-xs text-gray-400 uppercase tracking-wide mb-1 block"># Hashtags</label>
+                <input
+                  type="text"
+                  value={igTags}
+                  onChange={e => setIgTags(e.target.value)}
+                  disabled={sent['instagram']}
+                  className="w-full px-3 py-2 text-xs rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-pink-500 dark:text-pink-400 focus:outline-none focus:ring-2 focus:ring-pink-400 disabled:opacity-60"
+                  placeholder="#hashtag1 #hashtag2..."
+                />
+              </div>
+              <div className="flex gap-2 flex-wrap">
+                <motion.button
+                  whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  onClick={() => handleCopyAndOpen('instagram')}
+                  className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white text-sm font-semibold transition-colors"
+                >
+                  {postCopied['instagram']
+                    ? '✅ Copié — ouverture Instagram...'
+                    : '📋 Copier & ouvrir Instagram'}
+                </motion.button>
+              </div>
+              <p className="text-[11px] text-gray-400 mt-1">Le texte est copié dans le presse-papier, Instagram s'ouvre dans un nouvel onglet — colle et publie.</p>
+            </div>
+          )}
+        </div>
+
+        <p className="text-xs text-gray-400 text-center pt-2">
+          {tc.disclaimer || '⚠️ Chaque action nécessite votre approbation explicite. Aucun envoi n\'est effectué sans votre validation.'}
+        </p>
+      </div>
+    </motion.div>
+  )
+}
+
 // ==================== LANGUAGE SELECTOR ====================
 function LanguageSelector({ lang, setLang }) {
   const [open, setOpen] = useState(false)
@@ -1750,7 +2036,7 @@ function NavItem({ icon, label, active, onClick }) {
 // ==================== MAIN DASHBOARD ====================
 export default function Dashboard() {
   const router = useRouter()
-  const { lang, setLang, t, isDarkMode, setIsDarkMode, projectDesc, setProjectDesc, isRunning, agentsStatus, agentsResults, currentThoughts, stats, analysisHistory, settings, setSettings, launchAnalysis, loadAnalysis, documentText, setDocumentText, documentFileName, setDocumentFileName } = useApp()
+  const { lang, setLang, t, isDarkMode, setIsDarkMode, projectDesc, setProjectDesc, isRunning, agentsStatus, agentsResults, currentThoughts, stats, analysisHistory, settings, setSettings, launchAnalysis, loadAnalysis, clearAnalysis, documentText, setDocumentText, documentFileName, setDocumentFileName } = useApp()
   const [activeNav, setActiveNav] = useState('dashboard')
   const [showLaunchOverlay, setShowLaunchOverlay] = useState(false)
   const [showBPlan, setShowBPlan] = useState(false)
@@ -1761,6 +2047,33 @@ export default function Dashboard() {
   const [docUploading, setDocUploading] = useState(false)
   const [docError, setDocError] = useState('')
   const fileInputRef = useRef(null)
+
+  // Sync ideation data — uniquement si l'onboarding a été complété dans cette session
+  useEffect(() => {
+    const isFreshSession = sessionStorage.getItem('sw_fresh_session') === '1'
+
+    if (!isFreshSession) {
+      // Nouvelle session : effacer les données périmées et rediriger vers l'onboarding
+      clearAnalysis()
+      localStorage.removeItem('sw_ideation_data')
+      localStorage.removeItem('sw_ideation_summary')
+      localStorage.removeItem('sw_ideation_business_idea')
+      router.replace('/onboarding?reset=true')
+      return
+    }
+
+    // Session fraîche — charger les données d'idéation normalement
+    const ideationIdea = localStorage.getItem('sw_ideation_business_idea') || ''
+    const ideationSummary = localStorage.getItem('sw_ideation_summary') || ''
+    if (ideationIdea && ideationIdea !== projectDesc) {
+      setProjectDesc(ideationIdea)
+      clearAnalysis()
+    }
+    if (ideationSummary && ideationSummary !== documentText) {
+      setDocumentText(ideationSummary)
+      setDocumentFileName('📋 Résumé Idéation')
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLaunch = () => {
     if (!projectDesc.trim() || isRunning) return
@@ -1825,7 +2138,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="flex h-screen bg-white dark:bg-gray-950 overflow-hidden" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+    <div dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <AnimatePresence>
         {showLaunchOverlay && <LaunchOverlay messages={launchMessages} t={t} />}
       </AnimatePresence>
@@ -1836,92 +2149,28 @@ export default function Dashboard() {
       <PitchDeckModal open={showPitch} onClose={() => setShowPitch(false)}
         agentsResults={agentsResults} lang={lang} projectDesc={projectDesc} />
 
-      {/* SIDEBAR */}
-      <aside className="w-64 flex-shrink-0 border-r border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 flex flex-col">
-        {/* Logo */}
-        <div className="p-5 border-b border-gray-100 dark:border-gray-800">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-black text-sm">S</span>
-            </div>
-            <div>
-              <h1 className="text-sm font-black tracking-tight text-gray-900 dark:text-white">StartWise</h1>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest">Enterprise AI</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation */}
-        <nav className="p-3 space-y-0.5 flex-1">
-          {NAV_ITEMS.map(item => (
-            <NavItem key={item.id} icon={item.icon} label={item.label}
-              active={activeNav === item.id} onClick={() => setActiveNav(item.id)} />
-          ))}
-        </nav>
-
-        {/* History */}
-        <div className="p-3 border-t border-gray-100 dark:border-gray-800">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 px-2 mb-2">{t.history}</p>
-          <div className="space-y-1 max-h-32 overflow-y-auto">
-            {analysisHistory.slice(0, 5).map((item) => (
-              <button key={item.id} onClick={() => { loadAnalysis(item); setActiveNav('dashboard') }}
-                className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group">
-                <p className="text-xs text-gray-600 dark:text-gray-400 truncate group-hover:text-purple-500">{item.project}</p>
-                <div className="flex items-center justify-between mt-0.5">
-                  <p className="text-[10px] text-gray-400">{new Date(item.date).toLocaleDateString()}</p>
-                  {item.results && <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-500 font-bold">✓</span>}
-                </div>
-              </button>
-            ))}
-            {analysisHistory.length === 0 && projectDesc && (
-              <div className="px-2 py-1.5 rounded-lg bg-gray-50 dark:bg-gray-800">
-                <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{projectDesc}</p>
-                <p className="text-[10px] text-gray-400">{Object.keys(agentsResults).length} {t.agentsCompleted}</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </aside>
-
-      {/* MAIN */}
-      <main className="flex-1 overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 z-20 bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-          <div className="flex items-center justify-between px-8 py-3">
-            <div>
-              <h2 className="text-lg font-black text-gray-900 dark:text-white">
-                {NAV_ITEMS.find(n => n.id === activeNav)?.label || t.dashboardTitle}
-              </h2>
-              <p className="text-xs text-gray-400 mt-0.5">{t.dashboardSub}</p>
-            </div>
-            <div className="flex items-center gap-2">
-              <LanguageSelector lang={lang} setLang={setLang} />
-              <button onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-lg">
-                {isDarkMode ? '☀️' : '🌙'}
-              </button>
-            </div>
-          </div>
-        </div>
-
         {/* PAGES — no mode="wait": AnimatePresence reçoit plusieurs enfants (false inclus) */}
         <AnimatePresence>
           {activeNav === 'dashboard' && (
             <motion.div key="dashboard" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
 
               {/* Globe Hero */}
-              <div className="relative h-[420px] bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 overflow-hidden">
-                <div className="absolute inset-0">
+              <div className="relative h-[340px] bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 overflow-hidden">
+                <div className="absolute inset-0 opacity-70">
                   <GlobeNetwork />
                 </div>
 
-                {/* Welcome message */}
-                <div className="absolute top-8 left-0 right-0 flex justify-center">
-                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-                    className="px-4 py-2 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-sm">
-                    <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {t.welcome}
-                    </p>
+                {/* Welcome header — SaaS style */}
+                <div className="absolute top-8 left-0 right-0 flex flex-col items-center gap-2">
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-gray-900/70 backdrop-blur-sm border border-gray-200/60 dark:border-gray-700/60 shadow-sm mb-2 mx-auto w-fit">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span className="text-[11px] font-medium text-gray-500 dark:text-gray-400">{t.welcome}</span>
+                    </div>
+                    <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white tracking-tight">
+                      StartWise
+                    </h1>
+                    <p className="text-sm text-center text-gray-400 mt-1">Votre co-fondateur IA — 5 agents, une stratégie complète</p>
                   </motion.div>
                 </div>
 
@@ -2006,45 +2255,70 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Stats + Agents + Activity */}
+              {/* Agents + Synthesis */}
               <div className="px-8 py-6 space-y-6">
-                {/* Stats dynamiques */}
-                <div className="grid grid-cols-3 gap-4">
-                  <StatCard label={t.marketSignals} value={stats.signals} unit={` ${t.detected}`} icon="📈" color="#3b82f6" />
-                  <StatCard label={t.aiConfidence} value={stats.confidence} unit="%" icon="🎯" color="#a855f7" />
-                  <StatCard label={t.concepts} value={stats.concepts} unit={` ${t.variants}`} icon="✨" color="#f97316" />
-                </div>
-
-                <div className="grid grid-cols-3 gap-6">
-                  {/* Activity */}
-                  <div className="col-span-1 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden" style={{ height: 360 }}>
-                    <div className="p-4 border-b border-gray-100 dark:border-gray-800">
-                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <motion.div animate={{ opacity: isRunning ? [1,0.3,1] : 1 }} transition={{ duration: 1, repeat: Infinity }}
-                          className={`w-2 h-2 rounded-full ${isRunning ? 'bg-green-400' : 'bg-gray-400'}`} />
-                        Activité
-                      </h3>
-                    </div>
-                    <div style={{ height: 'calc(100% - 53px)', overflow: 'hidden' }}>
-                      <ActivityFeedPanel activities={currentThoughts} t={t} />
-                    </div>
-                  </div>
-
-                  {/* Agents Grid */}
-                  <div className="col-span-2 grid grid-cols-2 gap-4 content-start">
-                    {Object.keys(AGENT_CONFIG).map(id => (
-                      <AgentCard key={id} agentId={id}
-                        status={agentsStatus[id]?.status || 'idle'}
-                        progress={agentsStatus[id]?.progress || 0}
-                        onClick={() => handleAgentClick(id)} t={t} />
-                    ))}
-                  </div>
+                {/* Agents Grid — full width */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {Object.keys(AGENT_CONFIG).map(id => (
+                    <AgentCard key={id} agentId={id}
+                      status={agentsStatus[id]?.status || 'idle'}
+                      progress={agentsStatus[id]?.progress || 0}
+                      onClick={() => handleAgentClick(id)} t={t} />
+                  ))}
                 </div>
 
                 {/* Executive Synthesis */}
                 <ExecutiveSynthesis agentsResults={agentsResults} agentsStatus={agentsStatus} t={t} lang={lang} isDarkMode={isDarkMode}
                   onOpenBPlan={() => setShowBPlan(true)} onOpenPitch={() => setShowPitch(true)} />
               </div>
+
+              {/* Commercial Agent — résumé compact */}
+              {agentsResults?.commercial_agent && (
+                <div className="px-8 pb-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-2xl border border-pink-200 dark:border-pink-900/40 bg-gradient-to-r from-pink-500/5 to-purple-500/5 p-6"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-9 h-9 rounded-xl bg-pink-500/15 border border-pink-400/30 flex items-center justify-center text-lg">🤝</div>
+                      <div>
+                        <h3 className="font-bold text-gray-900 dark:text-white text-sm">The Dealmaker — Agent Commercial</h3>
+                        <p className="text-xs text-gray-500">Prospection, emails et posts validés</p>
+                      </div>
+                      <button
+                        onClick={() => handleAgentClick('commercial_agent')}
+                        className="ml-auto flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-pink-500 hover:bg-pink-600 text-white transition-colors"
+                      >
+                        Voir le détail →
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-4">
+                      {[
+                        { icon: '🎯', label: 'Prospects', value: agentsResults.commercial_agent.prospects?.length || 0 },
+                        { icon: '📧', label: 'Emails rédigés', value: agentsResults.commercial_agent.email_drafts?.length || 0 },
+                        { icon: '📱', label: 'Posts créés', value:
+                          (agentsResults.commercial_agent.social_posts?.facebook?.post ? 1 : 0) +
+                          (agentsResults.commercial_agent.social_posts?.instagram?.caption ? 1 : 0)
+                        },
+                      ].map((s, i) => (
+                        <div key={i} className="bg-white/60 dark:bg-gray-900/60 rounded-xl p-4 border border-white/80 dark:border-gray-800">
+                          <div className="text-2xl mb-1">{s.icon}</div>
+                          <div className="text-xl font-black text-gray-900 dark:text-white">{s.value}</div>
+                          <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
+                        </div>
+                      ))}
+                    </div>
+                    {agentsResults.commercial_agent.prospects?.[0] && (
+                      <p className="mt-3 text-xs text-gray-500 italic">
+                        Premier prospect : <span className="text-gray-700 dark:text-gray-300 font-medium">
+                          {agentsResults.commercial_agent.prospects[0].name} — {agentsResults.commercial_agent.prospects[0].role} @ {agentsResults.commercial_agent.prospects[0].company}
+                        </span>
+                      </p>
+                    )}
+                  </motion.div>
+                </div>
+              )}
             </motion.div>
           )}
 
@@ -2073,7 +2347,6 @@ export default function Dashboard() {
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
     </div>
   )
 }

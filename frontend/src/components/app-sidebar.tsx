@@ -5,6 +5,7 @@ import { useState, useEffect } from "react"
 import { useTheme } from "next-themes"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import {
   Lamp,
   FileText,
@@ -14,6 +15,7 @@ import {
   Presentation,
   ChartLine,
 } from "@mynaui/icons-react"
+import { BarChart2 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -25,13 +27,19 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
 } from "@/components/ui/sidebar"
 import { getWorkflowStatus, WorkflowStatus } from "@/services/agents"
+import { useApp } from "@/context/AppContext"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [mounted, setMounted] = useState(false)
   const [workflowStatus, setWorkflowStatus] = useState<WorkflowStatus | null>(null)
   const { resolvedTheme } = useTheme()
+  const router = useRouter()
+  const { analysisHistory, loadAnalysis } = useApp()
 
   useEffect(() => {
     setMounted(true)
@@ -236,12 +244,48 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent className="px-2 py-4">
         <NavMain items={getNavData()} />
+
+        {/* Marketing Analysis History — only rendered client-side to avoid SSR/localStorage mismatch */}
+        {mounted && analysisHistory.length > 0 && (
+          <SidebarGroup className="mt-2">
+            <SidebarGroupLabel className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground px-2">
+              <BarChart2 className="h-3.5 w-3.5" />
+              Marketing
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-0.5">
+                {analysisHistory.slice(0, 6).map((item: any, idx: number) => (
+                  <SidebarMenuItem key={`${item.id}-${idx}`}>
+                    <SidebarMenuButton
+                      onClick={() => { loadAnalysis(item); router.push('/dashboard') }}
+                      className="h-auto py-2 px-3 flex-col items-start hover:bg-sidebar-accent/50 cursor-pointer rounded-lg transition-colors"
+                    >
+                      <span className="text-xs font-medium truncate w-full text-sidebar-foreground leading-tight">
+                        {item.project.slice(0, 45)}{item.project.length > 45 ? '…' : ''}
+                      </span>
+                      <div className="flex items-center gap-2 mt-0.5 w-full">
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date(item.date).toLocaleDateString()}
+                        </span>
+                        {item.results && (
+                          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 font-bold ml-auto">
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border/50 p-2">
         <NavUser user={{
           name: "Startwise User",
           email: "user@startwise.ai",
-          avatar: "/avatars/user.jpg",
+          avatar: "",
         }} />
       </SidebarFooter>
     </Sidebar>

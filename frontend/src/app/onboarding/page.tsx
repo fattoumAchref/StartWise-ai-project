@@ -113,6 +113,14 @@ export default function OnboardingPage() {
       localStorage.removeItem('startwise_dashboard_timestamp');
       localStorage.removeItem('startwise_track');
       localStorage.removeItem('startwise_product_audit_draft');
+      // Effacer aussi les clés StartWise (AppContext / ProjectContext)
+      localStorage.removeItem('sw_ideation_data');
+      localStorage.removeItem('sw_ideation_summary');
+      localStorage.removeItem('sw_ideation_business_idea');
+      localStorage.removeItem('agentsStatus');
+      localStorage.removeItem('agentsResults');
+      // Supprimer le flag de session périmé
+      sessionStorage.removeItem('sw_fresh_session');
       setSelectedTrack(null);
       setStartupName("");
       setStartupWebsite("");
@@ -152,6 +160,9 @@ export default function OnboardingPage() {
               sessionId,
               shortTitle: businessIdea.slice(0, 40),
             }));
+            // Flag de session : indique que l'onboarding vient d'être complété
+            // dans cet onglet/session (sessionStorage est effacé à la fermeture)
+            sessionStorage.setItem('sw_fresh_session', '1');
           }
           
           // Redirect to main dashboard

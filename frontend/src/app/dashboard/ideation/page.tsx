@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Zap } from "lucide-react";
+import { ArrowRight, Zap, RefreshCw } from "lucide-react";
 import { ButtomBar } from "@/components/dashboard/ButtomBar";
 import { toast } from "sonner";
 import clsx from "clsx";
@@ -212,9 +212,36 @@ export default function IdeationPage() {
     router.push('/dashboard');
   };
 
-  useEffect(() => { 
-    setMounted(true); 
-    
+  /** Réinitialise tout et repart en onboarding — vide le localStorage IA */
+  const handleNewAnalysis = () => {
+    const keysToRemove = [
+      'startwise_session_id', 'startwise_summary', 'startwise_business_idea',
+      'startwise_dashboard_timestamp', 'startwise_track', 'startwise_product_audit_draft',
+      'sw_ideation_data', 'sw_ideation_summary', 'sw_ideation_business_idea',
+      'agentsStatus', 'agentsResults',
+    ]
+    keysToRemove.forEach(k => localStorage.removeItem(k))
+    // Purger aussi les clés d'image en cache (startwise_image_*)
+    Object.keys(localStorage)
+      .filter(k => k.startsWith('startwise_image_'))
+      .forEach(k => localStorage.removeItem(k))
+    sessionStorage.removeItem('sw_fresh_session')
+    router.push('/onboarding?reset=true')
+  };
+
+  useEffect(() => {
+    setMounted(true);
+
+    if (typeof window === 'undefined') return;
+
+    // Guard : si l'onboarding n'a pas été complété dans cette session navigateur,
+    // effacer les données périmées et forcer le passage par l'onboarding.
+    const isFreshSession = sessionStorage.getItem('sw_fresh_session') === '1';
+    if (!isFreshSession) {
+      router.replace('/onboarding?reset=true');
+      return;
+    }
+
     // Check if validation has already been done by checking if all 3 steps are completed
     if (typeof window !== 'undefined') {
       // Check if all 3 steps have been completed successfully
@@ -245,15 +272,20 @@ export default function IdeationPage() {
         sessionStorage.removeItem('startwise_validated');
       }
       
+      // Rejette les URLs pointant vers des serveurs localhost morts (ex: port 8001)
+      const isStaleLocalUrl = (url: string) =>
+        /^https?:\/\/localhost:\d+\//.test(url) &&
+        !url.includes('localhost:8000'); // 8000 = backend actif
+
       // Check for existing image from multiple sources in priority order
       const checkForExistingImage = () => {
         if (!savedSummary || !savedBusinessIdea) return false;
-        
+
         // Import utility functions
         import('@/services/agents').then(({ getImageCacheKey, parseImageFromSummary }) => {
           // 0. FIRST PRIORITY: Check for embedded image URL in summary
           const embeddedImageData = parseImageFromSummary(savedSummary);
-          if (embeddedImageData?.imageUrl && !backgroundImage) {
+          if (embeddedImageData?.imageUrl && !backgroundImage && !isStaleLocalUrl(embeddedImageData.imageUrl)) {
             setBackgroundImage(embeddedImageData.imageUrl);
             console.log('Loaded image from embedded summary metadata:', embeddedImageData.imageUrl);
             
@@ -266,11 +298,16 @@ export default function IdeationPage() {
           // 1. Second priority: Check for summary-linked cached image
           const summaryImageKey = getImageCacheKey(savedBusinessIdea, savedSummary);
           const summaryLinkedImage = localStorage.getItem(summaryImageKey);
-          
+
           if (summaryLinkedImage && !backgroundImage) {
-            setBackgroundImage(summaryLinkedImage);
-            console.log('Loaded summary-linked cached image from localStorage');
-            return;
+            if (isStaleLocalUrl(summaryLinkedImage)) {
+              // URL périmée → supprimer du cache et passer à la suite
+              localStorage.removeItem(summaryImageKey);
+            } else {
+              setBackgroundImage(summaryLinkedImage);
+              console.log('Loaded summary-linked cached image from localStorage');
+              return;
+            }
           }
           
           // 2. Third priority: Check if run-all included image data
@@ -291,8 +328,8 @@ export default function IdeationPage() {
                   console.log('Loaded image from backend serve URL:', imageData.serve_url);
                   return;
                 } else if (imageData.filename) {
-                  // Build serve URL from filename if serve_url is not provided
-                  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8001';
+                  // Build serve URL — utiliser le backend actif (8000), jamais 8001
+                  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
                   const serveUrl = `${backendUrl}/images/${imageData.filename}`;
                   setBackgroundImage(serveUrl);
                   console.log('Loaded image from constructed serve URL:', serveUrl);
@@ -662,15 +699,31 @@ export default function IdeationPage() {
             {/* Background Image Card */}
             <div className="w-full max-w-4xl mx-auto mb-6">
               <Card className="rounded-xl shadow-sm border border-border/50 bg-background overflow-hidden p-0">
-                <div 
-                  className="relative h-80 md:h-96 bg-gradient-to-r from-blue-500/10 to-purple-500/10 flex items-center justify-center rounded-xl"
+                <div
+                  className="relative h-80 md:h-96 bg-gradient-to-r from-blue-500/10 to-purple-500/10 flex items-center justify-center rounded-xl overflow-hidden"
                   style={{
-                    backgroundImage: backgroundImage && !imageLoading ? `url(${backgroundImage})` : undefined,
+                    backgroundImage: backgroundImage && !imageLoading && !backgroundImage.startsWith('http') ? `url(${backgroundImage})` : undefined,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat'
                   }}
                 >
+                  {/* Image HTTP(S) rendue via <img> pour capturer les erreurs 404/ERR_CONNECTION_REFUSED */}
+                  {backgroundImage && !imageLoading && backgroundImage.startsWith('http') && (
+                    <img
+                      src={backgroundImage}
+                      alt="Business visual"
+                      className="absolute inset-0 w-full h-full object-cover"
+                      onError={() => {
+                        console.warn('[IDEATION] Image inaccessible, nettoyage du cache:', backgroundImage);
+                        setBackgroundImage(null);
+                        // Nettoyer du localStorage si c'est une URL stale
+                        Object.keys(localStorage)
+                          .filter(k => localStorage.getItem(k) === backgroundImage)
+                          .forEach(k => localStorage.removeItem(k));
+                      }}
+                    />
+                  )}
                   {/* Enhanced Skeleton loading state */}
                   {imageLoading && (
                     <div className="absolute inset-0 bg-muted animate-pulse">
@@ -1001,15 +1054,26 @@ export default function IdeationPage() {
                       en injectant votre résumé d'idéation comme contexte prioritaire.
                     </p>
                   </div>
-                  <Button
-                    onClick={handleLaunchStrategicAnalysis}
-                    size="lg"
-                    className="shrink-0 bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white shadow-lg shadow-primary/25 gap-2 px-6"
-                  >
-                    <Zap className="w-4 h-4" />
-                    Analyse StartWise
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <Button
+                      onClick={handleNewAnalysis}
+                      size="lg"
+                      variant="outline"
+                      className="gap-2 px-5"
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                      Nouvelle Analyse
+                    </Button>
+                    <Button
+                      onClick={handleLaunchStrategicAnalysis}
+                      size="lg"
+                      className="bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white shadow-lg shadow-primary/25 gap-2 px-6"
+                    >
+                      <Zap className="w-4 h-4" />
+                      Analyse StartWise
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
                 {/* Glow décoratif */}
                 <div className="pointer-events-none absolute -right-8 -top-8 w-32 h-32 rounded-full bg-primary/10 blur-2xl" />
