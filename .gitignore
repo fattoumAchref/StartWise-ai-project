@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-venv/ 
-__pycache__/ 
-*.pyc 
-.env 
-=======
-=======
->>>>>>> recover-salim-work
 # Python
 __pycache__/
 *.pyc
@@ -29,9 +20,37 @@ venv/
 
 # OS
 .DS_Store
-<<<<<<< HEAD
 Thumbs.db
->>>>>>> Stashed changes
-=======
-Thumbs.db
->>>>>>> recover-salim-work
+
+# Vector database (large binary files)
+chroma_db/
+*.bin
+
+# Investment agent test outputs (auto-generated at runtime)
+agents/investment/outputs/
+
+# Data cache (re-generated on demand)
+data/benchmarks_cache.json
+data/yahoo_finance_results.json
+data/news_results.json
+data/market_results.json
+data/scraping_results.json
+data/sector_seasonality_cache.json
+
+# SQLite databases (générées à l'exécution)
+*.db
+*.sqlite3
+
+# Next.js build
+frontend/.next/
+frontend/node_modules/
+frontend/out/
+
+# Django
+backend/staticfiles/
+backend/db.sqlite3
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/

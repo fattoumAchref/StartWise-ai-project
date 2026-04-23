@@ -1,4 +1,7 @@
 httpx
+fastapi
+uvicorn[standard]
+redis
 pydantic>=2.0
 pandas
 chromadb
