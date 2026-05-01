@@ -1,45 +1,34 @@
 {
-  "cached_at": "2026-03-21T19:39:27.238188",
+  "cached_at": "2026-04-30T19:47:55.304773",
   "data": {
     "Seed": {
-      "burn_rate": 80000,
-      "net_revenue_retention": 1.04,
-      "gross_margin": 0.74,
-      "cac_payback_months": 5,
-      "ltv_cac_ratio": null,
-      "churn_rate_monthly": null,
       "growth_rate_yoy": 1.0,
-      "arr": null,
-      "ev_revenue_multiple": null
+      "gross_margin": 0.74,
+      "net_revenue_retention": 1.0,
+      "churn_rate_monthly": 0.025,
+      "ltv_cac_ratio": 3.2,
+      "cac_payback_months": 5,
+      "arr": 1000000,
+      "ev_revenue_multiple": 8.0,
+      "burn_rate": 50000
     },
     "Series A": {
+      "gross_margin": 0.75,
       "net_revenue_retention": 1.01,
-      "cac_payback_months": 12,
-      "burn_multiple": 1.0,
-      "growth_rate_yoy": 0.26,
-      "churn_rate_monthly": 0.00317
+      "growth_rate_yoy": 0.26
     },
     "Series B": {
-      "net_revenue_retention": 1.1,
-      "gross_margin": 0.8,
-      "growth_rate_yoy": 0.5
+      "net_revenue_retention": 1.01
     },
     "Series C": {
-      "growth_rate_yoy": 0.31,
-      "gross_margin": 0.8,
-      "net_revenue_retention": 1.03,
-      "churn_rate_monthly": null,
-      "ltv_cac_ratio": null,
-      "cac_payback_months": null,
-      "arr": null,
-      "ev_revenue_multiple": null,
-      "burn_rate": null
+      "net_revenue_retention": 1.15,
+      "gross_margin": 0.86,
+      "growth_rate_yoy": 0.72,
+      "cac_payback_months": 8
     },
     "Public": {
-      "growth_rate_yoy": 0.15,
-      "gross_margin": 0.77,
-      "net_revenue_retention": 1.01,
-      "ev_revenue_multiple": 6.0
+      "net_revenue_retention": 1.12,
+      "gross_margin": 0.77
     }
   }
 }

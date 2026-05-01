@@ -1,6 +1,7 @@
 export interface Message {
   role: 'user' | 'assistant'
   content: string
+  msgType?: 'analysis' | 'ideation_onboarding' | 'general' | 'whatif'
 }
 
 export interface KPIs {
@@ -106,6 +107,8 @@ export interface Benchmark {
   churn_median?: number
   gross_margin_median?: number
   valorisation_multiple?: number
+  cac_median?: number
+  ltv_median?: number
 }
 
 export interface BenchmarkExtra {

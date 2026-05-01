@@ -5,7 +5,7 @@ Client HTTP du bus A2A — utilisé par les agents pour publier et consommer des
 
 Usage (depuis finance_agent) :
     from a2a_bus.bus_client import A2ABusClient
-    from models.data_models import A2AMessage
+    from finagents.models.data_models import A2AMessage
 
     client = A2ABusClient("finance_agent")
     result = client.publish(a2a_msg)          # publier vers les destinataires
@@ -24,7 +24,7 @@ from typing import Any, Dict, List, Optional
 
 import httpx
 
-from models.data_models import A2AMessage
+from finagents.models.data_models import A2AMessage
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
