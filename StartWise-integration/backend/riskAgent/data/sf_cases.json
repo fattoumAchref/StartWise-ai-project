@@ -1,0 +1,3119 @@
+[
+  {
+    "startup": "37Coins",
+    "sector": "Finances",
+    "country": "United States",
+    "funding": "$525K",
+    "cause": [
+      "funding"
+    ],
+    "description": "37Coins developed a new Bitcoin platform. In 2014, they announced that providing Bitcoin transfer across different regions proved to be impossible. Details of the startup: Founders: Johann Barbie, Jonathan Zobro, Songyi Lee Country: United States Industry: Finances Started in: 2014 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Lack of Funds 37Coins You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "Alikolo",
+    "sector": "e-Commerce",
+    "country": "Indonesia",
+    "funding": "$100K",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Alikolo was an eMarketplace company. The founder didn't have a clear vision and didn't know the reasons why customers purchased at his rivals. Details of the startup: Founders: Danny Taniwan Country: Indonesia Industry: e-Commerce Started in: 2014 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Lack of Experience Alikolo You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "Beepi",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$149M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Beepi was a marketplace for used cars. They ran out of cash to operate and tried to sell to potential buyers, but didn't achieve to close the operation. Details of the startup: Founders: Ale Resnik, Owen Savir Country: United States Industry: Transportation Started in: 2013 Closed in: 2016 N\u00ba of employees: 100-250 Funding Amount: > $50M Specific cause of failure: Mismanagement of Funds Beepi You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2016"
+  },
+  {
+    "startup": "Berg",
+    "sector": "Design",
+    "country": "United Kingdom",
+    "funding": "$1.3M",
+    "cause": [
+      "market"
+    ],
+    "description": "Berg was a cloud platform on which Little Printer, an IoT device, worked. They had loyal supporters, but couldn't convert it into a sustainable business. Details of the startup: Founders: Matt Webb Country: United Kingdom Industry: Design Started in: 2005 Closed in: 2014 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: No Market Need Berg You can read more about their failure here .",
+    "founded": "2005",
+    "closed": "2014"
+  },
+  {
+    "startup": "ChaCha",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$96M",
+    "cause": [
+      "competition"
+    ],
+    "description": "ChaCha was a search engine where you interacted with a human being. However, the startup got stiff competition when Google released its Panda algorithm. Details of the startup: Founders: Brad Bostic & Scott Jones Country: United States Industry: Software & Hardware Started in: 2005 Closed in: 2016 N\u00ba of employees: 50-100 Funding Amount: > $50M Specific cause of failure: Competition ChaCha You can read more about their failure here .",
+    "founded": "2005",
+    "closed": "2016"
+  },
+  {
+    "startup": "CircleBack Lending",
+    "sector": "Finances",
+    "country": "United States",
+    "funding": "$12M",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "CircleBack Lending was a loan marketplace. Due to problems with profitability and issues with the industry, the startup was forced to cease its operations. Details of the startup: Founders: Manoj Ramnani & Patrick Questembert Country: United States Industry: Finances Started in: 2012 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Bad Business Model CircleBack Lending You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2016"
+  },
+  {
+    "startup": "Crowdmix",
+    "sector": "Music",
+    "country": "United Kingdom",
+    "funding": "\u00a314M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Crowdmix was a music streaming platform where people could listen and talk about their favorite bands. They spent \u00a314M before having a working product. Details of the startup: Founders: Gareth Ingham, Ian Roberts Country: United Kingdom Industry: Music Started in: 2013 Closed in: 2016 N\u00ba of employees: 100-250 Funding Amount: $10M-$50M Specific cause of failure: Mismanagement of Funds Crowdmix You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2016"
+  },
+  {
+    "startup": "Dazo",
+    "sector": "Food & Beverage",
+    "country": "India",
+    "funding": "No Data",
+    "cause": [
+      "competition",
+      "funding"
+    ],
+    "description": "Dazo was a food-tech startup based in Bangalore which emerged as a \u201cfood on demand\u201d company. Fierce competition and lack of funding led to Dazo's failure. Details of the startup: Founders: Monica Rastogi, Shashaank Shekhar Singhal Country: India Industry: Food & Beverage Started in: 2015 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: No Data Specific cause of failure: Competition Dazo You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2016"
+  },
+  {
+    "startup": "Delicious",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "No Data",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Delicious was a pioneer in social bookmarking tools until it was overtaken by rivals and ultimately acquired by Pinboard at a reduced price. Details of the startup: Founders: Joshua Schachter Country: United States Industry: Productivity Started in: 2003 Closed in: 2017 N\u00ba of employees: 50-100 Funding Amount: No Data Specific cause of failure: Acquisition Flu Delicious You can read more about their failure here .",
+    "founded": "2003",
+    "closed": "2017"
+  },
+  {
+    "startup": "Desti",
+    "sector": "Travel",
+    "country": "United States",
+    "funding": "$2M",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Desti was a traveling and mapping iPad app that used AI to help planning a trip. Although users found it useful, they ended up booking on other platforms. Details of the startup: Founders: Imri Goldberg, Mosi Shuchman, Nadav Gur Country: United States Industry: Travel Started in: 2011 Closed in: 2014 N\u00ba of employees: 1-10 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Desti You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2014"
+  },
+  {
+    "startup": "Dinner Lab",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$9.1M",
+    "cause": [
+      "bad_timing",
+      "unit_economics"
+    ],
+    "description": "Dinner Lab offered a culinary experience with a group of strangers in an unusual place. They faced several problems, including the diner's timing. Details of the startup: Founders: Brian Bordainick, Francisco Robert, Zach Kupperman Country: United States Industry: Food & Beverage Started in: 2011 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Dinner Lab You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2016"
+  },
+  {
+    "startup": "Dinnr",
+    "sector": "Food & Beverage",
+    "country": "United Kingdom",
+    "funding": "\u00a360K",
+    "cause": [
+      "market"
+    ],
+    "description": "Dinnr allowed to select a recipe and order pre-measured ingredients accompanied with instructions. However, there wasn\u2019t a market need for the business. Details of the startup: Founders: Adil Mohammed, Michal Bohanes Country: United Kingdom Industry: Food & Beverage Started in: 2012 Closed in: 2014 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: No Market Need Dinnr You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2014"
+  },
+  {
+    "startup": "Dopplr",
+    "sector": "Travel",
+    "country": "United States",
+    "funding": "No Data",
+    "cause": [
+      "execution",
+      "bad_timing"
+    ],
+    "description": "Dopplr was a social travel network service. In 2009, Nokia acquired it for $20 million and the number of Dopplr users fell since then until shutting down. Details of the startup: Founders: Dan Gillmor, Lisa Sounio, Marko Ahtisaari, Matt Jones, Taneli Tikka Country: United States Industry: Travel Started in: 2007 Closed in: Active N\u00ba of employees: 1-10 Funding Amount: No Data Specific cause of failure: Acquisition Flu Dopplr You can read more about their failure here .",
+    "founded": "2007",
+    "closed": "Active"
+  },
+  {
+    "startup": "Fab",
+    "sector": "e-Commerce",
+    "country": "United States",
+    "funding": "$336.3M",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Fab was an e-commerce company focused on daily design inspiration. Its success resulted in companies launching their same exact replicas of Fab\u2019s platform. Details of the startup: Founders: Bradford Shane Shellhammer, Deepa Shah, Jason Goldberg, Nishith Shah, Sunil Khedar Country: United States Industry: e-Commerce Started in: 2009 Closed in: 2013 N\u00ba of employees: 500-1,000 Funding Amount: > $50M Specific cause of failure: Multiple Reasons Fab You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2013"
+  },
+  {
+    "startup": "Flud",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "$3.1M",
+    "cause": [
+      "funding",
+      "execution",
+      "competition"
+    ],
+    "description": "Flud was a social news reader platform. They were unable to raise additional funding for their operations and eventually ran out of cash. Details of the startup: Founders: Bobby Ghoshal, Matthew Ausonio Country: United States Industry: Productivity Started in: 2010 Closed in: 2013 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Multiple Reasons Flud You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2013"
+  },
+  {
+    "startup": "Gowalla",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "$10.4M",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Gowalla was a location-based social platform that allowed users to share their location. It tried to do many things at once, and shut down after 5 years. Details of the startup: Founders: Josh Williams, Scott Raymond Country: United States Industry: Social Media Started in: 2007 Closed in: 2013 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Competition Gowalla You can read more about their failure here .",
+    "founded": "2007",
+    "closed": "2013"
+  },
+  {
+    "startup": "Grooveshark",
+    "sector": "Music",
+    "country": "United States",
+    "funding": "$4.6M",
+    "cause": [
+      "legal"
+    ],
+    "description": "Grooveshark was a streaming music platform. Its major weakness was that it illegally streamed music. They were sued multiples times and had to shut down. Details of the startup: Founders: Andres Barreto, Josh Greenberg, Sam Tarantino Country: United States Industry: Music Started in: 2006 Closed in: 2015 N\u00ba of employees: 50-100 Funding Amount: $1M-$10M Specific cause of failure: Legal Challenges Grooveshark You can read more about their failure here .",
+    "founded": "2006",
+    "closed": "2015"
+  },
+  {
+    "startup": "HiGear",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$1.3M",
+    "cause": [
+      "legal",
+      "execution"
+    ],
+    "description": "HiGear was a peer-to-peer online company that listed luxury cars for rent. A criminal gang stole four cars worth $400k. They opted to shut down operations. Details of the startup: Founders: Ali Moiz, Murtaza Hussain Country: United States Industry: Transportation Started in: 2011 Closed in: 2011 N\u00ba of employees: 1-10 Funding Amount: $1M-$10M Specific cause of failure: Legal Challenges HiGear You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2011"
+  },
+  {
+    "startup": "HotelsAroundYou",
+    "sector": "Travel",
+    "country": "India",
+    "funding": "$125.4K",
+    "cause": [
+      "competition",
+      "funding"
+    ],
+    "description": "HotelsAroundYou was an India service centered on last-minute and short stay bookings. They weren't capable of raising more money and had to shut down. Details of the startup: Founders: Animesh Chaudhary, Harsha Nallur, Mohsin Dingankar Country: India Industry: Travel Started in: 2013 Closed in: 2017 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Competition HotelsAroundYou You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2017"
+  },
+  {
+    "startup": "HubHaus",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$13.4M",
+    "cause": [
+      "bad_timing"
+    ],
+    "description": "Hubhaus offered an online platform to rent a house and find people willing to live with you. They even achieved PMF, but COVID came and they shut down. Details of the startup: Founders: Kerry Jones, Shruti Merchant, Sloane Yu Country: United States Industry: Software & Hardware Started in: 2016 Closed in: 2020 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Bad Timing HubHaus You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2020"
+  },
+  {
+    "startup": "Juicero",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$118.5M",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "Juicero was a juice company that packed fresh organic fruits. They claimed their juicer was innovative, until customers found out the machine was useless. Details of the startup: Founders: Doug Evans Country: United States Industry: Food & Beverage Started in: 2013 Closed in: 2017 N\u00ba of employees: 100-250 Funding Amount: > $50M Specific cause of failure: Bad Business Model Juicero You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2017"
+  },
+  {
+    "startup": "Kitchit",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$8.1M",
+    "cause": [
+      "competition"
+    ],
+    "description": "Kitchit brought local chefs to your home. They had to compete with other big food providers in the same market, which provoked their failure. Details of the startup: Founders: Brendan Marshall, Ian Ferguson Country: United States Industry: Food & Beverage Started in: 2011 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Competition Kitchit You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2016"
+  },
+  {
+    "startup": "Kno",
+    "sector": "Education",
+    "country": "United States",
+    "funding": "$94.9M",
+    "cause": [
+      "competition",
+      "bad_timing"
+    ],
+    "description": "Kno introduced double paneled e-textbooks. Despite raising $80M, the company saw its chances of scaling up diminish once Apple introduced its iconic iPad. Details of the startup: Founders: Babur Habib, Osman Rashid Country: United States Industry: Education Started in: 2009 Closed in: 2013 N\u00ba of employees: +10,000 Funding Amount: > $50M Specific cause of failure: Competition Kno You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2013"
+  },
+  {
+    "startup": "Leap Transit",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$2.5M",
+    "cause": [
+      "legal"
+    ],
+    "description": "Leap Transit was a private bus service based in San Francisco. They didn't comply with the SF regulations, which made them halt their operations. Details of the startup: Founders: Kyle Kirchhoff Country: United States Industry: Transportation Started in: 2013 Closed in: 2015 N\u00ba of employees: 50-100 Funding Amount: $1M-$10M Specific cause of failure: Legal Challenges Leap Transit You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2015"
+  },
+  {
+    "startup": "Lumos",
+    "sector": "Software & Hardware",
+    "country": "India",
+    "funding": "No Data",
+    "cause": [
+      "team"
+    ],
+    "description": "Lumos provided the ultimate smart switching tech. After the shutdown, the founders recognized they were not the right team to build a hardware company. Details of the startup: Founders: Pritesh Sankhe, Tarkeshwar Singh, Yash Kotak Country: India Industry: Software & Hardware Started in: 2014 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: No Data Specific cause of failure: Lack of Experience Lumos You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "Mailbox",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "$5M",
+    "cause": [
+      "unit_economics"
+    ],
+    "description": "Mailbox made your inbox more manageable and efficient. They didn't find a way to monetize the app. After being acquired by Dropbox, Mailbox shut down. Details of the startup: Founders: Gentry Underwood, Scott Cannon Country: United States Industry: Productivity Started in: 2011 Closed in: 2015 N\u00ba of employees: 500-1,000 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Mailbox You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "Maple",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$29M",
+    "cause": [
+      "unit_economics"
+    ],
+    "description": "Maple prepared and delivered meals in NY. They were losing money on each meal and it only began making a profit from 2016, just before they shut down. Details of the startup: Founders: Akshay Navle, Caleb Merkl Country: United States Industry: Food & Beverage Started in: 2014 Closed in: 2017 N\u00ba of employees: 100-250 Funding Amount: $10M-$50M Specific cause of failure: Bad Business Model Maple You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2017"
+  },
+  {
+    "startup": "Moped",
+    "sector": "Social Media",
+    "country": "Germany",
+    "funding": "$1M",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "Moped was a free social app. It had not enough entertaining and fast-growing content that could attract a broad mass of users. It closed after 16 years. Details of the startup: Founders: Schuyler Deerman Country: Germany Industry: Social Media Started in: 1998 Closed in: 2014 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: No Market Need Moped You can read more about their failure here .",
+    "founded": "1998",
+    "closed": "2014"
+  },
+  {
+    "startup": "Move Loot",
+    "sector": "e-Commerce",
+    "country": "United States",
+    "funding": "$21.8M",
+    "cause": [
+      "execution",
+      "unit_economics"
+    ],
+    "description": "Move Loot was an online resale marketplace for furniture. They decided to have a furniture stockroom without thinking about the expenses of running it. Details of the startup: Founders: Bill Bobbitt, Jenny Karin Morrill, Ryan Smith, Shruti Shah Country: United States Industry: e-Commerce Started in: 2013 Closed in: 2016 N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Bad Business Model Move Loot You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2016"
+  },
+  {
+    "startup": "MySpace",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "$37.8M",
+    "cause": [
+      "competition",
+      "execution",
+      "product",
+      "bad_timing"
+    ],
+    "description": "MySpace became the most popular social networking site before Facebook. After competing with them, they decided to repurpose it as a platform for artists. Details of the startup: Founders: Aber Whitcomb, Brad Greenspan, Chris DeWolfe, Colin Digiaro, Josh Berman, Michael Addicott, Tom Anderson Country: United States Industry: Social Media Started in: 2003 Closed in: Active N\u00ba of employees: 250-500 Funding Amount: $10M-$50M Specific cause of failure: Multiple Reasons MySpace You can read more about their failure here .",
+    "founded": "2003",
+    "closed": "Active"
+  },
+  {
+    "startup": "Navdy",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$41.8M",
+    "cause": [
+      "market",
+      "product",
+      "competition"
+    ],
+    "description": "Navdy provided a display that projected GPS in the cars' front. They failed due to a saturated market and a device that didn't satisfy customer needs. Details of the startup: Founders: Doug Simpson, Karl Guttag Country: United States Industry: Transportation Started in: 2013 Closed in: 2018 N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Multiple Reasons Navdy You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2018"
+  },
+  {
+    "startup": "PepperTap",
+    "sector": "Food & Beverage",
+    "country": "India",
+    "funding": "$51.2M",
+    "cause": [
+      "product",
+      "unit_economics"
+    ],
+    "description": "PepperTap provided a platform to buy and deliver groceries from local markets. Customers found delivery fees too expensive for their needs, and shut down. Details of the startup: Founders: Milind Sharma, Navneet Singh Country: India Industry: Food & Beverage Started in: 2014 Closed in: 2016 N\u00ba of employees: 1,000-5,000 Funding Amount: > $50M Specific cause of failure: Poor Product PepperTap You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Pixate",
+    "sector": "Design",
+    "country": "United States",
+    "funding": "$3.8M",
+    "cause": [
+      "acquisition"
+    ],
+    "description": "Pixate wanted to make prototyping and designing apps more accessible and effortless. It was acquired by Google in 2015, and after a year, it was shut down. Details of the startup: Founders: Kevin Lindsey, Paul Colton Country: United States Industry: Design Started in: 2012 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Acquisition Flu Pixate You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2016"
+  },
+  {
+    "startup": "Quibi",
+    "sector": "Entertainment",
+    "country": "United States",
+    "funding": "$1.8B",
+    "cause": [
+      "market",
+      "execution",
+      "competition",
+      "bad_timing"
+    ],
+    "description": "An analysis on why did Quibi, a short-form video streaming platform, shut down despite raising $1.8 billion from investors and having an experienced team. Details of the startup: Founders: Jeffrey Katzenberg Country: United States Industry: Entertainment Started in: 2018 Closed in: 2020 N\u00ba of employees: 250-500 Funding Amount: > $50M Specific cause of failure: Multiple Reasons Quibi You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2020"
+  },
+  {
+    "startup": "Rdio",
+    "sector": "Music",
+    "country": "United States",
+    "funding": "$125.7M",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Rdio, a music streaming platform, failed due to poor marketing and distribution, ultimately folding to competition from Spotify and closing down. Details of the startup: Founders: Carter Adamson, Janus Friis, Niklas Zennstr\u00f6m Country: United States Industry: Music Started in: 2008 Closed in: 2015 N\u00ba of employees: 50-100 Funding Amount: > $50M Specific cause of failure: Competition Rdio You can read more about their failure here .",
+    "founded": "2008",
+    "closed": "2015"
+  },
+  {
+    "startup": "RoomsTonite",
+    "sector": "Travel",
+    "country": "India",
+    "funding": "$1.5M",
+    "cause": [
+      "funding"
+    ],
+    "description": "RoomsTonite was a last-minute hotel booking app for people traveling to India. They raised $1.5M in funding but the money didn't arrive and they shut down. Details of the startup: Founders: Suresh John Country: India Industry: Travel Started in: 2014 Closed in: 2017 N\u00ba of employees: 100-250 Funding Amount: $1M-$10M Specific cause of failure: Lack of Funds RoomsTonite You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2017"
+  },
+  {
+    "startup": "Seven Dreamers Laboratories",
+    "sector": "Software & Hardware",
+    "country": "Japan",
+    "funding": "$95M",
+    "cause": [
+      "product"
+    ],
+    "description": "Seven Dreamers Laboratory built a robot that washed, ironed and folded laundry. However, their product was expensive and couldn't match human's dexterity. Details of the startup: Founders: Shin Sakane Country: Japan Industry: Software & Hardware Started in: 2014 Closed in: 2019 N\u00ba of employees: 100-250 Funding Amount: > $50M Specific cause of failure: Poor Product Seven Dreamers Laboratories You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2019"
+  },
+  {
+    "startup": "Shuddle",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$12.2M",
+    "cause": [
+      "funding"
+    ],
+    "description": "Shuddle was the go-to service for parents that needed someone to drive their kids to school. Parents found it disappointing, so they had to shut down. Details of the startup: Founders: Nick Allen, Rodrigo Prudencio Country: United States Industry: Transportation Started in: 2014 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Lack of Funds Shuddle You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Shyp",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$62.1M",
+    "cause": [
+      "execution",
+      "unit_economics"
+    ],
+    "description": "Shyp imitated the Uber model with an on-demand shipping service. However, they were unable to figure out a profitable business model and had to shut down. Details of the startup: Founders: Jack Smith, Joshua Scott, Kevin Gibbon Country: United States Industry: Transportation Started in: 2013 Closed in: 2018 N\u00ba of employees: 10-50 Funding Amount: > $50M Specific cause of failure: Multiple Reasons Shyp You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2018"
+  },
+  {
+    "startup": "Sidecar",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$45.5M",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Sidecar was a transportation company. They had top-notch technology but no marketing strategy, and could only become useful in high-density cities. Details of the startup: Founders: Jahan Khanna, Sunil Paul Country: United States Industry: Transportation Started in: 2011 Closed in: 2015 N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Competition Sidecar You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "Skully",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "$15M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Skully was a helmet targetting motorcycle riders. They had to close shops due to no fundings and couldn't complete the production of the pre-orders. Details of the startup: Founders: Marcus Weller, Mitch Weller Country: United States Industry: Transportation Started in: 2013 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Mismanagement of Funds Skully You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2016"
+  },
+  {
+    "startup": "Sprig",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$56.7M",
+    "cause": [
+      "competition",
+      "unit_economics"
+    ],
+    "description": "Sprig delivered meals to customers who were looking for healthy choices. Sprig found the process time-consuming and expensive, and decided to shut down. Details of the startup: Founders: Gagan Biyani, Matt Kent, Morgan Springer, Neeraj Berry Country: United States Industry: Food & Beverage Started in: 2013 Closed in: 2017 N\u00ba of employees: 50-100 Funding Amount: > $50M Specific cause of failure: Competition Sprig You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2017"
+  },
+  {
+    "startup": "Springpad",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "$7.3M",
+    "cause": [
+      "execution",
+      "product"
+    ],
+    "description": "Springpad was designed to empower users to clip, organize, and interpret all types of web content. The company failed to develop a monetization strategy. Details of the startup: Founders: Jason Horman Country: United States Industry: Productivity Started in: 2008 Closed in: 2014 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Lack of Focus Springpad You can read more about their failure here .",
+    "founded": "2008",
+    "closed": "2014"
+  },
+  {
+    "startup": "Stayzilla",
+    "sector": "Travel",
+    "country": "India",
+    "funding": "$34M",
+    "cause": [
+      "execution",
+      "unit_economics"
+    ],
+    "description": "Stayzilla, once a thriving homestay network with $33.5M in funding, closed due to unsustainable operational costs and consistent financial losses. Details of the startup: Founders: Rupal Yogendra, Sachit Singhi, Sachit Singhi, Yogendra Vasupal Country: India Industry: Travel Started in: 2005 Closed in: 2017 N\u00ba of employees: 250-500 Funding Amount: $10M-$50M Specific cause of failure: Lack of Focus Stayzilla You can read more about their failure here .",
+    "founded": "2005",
+    "closed": "2017"
+  },
+  {
+    "startup": "Stereomood",
+    "sector": "Music",
+    "country": "Italy",
+    "funding": "No Data",
+    "cause": [
+      "execution",
+      "competition",
+      "market",
+      "product"
+    ],
+    "description": "Stereomood was a music platform that provided mood-based song listings. The company was acquired but they weren\u2019t able to make a profit. Details of the startup: Founders: Daniele Novaga, Eleonora Viviani, Giovanni Ferron, Maurizio Pratici Country: Italy Industry: Music Started in: 2009 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: No Data Specific cause of failure: Acquisition Flu Stereomood You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2015"
+  },
+  {
+    "startup": "Teforia",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$17.1M",
+    "cause": [
+      "market"
+    ],
+    "description": "Teforia was a tea brewer that yielded the perfect cup of tea by combining tradition with smart technology. It had an absence of market fit and shut down. Details of the startup: Founders: Allen Han, Kris Efland Country: United States Industry: Food & Beverage Started in: 2014 Closed in: 2017 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: No Market Need Teforia You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2017"
+  },
+  {
+    "startup": "Tilt",
+    "sector": "Finances",
+    "country": "United States",
+    "funding": "$62.1M",
+    "cause": [
+      "execution"
+    ],
+    "description": "Tilt was a social payments startup. The CEO was believed to become the next Zuckerberg. However, lack of focus led to shutting down their operations. Details of the startup: Founders: James Beshara, Karolyn Baxter, Khaled Hussein Country: United States Industry: Finances Started in: 2012 Closed in: 2017 N\u00ba of employees: 100-250 Funding Amount: > $50M Specific cause of failure: Lack of Focus Tilt You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2017"
+  },
+  {
+    "startup": "Totsy",
+    "sector": "e-Commerce",
+    "country": "United States",
+    "funding": "$29.5M",
+    "cause": [
+      "product",
+      "bad_timing"
+    ],
+    "description": "Totsy was a flash sale company that offered high-end fashion brands online for a low-price. Flash sales lost their attractiveness and became obsolete. Details of the startup: Founders: Christophe Garnier, Guillaume Gauthereau Country: United States Industry: e-Commerce Started in: 2009 Closed in: 2013 N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Poor Product Totsy You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2013"
+  },
+  {
+    "startup": "Turntable.fm",
+    "sector": "Music",
+    "country": "United States",
+    "funding": "$7M",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Turntable.fm was a platform on which DJ and fans were brought together. The cost of running it proved to be too expensive and they had to shut down. Details of the startup: Founders: Billy Chasen Country: United States Industry: Music Started in: 2011 Closed in: 2013 N\u00ba of employees: 1-10 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Turntable.fm You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2013"
+  },
+  {
+    "startup": "Tutorspree",
+    "sector": "Education",
+    "country": "United States",
+    "funding": "$1.8M",
+    "cause": [
+      "execution",
+      "market"
+    ],
+    "description": "Tutorspree wanted to enhance tutoring. Their vision of pairing up tutors and students to meet up in person was not practical, which made it shut down. Details of the startup: Founders: Aaron Harris, Josh Abrams, Ryan Bednar Country: United States Industry: Education Started in: 2010 Closed in: 2013 N\u00ba of employees: 50-100 Funding Amount: $1M-$10M Specific cause of failure: Bad Marketing Tutorspree You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2013"
+  },
+  {
+    "startup": "Utrip",
+    "sector": "Travel",
+    "country": "United States",
+    "funding": "$6M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Utrip was a travel planning startup that used AI to create personalized itineraries. Keeping the recommendation engine alive was too much for them. Details of the startup: Founders: Gilad Berenstein, Yair Berenstein Country: United States Industry: Travel Started in: 2012 Closed in: 2019 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Mismanagement of Funds Utrip You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2019"
+  },
+  {
+    "startup": "Vine",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "No Data",
+    "cause": [
+      "competition",
+      "execution",
+      "market",
+      "product"
+    ],
+    "description": "What happened to Vine? Why did Vine shut down? When? Does TikTok face the same risk? Here's our detailed analysis. Details of the startup: Founders: Colin Kroll, Dom Hofmann, Rus Yusupov Country: United States Industry: Social Media Started in: 2012 Closed in: 2017 N\u00ba of employees: 50-100 Funding Amount: No Data Specific cause of failure: Multiple Reasons Vine You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2017"
+  },
+  {
+    "startup": "Vreal",
+    "sector": "Entertainment",
+    "country": "United States",
+    "funding": "$15M",
+    "cause": [
+      "bad_timing"
+    ],
+    "description": "Vreal was a virtual reality startup that enabled users to interact with content creators. They were ahead of their time in a market not fully developed. Details of the startup: Founders: Todd Hooper Country: United States Industry: Entertainment Started in: 2015 Closed in: Active N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Bad Timing Vreal You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "Active"
+  },
+  {
+    "startup": "Wantful",
+    "sector": "e-Commerce",
+    "country": "United States",
+    "funding": "$5.5M",
+    "cause": [
+      "competition"
+    ],
+    "description": "Wantful was an e-Commerce founded in 2011. After experiencing exponential growth, it shut down in 2013 due to stiff competition from other companies. Details of the startup: Founders: John Poisson Country: United States Industry: e-Commerce Started in: 2011 Closed in: 2013 N\u00ba of employees: +10,000 Funding Amount: $1M-$10M Specific cause of failure: Competition Wantful You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2013"
+  },
+  {
+    "startup": "Wattage",
+    "sector": "Software & Hardware",
+    "country": "Canada",
+    "funding": "$200K",
+    "cause": [
+      "market"
+    ],
+    "description": "Wattage was a platform with an ambitious goal: to break the entry barrier for hardware design. They weren't able to validate market interest. Details of the startup: Founders: Brett Hagman, Jeremy Bell, Peter Nitsch Country: Canada Industry: Software & Hardware Started in: 2014 Closed in: 2015 N\u00ba of employees: 50-100 Funding Amount: < $1M Specific cause of failure: No Market Need Wattage You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "Wesabe",
+    "sector": "Finances",
+    "country": "United States",
+    "funding": "$4.7M",
+    "cause": [
+      "execution",
+      "competition"
+    ],
+    "description": "Wesabe is a former Personal Finance Management system that helped clients make better financial decisions. Having better competitors made Wesabe fail. Details of the startup: Founders: Jason Knight, Marc Hedlund Country: United States Industry: Finances Started in: 2005 Closed in: 2010 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Bad Management Wesabe You can read more about their failure here .",
+    "founded": "2005",
+    "closed": "2010"
+  },
+  {
+    "startup": "WOW Air",
+    "sector": "Transportation",
+    "country": "Iceland",
+    "funding": "-",
+    "cause": [
+      "execution",
+      "unit_economics",
+      "competition",
+      "bad_timing"
+    ],
+    "description": "WOW Air was the Icelandic answer to RyanAir for low-cost air travel in Europe. The cause of failure was that they wanted to become too big too fast. Details of the startup: Founders: Skuli Mogensen Country: Iceland Industry: Transportation Started in: 2011 Closed in: 2019 N\u00ba of employees: 50-100 Funding Amount: No Data Specific cause of failure: Multiple Reasons WOW Air You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2019"
+  },
+  {
+    "startup": "Zoomo",
+    "sector": "Transportation",
+    "country": "India",
+    "funding": "$6M",
+    "cause": [
+      "bad_timing",
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Zoomo's goal was to build trust in the Indian used cars market. The buy-and-sell vehicle market was relatively young in India and decided to shut down. Details of the startup: Founders: Arnav Kumar, Himangshu Hazarika Country: India Industry: Transportation Started in: 2014 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Zoomo You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Zulily",
+    "sector": "e-Commerce",
+    "country": "United States",
+    "funding": "$194.6M",
+    "cause": [
+      "execution",
+      "market"
+    ],
+    "description": "Zulily was an online store selling clothing and other products. They declined in popularity because of their poor marketing and user-attention strategies. Details of the startup: Founders: Darrell Cavens, Mark Vadon Country: United States Industry: e-Commerce Started in: 2009 Closed in: Active N\u00ba of employees: 1,000-5,000 Funding Amount: > $50M Specific cause of failure: Bad Marketing Zulily You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "Active"
+  },
+  {
+    "startup": "140 Canvas",
+    "sector": "b2c",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "After dropping out of university, Harry went back home and found a gift: a fake big tweet from Federer. That\u2019s when he came with a business idea: fake tweets printed and sold for \u00a330. He partnered with a friend and launched the project within 2 months. However, after a Youtube\u2019s influencer campaign, the site got 17,000 visitors and only 20 sales. That\u2019s when they realized not so many people were interested in their product... Details of the startup: Founder: Harry Dry Country: United Kingdom Industry: e-Commerce Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: No Market Need 140 Canvas You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "Autto.in",
+    "sector": "b2c",
+    "country": "India",
+    "funding": "< $100K",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Autto.in was an on-demand doorstep car service provider, created by Deepak in 2017. Soon after launching, a co-founder joined him and they started marketing the startup, spending a lot of money in customer acquisition. As money burnt, they decided to reach investors, who put them pressure in growing fast. After some months, they decided to shut down. Details of the startup: Founder: Deepak Murthy Country: India Industry: Transportation Started in: 2017 Closed in: 2017 Funding Amount: < $100K Specific cause of failure: Lack of Funds Autto.in You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Birdy",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "execution",
+      "unit_economics"
+    ],
+    "description": "The Birdy was a simple app to track spending habits. Corey never figured out how to monetize it which also caused scaling issues. Details of the startup: Founder: Corey Maass Country: United States Industry: Finances Started in: 2009 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Lack of Funds Birdy You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2015"
+  },
+  {
+    "startup": "BusyMind",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "execution"
+    ],
+    "description": "BusyMind was a simple app that guided people through basic breathing and observation exercises. Lack of time destroyed the startup. Details of the startup: Founder: Kevin Lamping Country: United States Industry: Health Started in: 2014 Closed in: 2014 Funding Amount: $0 Specific cause of failure: Lack of Focus BusyMind You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2014"
+  },
+  {
+    "startup": "Chowdy",
+    "sector": "b2c",
+    "country": "Canada",
+    "funding": "$0",
+    "cause": [
+      "legal",
+      "execution"
+    ],
+    "description": "Steve and his housemate were always complaining food was expensive in Toronto. So, they came with a solution: hire a chef for themselves and 20 friends. This simple idea quickly escalated into a business, that, within a few months, was making +$110,000 per month. But, as it went up fast, it also came down rapidly. The business was involved in some legal problems, which forced the founders to shut it down. Read Steve\u2019s failure story and learn from his mistakes! Details of the startup: Founder: Steven Long Country: Canada Industry: Food & Beverage Started in: 2014 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Legal Challenges Chowdy You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Cuddli",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "unit_economics"
+    ],
+    "description": "Robert was the co-founder of Cuddli, a dating app for geeks. The startup was based in the US but they had their development team in Croatia. Media features grew the app to 100k users but a combination of a small market and their inability to monetize the app forced the startup to shut down. Details of the startup: Founder: Robert Walker Country: United States Industry: Software & Hardware Started in: 2014 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Bad Business Model Cuddli You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Fantastic House Buyers",
+    "sector": "b2c",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Fantastic House Buyers was an online service designed to improve the expensive and stressful experience of buying a house in the UK. Alan built it himself and start trying a lot of different marketing strategies. However, after a few months, he realized he had built something that no-one wanted. Details of the startup: Founder: Alan Murray Country: United Kingdom Industry: Services Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: No Market Need Fantastic House Buyers You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "Flux",
+    "sector": "b2c",
+    "country": "Germany",
+    "funding": "< $100K",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Flux was a modular multi messaging client. They raised a small angel round of 70K \u20ac and invested another 15K \u20ac. A combination of many issues led to their failure. Details of the startup: Founder: Jan Johannes Country: Germany Industry: Software & Hardware Started in: 2011 Closed in: 2016 Funding Amount: < $100K Specific cause of failure: Bad Management Flux You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2016"
+  },
+  {
+    "startup": "Formatically",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "unit_economics"
+    ],
+    "description": "Duncan Hamra has been building businesses with his best friend Tyler since they were in high school. They built Formatically, an instant citation tool that didn't take off. We'll discuss what went wrong with this project, and how those learnings helped him start Memberstack. Details of the startup: Founder: Duncan Hamra Country: United States Industry: Education Started in: 2014 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Bad Business Model Formatically You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2018"
+  },
+  {
+    "startup": "Graphite Docs",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$100K-$500K",
+    "cause": [
+      "execution",
+      "bad_timing"
+    ],
+    "description": "Justin Hunter had the courage to challenge Google Docs, all because he was scared of losing all his writing saved in the cloud. So he created Graphite Docs, a privacy-focused alternative to Google Docs powered by blockchain, that assured users that their saved files were indeed safe. And the effort paid off; he started gaining traction from individual users. However, he decided to focus on the B2B model, rather than B2C, and this decision cost him the business. Why? Read on to find it out. Details of the startup: Founder: Justin Hunter Country: United States Industry: Software & Hardware Started in: 2017 Closed in: 2020 Funding Amount: $100K-$500K Specific cause of failure: Bad Business Model Graphite Docs You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2020"
+  },
+  {
+    "startup": "Gulp",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Jeff Orr and two friends in college started Gulp- an app to pay bar cover. Gulp was meant to replace the inconvenience of having to go an ATM to pay for a bar\u2019s cover fee, but with the lack of affiliate marketing knowledge and some bad unit economics, the friends quickly ran out of money. Details of the startup: Founder: Jeff Orr Country: United States Industry: Software & Hardware Started in: 2014 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Bad Business Model Gulp You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "Gymlisted",
+    "sector": "b2c",
+    "country": "Canada",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Gymlisted was a website for finding the right private gym. Every day, Tom would go home from his day job and code up features for Gymlisted until midnight. Once launched, they started with their marketing efforts. But they soon realized there was pretty much no demand for what they were offering. Details of the startup: Founder: Tom Zaragoza Country: Canada Industry: Software & Hardware Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: No Market Need Gymlisted You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "Habitual",
+    "sector": "b2c",
+    "country": "Denmark",
+    "funding": "$0",
+    "cause": [
+      "execution"
+    ],
+    "description": "Holger Sindbaek is the founder of Habitual, a habit-tracking app that was initially created since Holger could not find an app that could suit his habit-tracking needs after reading Atomic Habits book. With other successful apps under his belt like a Solitaire card game played by 3M people per month, it seems like he has the knack of making startups fly. So what went wrong with Habitual? Discover it in this interview. Details of the startup: Founder: Holger Sindbaek Country: Denmark Industry: Productivity Started in: 2019 Closed in: 2021 Funding Amount: $0 Specific cause of failure: Bad Marketing Habitual You can read more about their failure here .",
+    "founded": "2019",
+    "closed": "2021"
+  },
+  {
+    "startup": "Howell Market",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "team",
+      "execution"
+    ],
+    "description": "Howell Market was an online store where individual sellers could go to sell their products. Cody, the founder, partnered with his family and friends, but things didn\u2019t work out as his partners weren\u2019t passionate about the vision of the company. Details of the startup: Founder: Cody Howell Country: United States Industry: e-Commerce Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Bad Management Howell Market You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Hubrif",
+    "sector": "b2c",
+    "country": "Nigeria",
+    "funding": "< $100K",
+    "cause": [
+      "market",
+      "unit_economics"
+    ],
+    "description": "Tobi Ogunwande is a Nigerian filmmaker who tried to build the Netflix for African short films as a result of his frustration to find great African movies. He partnered with a technical co-founder and soon after launching, they were seeing an average of 1,000 views on their films. However, they soon realized the market niche was too small and there wasn\u2019t a clear business model. Eventually, they run out of money and shut down. Details of the startup: Founder: Tobi Ogunwande Country: Nigeria Industry: Entertainment Started in: 2015 Closed in: 2016 Funding Amount: < $100K Specific cause of failure: Bad Business Model Hubrif You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2016"
+  },
+  {
+    "startup": "Juice Startup",
+    "sector": "b2c",
+    "country": "Thailand",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Wit Sumathavanit has recently started to pivot from offline to online entrepreneurship. But before that, he tried to build a juice business in Bangkok. He lost around $3,000 but those learnings impacted his process to validate new ideas. Details of the startup: Founder: Wit Sumathavanit Country: Thailand Industry: Food & Beverage Started in: 2020 Closed in: 2020 Funding Amount: $0 Specific cause of failure: No Market Need Juice Startup You can read more about their failure here .",
+    "founded": "2020",
+    "closed": "2020"
+  },
+  {
+    "startup": "Kaya.gs",
+    "sector": "b2c",
+    "country": "Argentina",
+    "funding": "< $100K",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "In 2011, Gabriel decided to build a Go Server that would launch new features every few weeks. He and his co-founder built and launched it in 2 months and in the following months, they raised $20,000 through a crowdfunding campaign. 1 year into running and they were shut down: product, engineering, and morale were the problems to blame. Details of the startup: Founder: Gabriel Benmergui Country: Argentina Industry: Entertainment Started in: 2011 Closed in: 2012 Funding Amount: < $100K Specific cause of failure: Poor Product Kaya.gs You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2012"
+  },
+  {
+    "startup": "Kolos",
+    "sector": "b2c",
+    "country": "Bulgaria",
+    "funding": "< $100K",
+    "cause": [
+      "market"
+    ],
+    "description": "In 2012, Ivo started a 3-year journey building a business that sold iPad racing wheels, which would suck up $50,000 in personal and investor funds. The hardware accelerator he went through wasn't able to help turn his business into a success, neither was the Kickstarter campaign successful. Learning from the experience, today Ivo runs $1M+ crowdfunding campaigns. Read below to learn about his journey. Details of the startup: Founder: Ivaylo Kalburdzhiev Country: Bulgaria Industry: Software & Hardware Started in: 2012 Closed in: 2015 Funding Amount: < $100K Specific cause of failure: No Market Need Kolos You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2015"
+  },
+  {
+    "startup": "Kopely",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "technical_dependency",
+      "bad_timing"
+    ],
+    "description": "After a decade of training and coaching, Andrew realized that stress was one of their clients\u2019 main issues. That\u2019s how he thought about creating a stress relief app. He partnered up with a dev company to build his idea while he took care of marketing. In few months, he got a great list of interested people, but COVID-19 changed things\u2026 the devs were no longer interested in building the app. Details of the startup: Founder: Andrew Laux Country: United States Industry: Health Started in: 2019 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Dependence on Others Kopely You can read more about their failure here .",
+    "founded": "2019",
+    "closed": "2020"
+  },
+  {
+    "startup": "Lernin Games",
+    "sector": "b2c",
+    "country": "Spain",
+    "funding": "$1M-$5M",
+    "cause": [
+      "unit_economics"
+    ],
+    "description": "Jordi Mir\u00f3 has been building products and companies since 2007. After a successful CTO experience in Wuaki TV, he founded Lernin Games, an EdTech startup focused on toddlers. He raised \u20ac1.5M and built a team of 10, but Lernin ran out of cash and the project couldn\u2019t succeed. Details of the startup: Founder: Jordi Mir\u00f3 Country: Spain Industry: Education Started in: 2017 Closed in: 2019 Funding Amount: $1M-$5M Specific cause of failure: Bad Business Model Lernin Games You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2019"
+  },
+  {
+    "startup": "Lieferoo",
+    "sector": "b2c",
+    "country": "Germany",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "In 2014, Aazar, a Pakistani entrepreneur, decided to create an Uber for logistics and awkward items trying to solve a problem he and many other people were having: Bringing items from Pakistan to Germany. He soon validated the idea and built the product. But a combination of bad marketing and bad team fit led to their failure. Details of the startup: Founder: Aazar Shad Country: Germany Industry: Transportation Started in: 2014 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Bad Marketing Lieferoo You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "LocalTown",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Michael founded LocalTown, an online marketplace built using no-code tools. After noticing a lot of makers needed help with launching their side projects, he started building tools to solve the problems of that niche. Details of the startup: Founder: Michael Novotny Country: United States Industry: Software & Hardware Started in: 2016 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Bad Market Fit LocalTown You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2018"
+  },
+  {
+    "startup": "Lockpick Entertainment",
+    "sector": "b2c",
+    "country": "Sweden",
+    "funding": "$0",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Lockpick Entertainment was a small game studio, that created Dreamlords, a famous MMORTS game. They did it well, making thousands per month. But they began to increase the scope, and after 6 years, they went out of business due to bankruptcy. Details of the startup: Founder: Jesper Bylund Country: Sweden Industry: Software & Hardware Started in: 2006 Closed in: 2012 Funding Amount: $0 Specific cause of failure: Competition Lockpick Entertainment You can read more about their failure here .",
+    "founded": "2006",
+    "closed": "2012"
+  },
+  {
+    "startup": "Mishra Motors",
+    "sector": "b2c",
+    "country": "India",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Mishra Motors was to be the premier electric sports bike in India. Time and capital were the causes of its collapse. Details of the startup: Founder: Naveen Mishra Country: India Industry: Transportation Started in: 2014 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Lack of Funds Mishra Motors You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Mongoose Cricket",
+    "sector": "b2c",
+    "country": "United Kingdom",
+    "funding": "$100K-$500K",
+    "cause": [
+      "market",
+      "execution"
+    ],
+    "description": "In 2009, Thomas Evans began working alongside Marcus, the creator of a radical new cricket bat named the Mongoose. After spending over $130,000 on glitzy marketing, and failing to break through the heavily traditional cricket market, they were forced to shut down. Details of the startup: Founder: Thomas Evans Country: United Kingdom Industry: e-Commerce Started in: 2009 Closed in: 2011 Funding Amount: $100K-$500K Specific cause of failure: Bad Marketing Mongoose Cricket You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2011"
+  },
+  {
+    "startup": "NE Lounge",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "product",
+      "market"
+    ],
+    "description": "Following his objective of reaching $10k/month from his online businesses, Jake launched NE Lounge, an Amazon FBA store selling inflatable products. 1 year and $16,000 later, the startup shut down. Choosing the wrong product in an unfamiliar niche is the cause to blame. Details of the startup: Founder: Jake Lang Country: United States Industry: e-Commerce Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: No Market Need NE Lounge You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "NewCo",
+    "sector": "b2c",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "execution"
+    ],
+    "description": "If you are interested in the no-code movement, you\u2019ve probably heard Ben Tossell\u2019s name. But today we\u2019re not here to talk about Makerpad, one of the leading communities for no-coders, but about Ben\u2019s previous project: NewCo. We want to know what went wrong, what were the lessons learned, and how it led to his success afterward. Details of the startup: Founder: Ben Tossell Country: United Kingdom Industry: Education Started in: 2018 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Lack of Focus NewCo You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2018"
+  },
+  {
+    "startup": "NOX",
+    "sector": "b2c",
+    "country": "Singapore",
+    "funding": "< $100K",
+    "cause": [
+      "execution",
+      "funding",
+      "unit_economics",
+      "team"
+    ],
+    "description": "Jeremiah is an ex-entrepreneur who co-founded NOX, a nightlife app that allowed users to book events, services, and VIPs. The 5-person-team raised $90,000 from several angel investors but had to pivot into an e-commerce platform for alcoholic beverages, which was eventually making $20,000/month. However, the lack of both financial discipline and ideas to scale led to its failure. Details of the startup: Founder: Jeremiah Lam Country: Singapore Industry: e-Commerce Started in: 2015 Closed in: 2018 Funding Amount: < $100K Specific cause of failure: Mismanagement of Funds NOX You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2018"
+  },
+  {
+    "startup": "Okami Pack",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "funding"
+    ],
+    "description": "Tim is a 32-years-old entrepreneur who in 2014 spent 10 months working on a Kickstarter project that would never launch: the Okami Pack. He quit his job to follow his dream of creating this survival pack, but as the months went over, he started running out of cash and saw himself forced to shut the startup down. Details of the startup: Founder: Tim Chard Country: United States Industry: e-Commerce Started in: 2014 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Lack of Funds Okami Pack You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "openmargin",
+    "sector": "b2c",
+    "country": "Netherlands",
+    "funding": "$100K-$500K",
+    "cause": [
+      "bad_timing",
+      "competition",
+      "execution"
+    ],
+    "description": "Marc co-founded *openmargin, a social e-reader app that turned books into small communities. Being too early in the market, having huge competitors like Amazon, and not shipping fast enough were three of the reasons for the startup\u2019s failure. Details of the startup: Founder: Marc K\u00f6hlbrugge Country: Netherlands Industry: Productivity Started in: 2009 Closed in: 2014 Funding Amount: $100K-$500K Specific cause of failure: Lack of Focus openmargin You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2014"
+  },
+  {
+    "startup": "Phoenix",
+    "sector": "b2c",
+    "country": "Mexico",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Phoenix was a SaaS app to send a last message to the people you love when you die. However, it was the app which died first. Details of the startup: Founder: Enrique Benitez Country: Mexico Industry: Software & Hardware Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: No Market Need Phoenix You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Playdate",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Logan was the CEO and CTO of Playdate, an on-demand social networking app. In two years, the startup grew to a team of 7 at its peak and 5,000 monthly active users. However, a collection of causes made the startup uninvestable and they eventually run out of money. Details of the startup: Founder: Logan Rado Country: United States Industry: Social Media Started in: 2016 Closed in: 2019 Funding Amount: $0 Specific cause of failure: Lack of Funds Playdate You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2019"
+  },
+  {
+    "startup": "Raw Gains",
+    "sector": "b2c",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Jack Ellis quit his full-time job to pursue Raw Gains, a fitness app focused on bodybuilding & coaching. It was self-funded and worked alone on the project. After a meaningless launch, he expected people would \u201cjust turn up\u201d and stopped working on it. Details of the startup: Founder: Jack Ellis Country: United Kingdom Industry: Health Started in: 2013 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Lack of Experience Raw Gains You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2018"
+  },
+  {
+    "startup": "Reality Hunt",
+    "sector": "b2c",
+    "country": "Belgium",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Toby founded two projects that gave him lots of valuable lessons for his current Startup Mill projects. They were RealityHunt and \"I Voted Remain\". He learned to build a simple landing page before committing to building it and to build processes that simplify your way of working. Details of the startup: Founder: Toby Allen Country: Belgium Industry: Software & Hardware Started in: 2016 Closed in: 2017 Funding Amount: $0 Specific cause of failure: No Market Need Reality Hunt You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2017"
+  },
+  {
+    "startup": "Refolo",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Lola founded Refolo, a meal-planning app focused on plant-based eating. After spending 2 years selling a solution for a problem that people weren't already investing money in, she decided to shut it down looking for other opportunities. Details of the startup: Founder: Lola Ojabowale Country: United States Industry: Health Started in: 2018 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Bad Market Fit Refolo You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2020"
+  },
+  {
+    "startup": "Ropero",
+    "sector": "b2c",
+    "country": "Mexico",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Ropero was an e-commerce aiming to sell t-shirts in an unprepared market. Many expenses and little earnings. Details of the startup: Founder: Rafael Soto Country: Mexico Industry: e-Commerce Started in: 2005 Closed in: 2006 Funding Amount: $0 Specific cause of failure: Bad Market Fit Ropero You can read more about their failure here .",
+    "founded": "2005",
+    "closed": "2006"
+  },
+  {
+    "startup": "Sharkius",
+    "sector": "b2c",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "unit_economics",
+      "market",
+      "team"
+    ],
+    "description": "Sharkius was a social games company. It grew too fast, too quickly. It reached $80k/month revenue within months and wasted it. Learn from their mistakes! Details of the startup: Founder: David Kramaley Country: United Kingdom Industry: Entertainment Started in: 2007 Closed in: 2012 Funding Amount: $0 Specific cause of failure: Bad Marketing Sharkius You can read more about their failure here .",
+    "founded": "2007",
+    "closed": "2012"
+  },
+  {
+    "startup": "Taleship",
+    "sector": "b2c",
+    "country": "Puerto Rico",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Sergio Mattei is an 18-year-old entrepreneur who built Taleship, a social writing application. He developed it himself when he was 16 and participated in a startup competition. Unfortunately, he didn\u2019t win, but was able to get a lot of experience and knowledge that allowed him to grow it to +600 users. Hurricane Maria demotivated Sergio, who finally decided to shut down Taleship. Details of the startup: Founder: Sergio Mattei Diaz Country: Puerto Rico Industry: Social Media Started in: 2016 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Lack of Focus Taleship You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2016"
+  },
+  {
+    "startup": "Teacher Finder",
+    "sector": "b2c",
+    "country": "Hungary",
+    "funding": "$0",
+    "cause": [
+      "competition"
+    ],
+    "description": "Andrew Davison is one of the automation kings. He is a Zapier Certified Expert and an Integromat Partner running Luhhu, a business automation agency. Before that, he built Teacher Finder, a marketplace for language teachers. It didn\u2019t take off, but using Zapier each day helped him start his agency. Details of the startup: Founder: Andrew Davison Country: Hungary Industry: Education Started in: 2015 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Competition Teacher Finder You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2020"
+  },
+  {
+    "startup": "The Nerd Cave",
+    "sector": "b2c",
+    "country": "Australia",
+    "funding": "< $100K",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "The Nerd Cave was a new kind of retail model, a truly safe space for gamers of all kinds to go and enjoy their passion and hobby. They were doing it great, earning $16,000 AUD/month. But when they moved to a new location, they saw a big loss of income, which provoked the closure of their doors. Details of the startup: Founder: David Desi Country: Australia Industry: Entertainment Started in: 2013 Closed in: 2017 Funding Amount: < $100K Specific cause of failure: Lack of Funds The Nerd Cave You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2017"
+  },
+  {
+    "startup": "The Punjab Kitchen",
+    "sector": "b2c",
+    "country": "India",
+    "funding": "$0",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Amit is a hard-core sales professional, who decided to set up a home-made food business with his wife. They started investing $1,200/month to set up the startup and get the first customers. However, once running they had to confront a big problem: the prices of their competitors were much lower. After some pivots, they decided to shut it down. Details of the startup: Founder: Amit Gogia Country: India Industry: Food & Beverage Started in: 2014 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Competition The Punjab Kitchen You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "ToyGaroo",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$100K-$500K",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Toygaroo was the Netflix of toys. Funded by a great group of people based in Los Angeles, the company appeared on Shark Tank asking $100k for a 10% stake. They ended up raising $250K in 2 funding rounds, but after some months, they had to shut down the company. Inventory and logistical costs were too high, so capital rapidly disappeared. Details of the startup: Founder: Phil Smy Country: United States Industry: e-Commerce Started in: 2010 Closed in: 2012 Funding Amount: $100K-$500K Specific cause of failure: Bad Business Model ToyGaroo You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2012"
+  },
+  {
+    "startup": "Vivalatina",
+    "sector": "b2c",
+    "country": "Mexico",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "market"
+    ],
+    "description": "Nicolas started an e-Commerce that imported sterling silver jewelry from Mexico and resold it in France. His lack of knowledge on marketing made it impossible to him to achieve customers. After some big mistakes, he decided to shut it down and start re-thinking the business model. He is now making $7,200/Month. Details of the startup: Founder: Nicolas Tranchant Country: Mexico Industry: e-Commerce Started in: 2012 Closed in: 2014 Funding Amount: $0 Specific cause of failure: Bad Marketing Vivalatina You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2014"
+  },
+  {
+    "startup": "WedMap",
+    "sector": "b2c",
+    "country": "Switzerland",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "execution",
+      "team",
+      "product"
+    ],
+    "description": "Tauras is a 30-year old entrepreneur from Lithuania. With the objective of digitizing the wedding planning process, he co-founded WedMap. They launched the tool within some months and carried out a vast number of marketing strategies, which led to a monthly revenue of $2k. However, different problems on team, resources, skills, and product meant WedMap\u2019s failure. Details of the startup: Founder: Tauras Sinkus Country: Switzerland Industry: Software & Hardware Started in: 2015 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Lack of Funds WedMap You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2018"
+  },
+  {
+    "startup": "WURA",
+    "sector": "b2c",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "competition"
+    ],
+    "description": "WURA was an on-demand video platform for African and Nollywood movies. Mike hired a few developers to build it and spent $35,000 on Facebook marketing. The business grew fast and he was making $3,861 per month. However, YouTube competition and cash flow killed the startup. Details of the startup: Founder: Michael Ojo Country: United States Industry: Entertainment Started in: 2013 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Lack of Funds WURA You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2018"
+  },
+  {
+    "startup": "Young Entrepreneurs' Program",
+    "sector": "b2c",
+    "country": "Germany",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "Fabian founded Young Entrepreneurs Program, a one-year educational program for entrepreneurs aged 17 to 23. After 2 years and 150,000\u20ac spent, they had 30,000\u20ac in ARR and had to shut down due to no product-market fit. Details of the startup: Founder: Fabian Tausch Country: Germany Industry: Education Started in: 2018 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Bad Market Fit Young Entrepreneurs' Program You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2020"
+  },
+  {
+    "startup": "Zor Technology",
+    "sector": "b2c",
+    "country": "Australia",
+    "funding": "$0",
+    "cause": [
+      "legal"
+    ],
+    "description": "When he was 16 years old, Mat wanted to help his family improve the standards of living. So, he started a business which imported consumer electronics and re-sold them at almost x10 the original price. Through affiliates, he was able to put his business on the track to 6 figures in the first year. However, one day he received a call from a law firm which forced him to shut down the startup. Details of the startup: Founder: Mathew Carpenter Country: Australia Industry: Software & Hardware Started in: 2008 Closed in: 2009 Funding Amount: $0 Specific cause of failure: Legal Challenges Zor Technology You can read more about their failure here .",
+    "founded": "2008",
+    "closed": "2009"
+  },
+  {
+    "startup": "Design Inc.",
+    "sector": "Design",
+    "country": "United States",
+    "funding": "$2.3M",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Design Inc. linked clients to talented designers. They reached market saturation and the startup could not make enough revenue to cover operation costs. Details of the startup: Founders: Bjoern Zinssmeister, Marc Hemeon Country: United States Industry: Design Started in: 2016 Closed in: 2017 N\u00ba of employees: 1-10 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Design Inc. You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2017"
+  },
+  {
+    "startup": "Fuhu",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$66.2M",
+    "cause": [
+      "execution",
+      "funding"
+    ],
+    "description": "Fuhu was a seller of cloud-served software. After reaching Top 1 on Inc 500, the company amassed an enormous amount of debt and had a very high burn rate. Details of the startup: Founders: John Hui, Robb Fujioka, Steve Hui Country: United States Industry: Software & Hardware Started in: 2006 Closed in: 2015 N\u00ba of employees: 500-1,000 Funding Amount: > $50M Specific cause of failure: Mismanagement of Funds Fuhu You can read more about their failure here .",
+    "founded": "2006",
+    "closed": "2015"
+  },
+  {
+    "startup": "Laurel & Wolf",
+    "sector": "e-Commerce",
+    "country": "United States",
+    "funding": "$25.5M",
+    "cause": [
+      "execution",
+      "unit_economics",
+      "market",
+      "team"
+    ],
+    "description": "Laurel & Wolf was a marketplace for interior design solutions. They shut down due to large spendings on marketing and a bad reputation among customers. Details of the startup: Founders: Brandon Kleinman, Leura Fine Country: United States Industry: e-Commerce Started in: 2014 Closed in: Active N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Multiple Reasons Laurel & Wolf You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "Active"
+  },
+  {
+    "startup": "Vacation Bird",
+    "sector": "los-angeles",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "team",
+      "execution"
+    ],
+    "description": "Gene founded VacationBird, a marketplace for finding your vacation rental. It was an early version of Airbnb and a VRBO competitor. Having a misalignment of incentives between co-founders and poor planning were the main causes to shut it down in 2012. Details of the startup: Founder: Gene Maryushenko Country: United States Industry: Travel Started in: 2011 Closed in: 2012 Funding Amount: $0 Specific cause of failure: Lack of Experience Vacation Bird You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Zapstream",
+    "sector": "los-angeles",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "funding",
+      "execution",
+      "competition"
+    ],
+    "description": "Zapstream was a social live streaming platform, which competed with Meerkat and Periscope. The startup raised $1m from angels and grew from 0 to 100k users. However, a combination of dwindling engagement, mismanagement of money, and the inability to fundraise further, led to their shut down. Details of the startup: Founder: Devan Sood Country: United States Industry: Social Media Started in: 2015 Closed in: 2016 Funding Amount: $1M-$5M Specific cause of failure: Mismanagement of Funds Zapstream You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "HitMeUp",
+    "sector": "e-Commerce",
+    "country": "United Kingdom",
+    "funding": "\u00a350K",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "HitMeUp was a web-based business commercial center. The founder had no tech background, and after launching 3 versions, they decided to shut down. Details of the startup: Founders: Charlie Pool Country: United Kingdom Industry: e-Commerce Started in: 2011 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Lack of Experience HitMeUp You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "Karhoo",
+    "sector": "Transportation",
+    "country": "United Kingdom",
+    "funding": "$39M",
+    "cause": [
+      "execution",
+      "product"
+    ],
+    "description": "Karhoo was a cab aggregator. It was out of business after 6 months of operation. Poor management and bad execution of a good concept were the main causes. Details of the startup: Founders: Daniel Ishag Country: United Kingdom Industry: Transportation Started in: 2014 Closed in: 2016 N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Poor Product Karhoo You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Radar Radio",
+    "sector": "Entertainment",
+    "country": "United Kingdom",
+    "funding": "-",
+    "cause": [
+      "execution",
+      "funding"
+    ],
+    "description": "Radar Radio, a hub for emerging music talent online, ceased operations amidst a debt of \u00a33.6M. Here's their story. Details of the startup: Founders: Ollie Ashley Country: United Kingdom Industry: Entertainment Started in: 2008 Closed in: 2018 N\u00ba of employees: 10-50 Funding Amount: $0 Specific cause of failure: Mismanagement of Funds Radar Radio You can read more about their failure here .",
+    "founded": "2008",
+    "closed": "2018"
+  },
+  {
+    "startup": "AskTina",
+    "sector": "united-kingdom",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "market"
+    ],
+    "description": "AskTina was a live video chat widget for experts to install on their blogs. They did not spend enough time validating the idea through customer interviews before investing in building the MVP. Details of the startup: Founder: Tom Hunt Country: United Kingdom Industry: Software & Hardware Started in: 2016 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Bad Market Fit AskTina You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Bediwin Information Services",
+    "sector": "united-kingdom",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "unit_economics",
+      "bad_timing",
+      "product"
+    ],
+    "description": "James is a IT professional who decided to start a business on a \u201cIT-manager-for-hire\u201d type model. He built the company with really few resources and tools and started looking for clients. At peak, he was earning \u00a32,500, but after some years, he had to shut down as he realized his business model was completely broken. Details of the startup: Founder: James Cort Country: United Kingdom Industry: Software & Hardware Started in: 2011 Closed in: 2014 Funding Amount: $0 Specific cause of failure: Bad Business Model Bediwin Information Services You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2014"
+  },
+  {
+    "startup": "Sport Draftr",
+    "sector": "united-kingdom",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "legal"
+    ],
+    "description": "Will created Sport Draftr, a Daily Fantasy Sports site in the UK, offering leagues in the English Premier League, and UEFA Champions League. The product was loved, looked great, and it worked well, but due to a lack of knowledge in the gambling industry and changes in legislation, they were forced to close the company. Details of the startup: Founder: Will Laurenson Country: United Kingdom Industry: Entertainment Started in: 2015 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Legal Challenges Sport Draftr You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2017"
+  },
+  {
+    "startup": "Tailor",
+    "sector": "united-kingdom",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "product"
+    ],
+    "description": "Joe is a 25-year-old founder who, following Pieter Levels example, decided to build 12 startups in 12 months. Doing some A/B testing for his other projects, he found the existing tools had a lot of missing features and decided to spend 2 months full-time working on a new solution. But things didn't go well... Details of the startup: Founder: Joe D\u2019elia Country: United Kingdom Industry: Analytics Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Bad Marketing Tailor You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "VO2 Sportswear",
+    "sector": "united-kingdom",
+    "country": "United Kingdom",
+    "funding": "< $100K",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "After realizing no triathlon clothing brand was properly catering to the market from a design point of view, Matthew decided to do it himself and started VO2 Sportwear. Through social media, sponsorships, and SEO, the business made \u00a3250k its third year, but then failed to manage their cash flow and had to shut down. Details of the startup: Founder: Matthew Tomkin Country: United Kingdom Industry: e-Commerce Started in: 2012 Closed in: 2016 Funding Amount: < $100K Specific cause of failure: Lack of Funds VO2 Sportswear You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2016"
+  },
+  {
+    "startup": "Watu",
+    "sector": "united-kingdom",
+    "country": "United Kingdom",
+    "funding": "$0",
+    "cause": [
+      "funding"
+    ],
+    "description": "Watu was a temporary staffing app founded by Jos\u00e9 Pablo Fern\u00e1ndez and his business partner. The business was very sticky; once a company started using the app, it was very unlikely for them to leave. So what could have gone wrong!? Read our interview with Pablo below to know more. Details of the startup: Founder: Pablo Ferna\u0301ndez Country: United Kingdom Industry: Software & Hardware Started in: 2011 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Lack of Funds Watu You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "99dresses",
+    "sector": "e-Commerce",
+    "country": "Australia",
+    "funding": "$105.7K",
+    "cause": [
+      "execution",
+      "market",
+      "competition",
+      "funding"
+    ],
+    "description": "99dresses was a fashion app that offered trades of second-hand designer dresses between users. It operated for a year but had to shut it down in 2014. Details of the startup: Founders: Nikki Durkin Country: Australia Industry: e-Commerce Started in: 2010 Closed in: 2014 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Multiple Reasons 99dresses You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2014"
+  },
+  {
+    "startup": "Auctionata",
+    "sector": "e-Commerce",
+    "country": "Germany",
+    "funding": "$95.5M",
+    "cause": [
+      "team",
+      "execution",
+      "legal"
+    ],
+    "description": "Auctionata was an online auction platform for art and luxury. Their issues originated from unethical behavior, lack of transparency, and lies by the CEO. Details of the startup: Founders: Alexander Gilkes, Alexander Zacke, Georg Untersalmberger, Susanne Zacke Country: Germany Industry: e-Commerce Started in: 2012 Closed in: 2017 N\u00ba of employees: 250-500 Funding Amount: > $50M Specific cause of failure: Legal Challenges Auctionata You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2017"
+  },
+  {
+    "startup": "Formspring",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "$14.3M",
+    "cause": [
+      "legal",
+      "execution"
+    ],
+    "description": "Formspring was an anonymous Q&A forum that grew to 1 million users in 2 months. This brought lots of cyberbullying on the site. They shut down after 4 years. Details of the startup: Founders: Ade Olonoh, John Wechsler Country: United States Industry: Social Media Started in: 2009 Closed in: 2013 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Legal Challenges Formspring You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2013"
+  },
+  {
+    "startup": "Koinex",
+    "sector": "Finances",
+    "country": "India",
+    "funding": "-",
+    "cause": [
+      "legal",
+      "execution"
+    ],
+    "description": "Koinex was a cryptocurrency exchange platform. India's laws got harsh against cryptocurrencies and the obstacles and little profits led to its shut down. Details of the startup: Founders: Aditya Naik, Rahul Raj, Rakesh Yadav Country: India Industry: Finances Started in: 2017 Closed in: 2019 N\u00ba of employees: 50-100 Funding Amount: No Data Specific cause of failure: Legal Challenges Koinex You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2019"
+  },
+  {
+    "startup": "Secret",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "$35M",
+    "cause": [
+      "product",
+      "execution",
+      "legal"
+    ],
+    "description": "Secret was an app that allowed users to post content anonymously. Active users rapidly declined after 18 months from its launch and cyberbullying emerged. Details of the startup: Founders: Chrys Bader-Wechseler, David Byttow Country: United States Industry: Social Media Started in: 2013 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Legal Challenges Secret You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2015"
+  },
+  {
+    "startup": "Theranos",
+    "sector": "Health",
+    "country": "United States",
+    "funding": "$1.4B",
+    "cause": [
+      "product",
+      "execution",
+      "legal",
+      "team"
+    ],
+    "description": "Theranos was a way to predict diseases with small blood samples. They raised $1.4B but legal investigations pointed out it was a fraud and shut down. Details of the startup: Founders: Elizabeth Holmes Country: United States Industry: Health Started in: 2003 Closed in: 2018 N\u00ba of employees: 10-50 Funding Amount: > $50M Specific cause of failure: Legal Challenges Theranos You can read more about their failure here .",
+    "founded": "2003",
+    "closed": "2018"
+  },
+  {
+    "startup": "Yik Yak",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "$73.5M",
+    "cause": [
+      "legal"
+    ],
+    "description": "What was Yik Yak? Why was it shut down? Are there any alternatives nowadays? Find the answers to these questions and more in this article. Details of the startup: Founders: Brooks Buffington, Tyler Droll, Will Jamieson Country: United States Industry: Social Media Started in: 2013 Closed in: 2017 N\u00ba of employees: 10-50 Funding Amount: > $50M Specific cause of failure: Legal Challenges Yik Yak You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2017"
+  },
+  {
+    "startup": "EventVue",
+    "sector": "Finances",
+    "country": "United States",
+    "funding": "$455K",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "EventVue helped to improve the conference networking experience. They lacked product-market fit and failed to test early the usefulness of the product. Details of the startup: Founders: Josh Fraser, Rob Johnson Country: United States Industry: Finances Started in: 2007 Closed in: 2010 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Lack of PMF EventVue You can read more about their failure here .",
+    "founded": "2007",
+    "closed": "2010"
+  },
+  {
+    "startup": "Community Coders",
+    "sector": "community",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "While in university, Kaito started Community Coders, a business that connected companies looking for web development and digital marketing services with high school students. However, as the months went over, it became difficult to close deals and the startup began to lose its course until they shut down. Details of the startup: Founder: Kaito Cunningham Country: Canada Industry: Education Started in: 2018 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Bad Management Community Coders You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Onepagetrip",
+    "sector": "community",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "execution",
+      "unit_economics"
+    ],
+    "description": "Onepagetrip was a travel itinerary sharing community. Not having a plan to make money from the beginning was a stupid rookie mistake. Details of the startup: Founder: Ana Santos Country: Australia Industry: Travel Started in: 2014 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Bad Business Model Onepagetrip You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Phez",
+    "sector": "community",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Shanti is a 38-year-old software developer and entrepreneur who, using Ruby on Rails, built Phez, a Reddit clone that rewarded users with Bitcoin. After a few months, however, Phez failed due to its poor business model. If Shanti would have sold the BTC he used as rewards at BTC peak, he would have made $29,014! Details of the startup: Founder: Shanti Braford Country: United States Industry: Social Media Started in: 2015 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Bad Business Model Phez You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2016"
+  },
+  {
+    "startup": "QuickHaggle",
+    "sector": "community",
+    "country": "Pakistan",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "product"
+    ],
+    "description": "QuickHaggle was a community in which online users could exchange their skills. However, just like in old age, with the barter system, it became really difficult to find people who were looking for your service, and in exchange, could carry out what you needed. After some months, Bilal decided to shut it down. Details of the startup: Founder: Bilal Ahmad Country: Pakistan Industry: Software & Hardware Started in: 2010 Closed in: 2011 Funding Amount: $0 Specific cause of failure: Lack of Funds QuickHaggle You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2011"
+  },
+  {
+    "startup": "LayerVault",
+    "sector": "Design",
+    "country": "United States",
+    "funding": "$535K",
+    "cause": [
+      "funding"
+    ],
+    "description": "LayerVault helped you store, track, review, and deliver design work. However, they were unable to secure additional capital to sustain their services. Details of the startup: Founders: Allan Grinshtein, Kelly Sutton Country: United States Industry: Design Started in: 2011 Closed in: 2014 N\u00ba of employees: 10-50 Funding Amount: < $1M Specific cause of failure: Lack of Funds LayerVault You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2014"
+  },
+  {
+    "startup": "Flowtab",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "-",
+    "cause": [
+      "execution",
+      "unit_economics"
+    ],
+    "description": "Flowtab was an app that solved the problem of long queues in bars. They tried several business models but never found a profitable one, so they shut down. Details of the startup: Founders: Mike Townsend Country: United States Industry: Food & Beverage Started in: 2011 Closed in: 2013 N\u00ba of employees: 50-100 Funding Amount: $0 Specific cause of failure: Bad Business Model Flowtab You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2013"
+  },
+  {
+    "startup": "SellanApp",
+    "sector": "Finances",
+    "country": "The Netherlands",
+    "funding": "$961.1K",
+    "cause": [
+      "team"
+    ],
+    "description": "SellanApp connected people who had an idea for an app with app developers that could materialize it. It failed due to an unhealthy co-founder partnership. Details of the startup: Founders: Aernoud Dekker, Milan van den Bovenkamp Country: The Netherlands Industry: Finances Started in: 2012 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Failure to Pivot SellanApp You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2015"
+  },
+  {
+    "startup": "Selltag",
+    "sector": "e-Commerce",
+    "country": "Spain",
+    "funding": "\u20ac325K",
+    "cause": [
+      "execution",
+      "unit_economics"
+    ],
+    "description": "Selltag was a web-based buy & sell platform. The CEO realized their business model would not be sustainable in the long term and shut it down. Details of the startup: Founders: Javier Escribano, Ruben Colomer, Juan Luis Hortelano, Walter Kobylanski Country: Spain Industry: e-Commerce Started in: 2014 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: < $1M Specific cause of failure: Failure to Pivot Selltag You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "Sharingear",
+    "sector": "Music",
+    "country": "Denmark",
+    "funding": "\u20ac15K",
+    "cause": [
+      "market",
+      "unit_economics"
+    ],
+    "description": "Sharinger was a marketplace for musicians to rent their instruments. They focused on a market that was too small and the business model was unsustainable. Details of the startup: Founders: Mircea Gabriel Eftemie Country: Denmark Industry: Music Started in: 2014 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Multiple Reasons Sharingear You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2015"
+  },
+  {
+    "startup": "Take Eat Easy",
+    "sector": "Food & Beverage",
+    "country": "Belgium",
+    "funding": "\u20ac16.4M",
+    "cause": [
+      "competition",
+      "unit_economics"
+    ],
+    "description": "TakeEatEasy enabled restaurants to provide a reliable delivery service for their customers. Their margins were insufficient and closed doors after 3 years. Details of the startup: Founders: Adrien Roose, Chlo\u00e9 Roose, Jean-Christophe Libbrecht, Karim Slaoui Country: Belgium Industry: Food & Beverage Started in: 2013 Closed in: 2016 N\u00ba of employees: 100-250 Funding Amount: $10M-$50M Specific cause of failure: Competition Take Eat Easy You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2016"
+  },
+  {
+    "startup": "Zirtual",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$5.5M",
+    "cause": [
+      "execution",
+      "funding",
+      "team"
+    ],
+    "description": "Zirtual was a virtual assistant marketplace for busy entrepreneurs. Its management and the high burn rate brought the firm on the verge of bankruptcy. Details of the startup: Founders: Collin Vine, Erik Jensen, Maren Kate Donovan Country: United States Industry: Software & Hardware Started in: 2011 Closed in: 2015 N\u00ba of employees: 100-250 Funding Amount: $1M-$10M Specific cause of failure: Mismanagement of Funds Zirtual You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "Adproval",
+    "sector": "marketplace",
+    "country": "United States",
+    "funding": "$100K-$500K",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Matthew founded Adproval, a marketplace to connect blogging and social media influencers with brands. Raised around $300k in funds and made $200/mo from their self-service software for bloggers. In the end, they made over $200k in revenue from consulting services but it wasn't enough. Details of the startup: Founder: Matthew Anderson Country: United States Industry: Marketing Started in: 2011 Closed in: 2017 Funding Amount: $100K-$500K Specific cause of failure: Bad Business Model Adproval You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2017"
+  },
+  {
+    "startup": "Boston Apartment Hub",
+    "sector": "marketplace",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "bad_timing"
+    ],
+    "description": "Boston Apartment Hub was an apartment listing site for the Boston area. The idea was probably too ahead of its time. Details of the startup: Founder: Jon Sherman Country: United States Industry: Software & Hardware Started in: 2006 Closed in: 2007 Funding Amount: $0 Specific cause of failure: Bad Market Fit Boston Apartment Hub You can read more about their failure here .",
+    "founded": "2006",
+    "closed": "2007"
+  },
+  {
+    "startup": "ExploreVR",
+    "sector": "marketplace",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Andrey Norin is a budding entrepreneur, responsible for all the successes and the failures of ExploreVR. This was a directory site focused 100% on virtual reality. He started it in 2017 and shut down a few months later. His lack of experience in creating a business from scratch was the main cause of failure. Details of the startup: Founder: Andrey Norin Country: United States Industry: Software & Hardware Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Lack of Experience ExploreVR You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Gawkbox",
+    "sector": "marketplace",
+    "country": "United States",
+    "funding": "$1M-$5M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "GawkBox was a platform where viewers of live streams could play mobile games to donate real money to streamers. Chris co-founded this as his first startup and he was able to successfully raise $4.4M in venture funding, which the startup invested in marketing until they achieved 500k users and more than $1M in revenue. However, multiple mistakes and a series of reasons led to their shut down. Details of the startup: Founder: Christopher Brownridge Country: United States Industry: Entertainment Started in: 2016 Closed in: 2019 Funding Amount: $1M-$5M Specific cause of failure: Lack of Funds Gawkbox You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2019"
+  },
+  {
+    "startup": "Hot Barber",
+    "sector": "marketplace",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "unit_economics"
+    ],
+    "description": "Hot Barber was a website that let hair stylists set up profiles and customers browse portfolios, but the founders couldn't find a way to monetize it! Details of the startup: Founder: Julia Enthoven Country: United States Industry: Software & Hardware Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Bad Business Model Hot Barber You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "Jobridge",
+    "sector": "marketplace",
+    "country": "India",
+    "funding": "$0",
+    "cause": [
+      "bad_timing",
+      "execution"
+    ],
+    "description": "Jasmeet is an Indian software engineer who a few years ago decided to build new revenue strategies for his business directory and decided to build a job board with a unique offline-online model. But their idea was too ahead to the time and, due to a bad business model, they had to shut down. Details of the startup: Founder: Jasmeet Singh Country: India Industry: Software & Hardware Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Bad Business Model Jobridge You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Rent Nest",
+    "sector": "marketplace",
+    "country": "United States",
+    "funding": "< $100K",
+    "cause": [
+      "unit_economics",
+      "funding"
+    ],
+    "description": "Steven was co-founder at Rent Nest, an app that allowed users to collect and share information on houses to rent. They raised some money from friends and were soon accepted on a startup accelerator. Throughout two years, the startup grew to $12k/mo, but they were spending +$40k/mo, which led them to eventually running out of funds and shutting down. Details of the startup: Founder: Steven Glod Country: United States Industry: Software & Hardware Started in: 2012 Closed in: 2014 Funding Amount: < $100K Specific cause of failure: Bad Business Model Rent Nest You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2014"
+  },
+  {
+    "startup": "Sofetch",
+    "sector": "marketplace",
+    "country": "Armenia",
+    "funding": "< $100K",
+    "cause": [
+      "bad_timing",
+      "execution"
+    ],
+    "description": "Talking with her manicurist, Margaret got to know some of the common challenges beauty service providers faced in Armenia. Her startup Sofetch aimed to solve some of these. She hired a developer to build it and as she was beginning to prepare the launch, COVID happened and the beauty industry was disrupted. She tried pivoting, but nothing worked so she decided to move on to a new startup idea. Details of the startup: Founder: Margaret Rostamian Country: Armenia Industry: Health Started in: 2019 Closed in: 2020 Funding Amount: < $100K Specific cause of failure: Failure to Pivot Sofetch You can read more about their failure here .",
+    "founded": "2019",
+    "closed": "2020"
+  },
+  {
+    "startup": "WantRemoteJob",
+    "sector": "marketplace",
+    "country": "Latvia",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Vyacheslav is a software engineer who in 2017 decided to build a board for remote jobs on the IT industry. He built it using his programming knowledge and invite a list of contacts he knew to try the product. But he soon realized he couldn\u2019t handle everything and that keeping up the project would require a lot of time and people. It wasn\u2019t going to pay off, so he shut it down. Details of the startup: Founder: Vyacheslav Grzhybovsky Country: Latvia Industry: Software & Hardware Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Bad Market Fit WantRemoteJob You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Creator Growth Lab",
+    "sector": "indonesia",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "Andrew Kamphey has started several projects related to creators and influencer marketing. One of them was Creator Growth Lab, a tool to help Instagram creators grow by themselves. He invested $5,000, never made a penny, and realized there was no need for that product. Details of the startup: Founder: Andrew Kamphey Country: Indonesia Industry: Analytics Started in: 2018 Closed in: 2019 Funding Amount: $0 Specific cause of failure: Dependence on Others Creator Growth Lab You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Profitabilly",
+    "sector": "indonesia",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Natagon is an entrepreneur from Bali who, trying to solve a problem he was struggling with in his development agency, built a SaaS that mixed a project management software with an accounting one. Using cold-emails, he was soon able to make it profitable, but lack of passion led to its shut down. Details of the startup: Founder: Natagon Country: Indonesia Industry: Software & Hardware Started in: 2018 Closed in: 2019 Funding Amount: $0 Specific cause of failure: Lack of Focus Profitabilly You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "ABBY",
+    "sector": "germany",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "market"
+    ],
+    "description": "ABBY was a documentation service for A/B tests. To make such a service successful, Andy would have needed to educate the users, and that was not possible. Details of the startup: Founder: Andy Goldschmidt Country: Germany Industry: Analytics Started in: 2015 Closed in: 2016 Funding Amount: $0 Specific cause of failure: No Market Need ABBY You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Gameslog",
+    "sector": "germany",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "competition",
+      "market"
+    ],
+    "description": "Gameslog was a gaming site monetized with affiliate marketing. But the site never took off, as the market was already saturated. Details of the startup: Founder: Michael Hebenstreit Country: Germany Industry: Entertainment Started in: 2013 Closed in: 2014 Funding Amount: $0 Specific cause of failure: Competition Gameslog You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "ScaleFactor",
+    "sector": "Finances",
+    "country": "United States",
+    "funding": "$103M",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "ScaleFactor was a tech startup that claimed to automate SME bookkeeping and payroll thanks to an AI they were developing in-house, which wasn't the case. Details of the startup: Founders: Kurt Rathmann Country: United States Industry: Finances Started in: 2014 Closed in: 2020 N\u00ba of employees: 100-250 Funding Amount: > $50M Specific cause of failure: Poor Product ScaleFactor You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2020"
+  },
+  {
+    "startup": "Hello Tyro",
+    "sector": "services",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "market"
+    ],
+    "description": "Pierre co-founded Hello Tyro, a platform matching students with internship opportunities in Belgian startups. They raised \u20ac250k and reached \u20ac4k MRR at their top but didn't find Product-Market Fit. They ran out of cash and filed for bankruptcy in 2020. Details of the startup: Founder: Pierre Tillement Country: Belgium Industry: Software & Hardware Started in: 2017 Closed in: 2020 Funding Amount: $100K-$500K Specific cause of failure: No Market Need Hello Tyro You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "DotCloud",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$13.7M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "dotCloud was a PaaS for developers that enabled them to host, assemble and run their applications. They could not sustain operation costs by themselves. Details of the startup: Founders: Solomon Hykes Country: United States Industry: Software & Hardware Started in: 2008 Closed in: 2016 N\u00ba of employees: 250-500 Funding Amount: $10M-$50M Specific cause of failure: Mismanagement of Funds DotCloud You can read more about their failure here .",
+    "founded": "2008",
+    "closed": "2016"
+  },
+  {
+    "startup": "RewardMe",
+    "sector": "Marketing",
+    "country": "United States",
+    "funding": "$1.1M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "RewardMe was a real-time intelligent CRM Platform for Local Commerce. They wanted to scale up the company prematurely, which lead to their shut down. Details of the startup: Founders: Jun Loayza, Stephen Johnson, Yu-kai Chou Country: United States Industry: Marketing Started in: 2010 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Lack of Funds RewardMe You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2015"
+  },
+  {
+    "startup": "SchoolGennie",
+    "sector": "Education",
+    "country": "India",
+    "funding": "-",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "SchoolGennie provided solutions that saved time, reduced costs, and helped make better decisions on schools. But they didn\u2019t test their product-market fit. Details of the startup: Founders: Amit Gupta, Pardeep Goyal Country: India Industry: Education Started in: 2013 Closed in: 2014 N\u00ba of employees: 1-10 Funding Amount: $0 Specific cause of failure: Lack of Experience SchoolGennie You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2014"
+  },
+  {
+    "startup": "Adleaf Technologies",
+    "sector": "mismanagement-of-funds",
+    "country": "India",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "funding"
+    ],
+    "description": "Back in 2013, Chetan Vashistth founded his first startup business called \u201cAdleaf Technologies\u201d, a blend of programming bootcamps and software solutions. Business was good for a while, but the challenge of multiple bad business decisions paired with failed money management proved to be the business\u2019s demise. In this interview, we will talk about the lessons Chetan learned the hard way. Details of the startup: Founder: Chetan Vashistth Country: India Industry: Education Started in: 2013 Closed in: 2014 Funding Amount: $0 Specific cause of failure: Mismanagement of Funds Adleaf Technologies You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2014"
+  },
+  {
+    "startup": "Vulpine",
+    "sector": "mismanagement-of-funds",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "funding"
+    ],
+    "description": "Derric Haynie is an entrepreneur based in Oakland, California who, years ago, launched Vulpine Interactive, a social media and advertising agency. Peaking at 10 clients, $40k/mo and 5 employees, things were expected to keep going well. However, they ended up shutting the business and walked away with $70k in debt. Learn what happened! Details of the startup: Founder: Derric Haynie Country: United States Industry: Social Media Started in: 2013 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Mismanagement of Funds Vulpine You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2018"
+  },
+  {
+    "startup": "Anki",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$182M",
+    "cause": [
+      "funding"
+    ],
+    "description": "Anki aimed to intergrate robotics and IoT with kids' toys and games but shut down in April 2019 after failure to raise funding. Details of the startup: Founders: Boris Sofman, Hanns Tappeiner, Mark Palatucci Country: United States Industry: Software & Hardware Started in: 2010 Closed in: 2019 N\u00ba of employees: 100-250 Funding Amount: > $50M Specific cause of failure: Lack of Funds Anki You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2019"
+  },
+  {
+    "startup": "QBotix",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$23.5M",
+    "cause": [
+      "competition"
+    ],
+    "description": "QBotix offered solar panels that tracked solar light. Their competitors' efficiency improved, making QBotix's innovative solar panels less cost-effective. Details of the startup: Founders: Wasiq Bokhari Country: United States Industry: Software & Hardware Started in: 2010 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Competition QBotix You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2015"
+  },
+  {
+    "startup": "Hashtag Pirate",
+    "sector": "spain",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "technical_dependency"
+    ],
+    "description": "Nicolas is an IT support engineer who built Hashtag Pirate, an Instagram hashtag search engine. He hired a freelance developer and, once launched, he put a big focus on SEO. Things were going pretty well. However, in 2015 Instagram announced changes to its API and so Hashtag Pirates stopped working. Details of the startup: Founder: Nicolas Elec Attallah Country: Spain Industry: Social Media Started in: 2015 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Dependence on Others Hashtag Pirate You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Appiterate",
+    "sector": "Marketing",
+    "country": "United States",
+    "funding": "$500K",
+    "cause": [
+      "execution",
+      "bad_timing"
+    ],
+    "description": "Appiterate was a mobile marketing company that was acquired by Flipkart, India\u2019s largest e-commerce company. It was closed 2 years after launching. Details of the startup: Founders: Anuj Bhargava, Mayank Kumar, Tanuj Mendiratta, Varun Sharma Country: United States Industry: Marketing Started in: 2013 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Acquisition Flu Appiterate You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2015"
+  },
+  {
+    "startup": "ArsDigita",
+    "sector": "e-Commerce",
+    "country": "United States",
+    "funding": "$35M",
+    "cause": [
+      "team"
+    ],
+    "description": "ArsDigita was a Web Development Company established in 1997. Their decline was ascribed to an inexperienced external CEO and had to shut down in 2001. Details of the startup: Founders: Philip Greenspun, Tracy Adams, Ben Adida, Eve Andersson, Olin Shivers, Aurelius Prochazka, Jin Choi Country: United States Industry: e-Commerce Started in: 1997 Closed in: 2002 N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Lack of Experience ArsDigita You can read more about their failure here .",
+    "founded": "1997",
+    "closed": "2002"
+  },
+  {
+    "startup": "Reach.ly",
+    "sector": "Analytics",
+    "country": "Latvia",
+    "funding": "\u20ac200K",
+    "cause": [
+      "market",
+      "execution"
+    ],
+    "description": "Reach.ly was an analytics tool for e-commerce sites providing customer behavior patterns. Lack of proper market feedback made the company shut down. Details of the startup: Founders: Ernests \u0160t\u0101ls Country: Latvia Industry: Analytics Started in: 2011 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Multiple Reasons Reach.ly You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "Shipbeat",
+    "sector": "e-Commerce",
+    "country": "Denmark",
+    "funding": "\u20ac1.2M",
+    "cause": [
+      "execution",
+      "market",
+      "competition"
+    ],
+    "description": "Shipbeat was an API to help e-commerces. When Shipbeat expanded its logistic services in other market areas, they had some big difficulties and shut down. Details of the startup: Founders: Joachim R\u00f8rb\u00f8l, Kenneth Svenningse Country: Denmark Industry: e-Commerce Started in: 2014 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Multiple Reasons Shipbeat You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "SpoonRocket",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$13.5M",
+    "cause": [
+      "competition",
+      "funding"
+    ],
+    "description": "SpoonRocket was a food delivery service making healthy meals each day. When their financial situation declined, they failed to fundraise to stay afloat. Details of the startup: Founders: Anson Tsui, Steven Hsiao Country: United States Industry: Food & Beverage Started in: 2013 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Competition SpoonRocket You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2016"
+  },
+  {
+    "startup": "FreshConnect",
+    "sector": "e-commerce",
+    "country": "India",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Tarun co-founded Freshconnect, an online B2B marketplace for fresh agricultural produce like fruits & vegetables. After making mistakes like lack of focus and bad hiring, they couldn't secure a funding round and eventually got acqui-hired by another company. Details of the startup: Founder: Tarun Gupta Country: India Industry: e-Commerce Started in: 2018 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Bad Management FreshConnect You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2020"
+  },
+  {
+    "startup": "Argyle Social",
+    "sector": "Marketing",
+    "country": "United States",
+    "funding": "$1.6M",
+    "cause": [
+      "technical_dependency",
+      "competition"
+    ],
+    "description": "The Argyle Social was a social media marketing tool. The leading social media platforms change their APIs every time, which led to their shut down. Details of the startup: Founders: Adam Covati Country: United States Industry: Marketing Started in: 2010 Closed in: 2014 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Competition Argyle Social You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2014"
+  },
+  {
+    "startup": "Digg",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "$49M",
+    "cause": [
+      "competition"
+    ],
+    "description": "Digg had the mission of \"democratizing\" the content and news that people saw. However, it missed lots of opportunities to become a thriving social network. Details of the startup: Founders: Kevin Rose Country: United States Industry: Social Media Started in: 2004 Closed in: Active N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Competition Digg You can read more about their failure here .",
+    "founded": "2004",
+    "closed": "Active"
+  },
+  {
+    "startup": "Frankly",
+    "sector": "Social Media",
+    "country": "India",
+    "funding": "$600K",
+    "cause": [
+      "product",
+      "funding"
+    ],
+    "description": "Frankly.me was a Q&A social platform that wasn\u2019t able to raise the necessary round of funding. That is why the CEO of Frankly decided to shut it down. Details of the startup: Founders: Abhishek Gupta, Nikunj Jain Country: India Industry: Social Media Started in: 2014 Closed in: 2016 N\u00ba of employees: 50-100 Funding Amount: < $1M Specific cause of failure: Lack of PMF Frankly You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Friendster",
+    "sector": "Social Media",
+    "country": "Philippines",
+    "funding": "$48.5M",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "Friendster was a social gaming site widely popular in Asia. It never put emphasis on the social news feed feature, leading to poor usage and registrations. Details of the startup: Founders: Jonathan Abrams Country: Philippines Industry: Social Media Started in: 2001 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Lack of PMF Friendster You can read more about their failure here .",
+    "founded": "2001",
+    "closed": "2015"
+  },
+  {
+    "startup": "Salorix",
+    "sector": "Analytics",
+    "country": "United States",
+    "funding": "$3.5M",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Salorix offered an engagement platform for brands. It closed down because of its inability to raise money after its investors stopped supporting it. Details of the startup: Founders: Santanu Bhattacharya Country: United States Industry: Analytics Started in: 2009 Closed in: 2014 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Bad Management Salorix You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2014"
+  },
+  {
+    "startup": "TeeBeeDee",
+    "sector": "Social Media",
+    "country": "United States",
+    "funding": "$4.8M",
+    "cause": [
+      "execution",
+      "unit_economics",
+      "market",
+      "product"
+    ],
+    "description": "TeeBeeDee was a social network aimed at people over 40 to share their experiences. They weren\u2019t able to grow their user base fast enough to survive. Details of the startup: Founders: David Markus, Jon Brandt, Robin Wolaner, Todd Basche Country: United States Industry: Social Media Started in: 2007 Closed in: 2009 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model TeeBeeDee You can read more about their failure here .",
+    "founded": "2007",
+    "closed": "2009"
+  },
+  {
+    "startup": "BeehiveID",
+    "sector": "social-media",
+    "country": "United States",
+    "funding": "< $100K",
+    "cause": [
+      "technical_dependency"
+    ],
+    "description": "BeehiveID was a startup on the dating market, that identified online accounts created for fraudulent use. Techstars and RightSide Capital decided to invest $70K on their business. However, after some months BeehiveID closed their doors. Being too dependent on Facebook data killed their startup. Details of the startup: Founder: Mary Haskett Country: United States Industry: Software & Hardware Started in: 2013 Closed in: 2015 Funding Amount: < $100K Specific cause of failure: Dependence on Others BeehiveID You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2015"
+  },
+  {
+    "startup": "Legaats",
+    "sector": "social-media",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "bad_timing",
+      "execution",
+      "market",
+      "product"
+    ],
+    "description": "Legaats was a web app where baby boomers and senior citizens could share their important life lessons. 5 were the causes of its failure. Details of the startup: Founder: Deepak Chhugani Country: United States Industry: Social Media Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Bad Business Model Legaats You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Aria Insights",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$39M",
+    "cause": [
+      "execution",
+      "product",
+      "market",
+      "funding"
+    ],
+    "description": "Aria Insights developed highly advanced drones. After some pivots, the company couldn't find out the correct business model and had to shut down. Details of the startup: Founders: Helen Greiner Country: United States Industry: Software & Hardware Started in: 2008 Closed in: 2019 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Multiple Reasons Aria Insights You can read more about their failure here .",
+    "founded": "2008",
+    "closed": "2019"
+  },
+  {
+    "startup": "Lookery",
+    "sector": "Marketing",
+    "country": "United States",
+    "funding": "$3.2M",
+    "cause": [
+      "technical_dependency"
+    ],
+    "description": "Lookery gave statistics showcasing services that empowered organizations. It was based on Facebook platform, and after the redesign, they had to shut down. Details of the startup: Founders: David Cancel, Rex Dixon, Todd Sawicki Country: United States Industry: Marketing Started in: 2007 Closed in: 2009 N\u00ba of employees: 1-10 Funding Amount: $1M-$10M Specific cause of failure: Dependence on Others Lookery You can read more about their failure here .",
+    "founded": "2007",
+    "closed": "2009"
+  },
+  {
+    "startup": "Monitor110",
+    "sector": "Analytics",
+    "country": "United States",
+    "funding": "$17.3M",
+    "cause": [
+      "execution",
+      "product"
+    ],
+    "description": "Monitor110 offered real-time monitoring services for Wall Street. They lost the edge they had by not validating the product and shut down in 2008. Details of the startup: Founders: Roger Ehrenberg Country: United States Industry: Analytics Started in: 2003 Closed in: 2008 N\u00ba of employees: 1-10 Funding Amount: $10M-$50M Specific cause of failure: Multiple Reasons Monitor110 You can read more about their failure here .",
+    "founded": "2003",
+    "closed": "2008"
+  },
+  {
+    "startup": "OpTier",
+    "sector": "Analytics",
+    "country": "United States",
+    "funding": "$118.1M",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "OpTier provided customers with a business transaction monitoring platform. Little market share, revenue, and investment led to OpTier's failure. Details of the startup: Founders: Amir Alon, Motti Tal Country: United States Industry: Analytics Started in: 2002 Closed in: 2014 N\u00ba of employees: 50-100 Funding Amount: > $50M Specific cause of failure: Lack of PMF OpTier You can read more about their failure here .",
+    "founded": "2002",
+    "closed": "2014"
+  },
+  {
+    "startup": "Ansaro",
+    "sector": "no-pivoting",
+    "country": "United States",
+    "funding": "$1M-$5M",
+    "cause": [
+      "market",
+      "execution"
+    ],
+    "description": "Sam was one of the co-founders of Ansaro, a SaaS that aimed to revolutionize the recruiting industry through the use of technologies like AI. They raised $2.25M from institutional investors and $750K from friends and family, grew the team to 6 members and earned in total $100k. But with expenses of $70k/month and no product-market fit, they had to shut down 2 years later. Details of the startup: Founder: Sam Stone Country: United States Industry: Software & Hardware Started in: 2016 Closed in: 2018 Funding Amount: $1M-$5M Specific cause of failure: Bad Market Fit Ansaro You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2018"
+  },
+  {
+    "startup": "DotaHaven",
+    "sector": "no-pivoting",
+    "country": "Bulgaria",
+    "funding": "< $100K",
+    "cause": [
+      "market",
+      "execution"
+    ],
+    "description": "Kyril is the founder of DotaHaven, a gaming content site that\u2019s currently passing away. The website had early success, raising $90k, growing from 0 to 500k page views/mo in 6 months and making $3.5/mo at its peak. However, in the last months, the business has struggled to make enough money to keep running; over-investment in a non-validated concept is one of the reasons for their failure. Details of the startup: Founder: Kyril Kotashev Country: Bulgaria Industry: Entertainment Started in: 2018 Closed in: 2020 Funding Amount: < $100K Specific cause of failure: Bad Market Fit DotaHaven You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2020"
+  },
+  {
+    "startup": "Pactero",
+    "sector": "no-pivoting",
+    "country": "United States",
+    "funding": "$100K-$500K",
+    "cause": [
+      "market"
+    ],
+    "description": "Wes founded Pactero, a platform to simplify the process of managing income share agreements. He confused the initial launch hype with market validation, but it was vanity. The business made around $180 total after spending $55k. Details of the startup: Founder: Wes Wagner Country: United States Industry: Education Started in: 2020 Closed in: 2021 Funding Amount: $100K-$500K Specific cause of failure: No Market Need Pactero You can read more about their failure here .",
+    "founded": "2020",
+    "closed": "2021"
+  },
+  {
+    "startup": "Tali",
+    "sector": "no-pivoting",
+    "country": "United States",
+    "funding": "$500K-$1M",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "Matt created Tali, a timekeeping solution for lawyers powered by voice technology like Amazon Alexa, and Google Assistant. Like many first start-ups, they encountered many mistakes while trying to build. He created Tali in the effort to help lawyers more effectively keep track of their time instead of using pen and paper. Ultimately, due to a lack of traction and a misfit product market they had to wind things down. Details of the startup: Founder: Matthew Volm Country: United States Industry: Software & Hardware Started in: 2017 Closed in: 2019 Funding Amount: $500K-$1M Specific cause of failure: Bad Market Fit Tali You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2019"
+  },
+  {
+    "startup": "PostRocket",
+    "sector": "Analytics",
+    "country": "United States",
+    "funding": "$610K",
+    "cause": [
+      "product",
+      "technical_dependency"
+    ],
+    "description": "PostRocket was a Facebook marketing platform co-founded in October 2010. Many technical issues and depending on FB affected the quality of their service. Details of the startup: Founders: Murry Ivanoff, Tim Chae Country: United States Industry: Analytics Started in: 2010 Closed in: 2013 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Poor Product PostRocket You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2013"
+  },
+  {
+    "startup": "Brisk",
+    "sector": "depending-on-others",
+    "country": "",
+    "funding": "",
+    "cause": [
+      "execution",
+      "technical_dependency"
+    ],
+    "description": "Brisk was a prescriptive intelligence company which suffered from lack of focus. Being dependant on Salesforce was a fatal mistake. Details of the startup: Founder: Hampus Jakobsson Country: Sweden Industry: Software & Hardware Started in: 2012 Closed in: 2016 Funding Amount: $1M-$5M Specific cause of failure: Lack of Focus Brisk You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Admazely",
+    "sector": "Marketing",
+    "country": "Denmark",
+    "funding": "$600K",
+    "cause": [
+      "funding"
+    ],
+    "description": "Admazely offered retargeting tools for businesses. They shut down in 2013 when they ran short on financing and didn't figure out how to secure more cash. Details of the startup: Founders: David Bj\u00f6rklund, Peter Vilsholm Therkildsen, Sylwia Erhardt-Bednarska, S\u00f8ren Holbech Nielsen Country: Denmark Industry: Marketing Started in: 2011 Closed in: 2013 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Lack of Funds Admazely You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2013"
+  },
+  {
+    "startup": "Circa",
+    "sector": "Entertainment",
+    "country": "United States",
+    "funding": "$4.7M",
+    "cause": [
+      "funding",
+      "competition"
+    ],
+    "description": "Circa had the mission of \u2018fixing\u2019 what was wrong with journalism. They suffered a financial breakdown and were copied by giants in the news sector. Details of the startup: Founders: Arsenio Santos, Ben Huh, Matt Galligan Country: United States Industry: Entertainment Started in: 2011 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Lack of Funds Circa You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "Poliana",
+    "sector": "Analytics",
+    "country": "United States",
+    "funding": "$15K",
+    "cause": [
+      "market",
+      "funding",
+      "execution"
+    ],
+    "description": "Poliana's aim was to bring order to the USA political system. They had low market demand and ran out of funds even after implementing 3 business models. Details of the startup: Founders: Grayson Carroll, Patrick Cason, Seth Whiting, Shawn Whiting Country: United States Industry: Analytics Started in: 2013 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: Bad Business Model Poliana You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2015"
+  },
+  {
+    "startup": "Verelo",
+    "sector": "Analytics",
+    "country": "Canada",
+    "funding": "No Data",
+    "cause": [
+      "funding"
+    ],
+    "description": "Verelo was a Canadian startup that offered web monitoring services from multiple locations. Not enough traction made the company shut down in 2012. Details of the startup: Founders: McGrath, Michael Curry Country: Canada Industry: Analytics Started in: 2012 Closed in: 2012 N\u00ba of employees: 1-10 Funding Amount: No Data Specific cause of failure: Lack of Funds Verelo You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2012"
+  },
+  {
+    "startup": "Hawthorne Strategies",
+    "sector": "lack-of-funds",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Michael Hawthorne Jr. was the founder of Atlanta-based consulting agency Hawthorne Strategies LLC. The agency worked with NFL Players to develop their philanthropic foundations and awareness campaigns to address community issues that they cared about. Read on to know how overwhelm, overwork, and failing to scale led the potentially-profitable business to the ground. Details of the startup: Founder: Michael Hawthorne Country: United States Industry: Entertainment Started in: 2013 Closed in: 2013 Funding Amount: $0 Specific cause of failure: Lack of Funds Hawthorne Strategies You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2013"
+  },
+  {
+    "startup": "HitroNaSplet",
+    "sector": "lack-of-funds",
+    "country": "Slovenia",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "unit_economics"
+    ],
+    "description": "HitroNaSplet was a hosting reseller company. They invested a lot of time in SEO and achieved the first page in Google, which let them start making some monthly revenue. However, after some months, they realized it didn't generate enough revenue to be worth the time invested, so they closed their doors. Details of the startup: Founder: Ales Krivec Country: Slovenia Industry: Software & Hardware Started in: 2008 Closed in: 2010 Funding Amount: $0 Specific cause of failure: Lack of Funds HitroNaSplet You can read more about their failure here .",
+    "founded": "2008",
+    "closed": "2010"
+  },
+  {
+    "startup": "InoVVorX",
+    "sector": "lack-of-funds",
+    "country": "India",
+    "funding": "$100K-$500K",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "InoVVorX was an app development company that both worked for clients and built their own projects. The business did it well for some time, having a team of 25 people, making $300k from their services, and raising $100k. However, their plans on working on their own products (too many of them) meant they started burning all the money and eventually had to shut down. Details of the startup: Founder: Maxim Dsouza Country: India Industry: Software & Hardware Started in: 2010 Closed in: 2016 Funding Amount: $100K-$500K Specific cause of failure: Lack of Funds InoVVorX You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2016"
+  },
+  {
+    "startup": "Singulution",
+    "sector": "lack-of-funds",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Hunt was a software engineer at a Silicon Valley company when he decided to build Singulution, a point of sale & business management solution for multi-location vendors. However, after 10 months of work and $30,000 spent, he couldn\u2019t validate his idea and ran out of money. The company was eventually absorbed by another startup. Details of the startup: Founder: Hunt Burdick Country: United States Industry: Software & Hardware Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Bad Market Fit Singulution You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "Swipes",
+    "sector": "lack-of-funds",
+    "country": "Bulgaria",
+    "funding": "< $100K",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "With 2 partners, Stefan co-founded Swipes, a company that developed productivity tools. The startup went through all stages and experiences, even almost fundraising $1M. However, over the 6 years of running, they weren\u2019t able to really find product-market fit and they eventually ran out of money. Details of the startup: Founder: Stefan Vladimirov Country: Bulgaria Industry: Productivity Started in: 2013 Closed in: 2019 Funding Amount: < $100K Specific cause of failure: Bad Market Fit Swipes You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2019"
+  },
+  {
+    "startup": "Yottio",
+    "sector": "lack-of-funds",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Jon was one of the Yottio\u2019s co-founders, a mobile-first tool that enabled video participation on broadcast television. The startup went through all experiences, including making $200k in revenue, spending $150k for operations, a co-founder leaving the business and a $20m acquisition offer. However, Yottio eventually ran out of cash and shut down. Details of the startup: Founder: Jon Lawrence Country: United States Industry: Software & Hardware Started in: 2013 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Lack of Funds Yottio You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2015"
+  },
+  {
+    "startup": "Kiko",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "$50K",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "Kiko was a calendar app offering API integrations with other tools. The team worked on various ideas and plans at the same time, which led to its failure. Details of the startup: Founders: Emmett Shear, Justin Kan Country: United States Industry: Productivity Started in: 2003 Closed in: 2008 N\u00ba of employees: 10-50 Funding Amount: < $1M Specific cause of failure: Bad Management Kiko You can read more about their failure here .",
+    "founded": "2003",
+    "closed": "2008"
+  },
+  {
+    "startup": "Netscape",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "No Data",
+    "cause": [
+      "competition",
+      "product"
+    ],
+    "description": "Netscape was one of the most significant internet applications in history. Despite its early success, they couldn't beat Microsoft's Internet Explorer. Details of the startup: Founders: James Clark, Jon Mittelhauser, Marc Andreessen Country: United States Industry: Productivity Started in: 1994 Closed in: 2008 N\u00ba of employees: 5,000-10,000 Funding Amount: No Data Specific cause of failure: Poor Product Netscape You can read more about their failure here .",
+    "founded": "1994",
+    "closed": "2008"
+  },
+  {
+    "startup": "Sip",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "Nothing",
+    "cause": [
+      "market",
+      "execution"
+    ],
+    "description": "Sip was made by ProductHunt. It covered news in the tech industry in a bite-size format. Due to no market need and lack of focus, PH shut it down. Details of the startup: Founders: Ryan Hoover, Nick Abouzeid, Chad Whitaker Country: United States Industry: Productivity Started in: 2018 Closed in: 2019 N\u00ba of employees: 1-10 Funding Amount: $0 Specific cause of failure: Multiple Reasons Sip You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2019"
+  },
+  {
+    "startup": "Sunrise",
+    "sector": "Productivity",
+    "country": "France",
+    "funding": "$8.2M",
+    "cause": [
+      "unit_economics",
+      "competition"
+    ],
+    "description": "Sunrise was a calendar app for mobile and desktop. They had good reviews from users, but calendars are hard to monetize and they have a low entry barrier. Details of the startup: Founders: Jeremy Le Van, Pierre Valade Country: France Industry: Productivity Started in: 2012 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Sunrise You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2016"
+  },
+  {
+    "startup": "Transpose",
+    "sector": "Productivity",
+    "country": "United States",
+    "funding": "$1.5M",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "Transpose was a comprehensive information management platform. Operated for two years before shutting down due to the inability to generate enough revenue. Details of the startup: Founders: Hussein Ahmed, Matt Goyer, Samah Gad, Skyler Johnson-Wagner Country: United States Industry: Productivity Started in: 2015 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Bad Business Model Transpose You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2015"
+  },
+  {
+    "startup": "MotionThink",
+    "sector": "productivity",
+    "country": "United States",
+    "funding": "$100K-$500K",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "After moving to SF, Andrew joined a startup accelerator that included a co-founder dating phase. There, he met some co-founders with whom he built MotionThink, a startup that built productivity tools for freelancers. Some months and +$100,000 after, the startup was shut down. Learn what went wrong! Details of the startup: Founder: Andrew Chen Country: United States Industry: Productivity Started in: 2011 Closed in: 2012 Funding Amount: $100K-$500K Specific cause of failure: Bad Management MotionThink You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2012"
+  },
+  {
+    "startup": "Patron.ai",
+    "sector": "productivity",
+    "country": "Turkey",
+    "funding": "< $100K",
+    "cause": [
+      "market",
+      "execution"
+    ],
+    "description": "\u00d6mer launched patron.ai, a gamification platform for developer teams. After promoting it on Twitter and Product Hunt without getting much traction, he decided to shut down the project. That decision was mainly due to a lack of product-market fit and not talking enough to users that signed up. Details of the startup: Founder: \u00d6mer Taban Country: Turkey Industry: Productivity Started in: 2018 Closed in: 2020 Funding Amount: < $100K Specific cause of failure: Bad Market Fit Patron.ai You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2020"
+  },
+  {
+    "startup": "Teamometer",
+    "sector": "productivity",
+    "country": "Brazil",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "execution",
+      "team",
+      "product"
+    ],
+    "description": "When reading the Lean Startup book, Sergio came up with an idea he wanted to validate: a SaaS to help teams to perform at a higher level. The validation was done successfully, but since then, mistakes related to technology, founding team and listening to customers, meant its shut down 2 years later. Details of the startup: Founder: Sergio Schu\u0308ler Country: Brazil Industry: Software & Hardware Started in: 2012 Closed in: 2013 Funding Amount: $0 Specific cause of failure: No Market Need Teamometer You can read more about their failure here .",
+    "founded": "2012",
+    "closed": "2013"
+  },
+  {
+    "startup": "PoliMobile",
+    "sector": "Marketing",
+    "country": "United States",
+    "funding": "-",
+    "cause": [
+      "market"
+    ],
+    "description": "PoliMobile provided political campaigns with a strategic way to reach their supporters. No one wanted to pay for such a service and they had to shut down. Details of the startup: Founders: Curt Prins Country: United States Industry: Marketing Started in: 2011 Closed in: 2015 N\u00ba of employees: 1-10 Funding Amount: $0 Specific cause of failure: No Market Need PoliMobile You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2015"
+  },
+  {
+    "startup": "Shipitwise",
+    "sector": "Transportation",
+    "country": "Estonia",
+    "funding": "\u20ac419.4K",
+    "cause": [
+      "market"
+    ],
+    "description": "ShipItWise was a way of booking shipping services. However, the transportation companies involved weren\u2019t eager on jumping on this new technology. Details of the startup: Founders: Aleksander Gansen, Anna Medjanskaja, Olari Miiter, Ragmar Saksing & Sander Gansen Country: Estonia Industry: Transportation Started in: 2016 Closed in: 2019 N\u00ba of employees: 1-10 Funding Amount: < $1M Specific cause of failure: No Market Need Shipitwise You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2019"
+  },
+  {
+    "startup": "101 Studios",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "101 Studios was a producer of video games that taught users things while they played. They went with a \u201cbusiness to professor\u201d business model, but despite professors like the idea, they wouldn\u2019t implement it in their classes. The startup could never reach product-market fit and shut down months later. Details of the startup: Founder: Matt \u201cGundayMonday\u201d Sever Country: United States Industry: Education Started in: Closed in: Funding Amount: $0 Specific cause of failure: Bad Market Fit 101 Studios You can read more about their failure here .",
+    "founded": "",
+    "closed": ""
+  },
+  {
+    "startup": "Addressbin",
+    "sector": "no-market-need",
+    "country": "Canada",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "competition"
+    ],
+    "description": "Addressbin was an easy way to collect email addresses. Bad marketing and big competitors where the problems that dug its grave. Details of the startup: Founder: Adam Bard Country: Canada Industry: Software & Hardware Started in: 2013 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Bad Marketing Addressbin You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2018"
+  },
+  {
+    "startup": "Botnim",
+    "sector": "no-market-need",
+    "country": "Israel",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Botnim was a web application that provided near dishes and their nutritional values. Read now the story of the 2 co-founders with a failed startup. Details of the startup: Founder: Shaked Klein Orbach & Gilad Peled Country: Israel Industry: Food & Beverage Started in: 2017 Closed in: 2017 Funding Amount: $0 Specific cause of failure: Bad Market Fit Botnim You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2017"
+  },
+  {
+    "startup": "Delite",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Delite was a SaaS platform for B2B wholesale orders. It didn\u2019t satisfy any necessity of customers. Just that thing in life you keep putting off. Details of the startup: Founder: Patrick Walls Country: United States Industry: Software & Hardware Started in: 2016 Closed in: 2017 Funding Amount: $0 Specific cause of failure: No Market Need Delite You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2017"
+  },
+  {
+    "startup": "Eloquis",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "bad_timing"
+    ],
+    "description": "Eloquis was all about bringing personalization to mobile apps. The problem? Early in the market and targeted the wrong customer segment. Details of the startup: Founder: Rohit Nallapeta Country: United States Industry: Software & Hardware Started in: 2010 Closed in: 2011 Funding Amount: $0 Specific cause of failure: No Market Need Eloquis You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2011"
+  },
+  {
+    "startup": "Eventloot",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "Justin Anyanwu is a maker who a few years ago built Eventloot, a SaaS platform for wedding planning professionals. He hired some designers and developers and got the SaaS working. But after a few months of running Facebook Ads and sending cold emails, they decided to shut it down. They hadn\u2019t built a platform that solved the problems wedding planners had. Details of the startup: Founder: Justin Anyanwu Country: United States Industry: Software & Hardware Started in: 2014 Closed in: 2017 Funding Amount: $0 Specific cause of failure: No Market Need Eventloot You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2017"
+  },
+  {
+    "startup": "MyCity",
+    "sector": "no-market-need",
+    "country": "Russia",
+    "funding": "< $100K",
+    "cause": [
+      "market"
+    ],
+    "description": "Stepa co-founded MyCity, a tool for local authorities to build relationships with their residents. After realizing they had created a product for a non-existing market, they decided to shut it down. Details of the startup: Founder: Stepa Mitaki Country: Russia Industry: Software & Hardware Started in: 2014 Closed in: 2016 Funding Amount: < $100K Specific cause of failure: No Market Need MyCity You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2016"
+  },
+  {
+    "startup": "Readership",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Gregg Blanchard developed Readership from a fascination with Twitter API. While the visual analytics on Readership was appealing, it didn\u2019t bring enough marketing value to get the buy-in needed to be a successful start-up. Details of the startup: Founder: Gregg Blanchard Country: United States Industry: Analytics Started in: 2019 Closed in: 2019 Funding Amount: $0 Specific cause of failure: No Market Need Readership You can read more about their failure here .",
+    "founded": "2019",
+    "closed": "2019"
+  },
+  {
+    "startup": "Tandem",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "Tandem was a live streaming platform for fitness. Cause of failure? Live fitness isn't that engaging. Influencers were reluctant to adopt a new platform. Details of the startup: Founder: Nick Raushenbush Country: United States Industry: Health Started in: 2016 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Bad Market Fit Tandem You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2016"
+  },
+  {
+    "startup": "Tandem App",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Will is a software engineer based in San Francisco, who co-founded Tandem, an app to help people stay on top of their medications. They carried out some research and considered it was a great business idea. But, after launching, they discovered retention was really difficult and decided not to continue. Details of the startup: Founder: Will Sun Country: United States Industry: Health Started in: 2016 Closed in: 2016 Funding Amount: $0 Specific cause of failure: No Market Need Tandem App You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2016"
+  },
+  {
+    "startup": "Team Voice",
+    "sector": "no-market-need",
+    "country": "Canada",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Team Voice was a SaaS platform for HR professionals. The problem they were trying to solve turned out to be a human problem, not a technology one. Details of the startup: Founder: Kirill Vechtomov Country: Canada Industry: Software & Hardware Started in: 2015 Closed in: 2017 Funding Amount: $0 Specific cause of failure: No Market Need Team Voice You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2017"
+  },
+  {
+    "startup": "WorldOs",
+    "sector": "no-market-need",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "WorldOS was a P2P infrastructure provider. Lucas tried to productize a buzzword, but was not solving the right problem. Details of the startup: Founder: Lucas Gonze Country: United States Industry: Software & Hardware Started in: 2005 Closed in: 2005 Funding Amount: $0 Specific cause of failure: No Market Need WorldOs You can read more about their failure here .",
+    "founded": "2005",
+    "closed": "2005"
+  },
+  {
+    "startup": "BitPass",
+    "sector": "Finances",
+    "country": "United States",
+    "funding": "$13.3M",
+    "cause": [
+      "competition"
+    ],
+    "description": "Bitpass was a company that gave people a platform to make micropayments online. The main reason for its closure was competition, even after raising $12M. Details of the startup: Founders: Kurt Huang Country: United States Industry: Finances Started in: 2002 Closed in: 2007 N\u00ba of employees: 50-100 Funding Amount: $10M-$50M Specific cause of failure: Competition BitPass You can read more about their failure here .",
+    "founded": "2002",
+    "closed": "2007"
+  },
+  {
+    "startup": "Ink",
+    "sector": "web-app",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "product"
+    ],
+    "description": "Andrew Askins, in partner with two of his best friends, started his company Krit in 2014. In 2015 they launched Ink, a tool that let freelancers create contracts and get them signed online. They got a couple thousand free users, but ultimately got burnt out before they could make the business model work. Now, they have been able to overcome this failure and build a successful consulting business. Details of the startup: Founder: Andrew Askins Country: United States Industry: Software & Hardware Started in: 2015 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Lack of Focus Ink You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2015"
+  },
+  {
+    "startup": "KnowNet",
+    "sector": "web-app",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "competition"
+    ],
+    "description": "KnowNet was a tutoring platform. A SWOT analysis saved Rik and Ari from lifting their name into the failure hall of fame. Details of the startup: Founder: Rik Ganguly Country: United States Industry: Education Started in: 2014 Closed in: 2014 Funding Amount: $0 Specific cause of failure: Competition KnowNet You can read more about their failure here .",
+    "founded": "2014",
+    "closed": "2014"
+  },
+  {
+    "startup": "Muun",
+    "sector": "web-app",
+    "country": "Netherlands",
+    "funding": "$0",
+    "cause": [
+      "competition",
+      "execution"
+    ],
+    "description": "Eelco built Muun in his own, a SaaS that allowed co-working spaces owners to run their businesses effectively. He validated the idea and after weeks, he launched it. However, once in the market, Muun had to compete with really big competitors which had much more features and a better pricing. So, Eelco decided to shut it down. Details of the startup: Founder: Eelco Country: Netherlands Industry: Software & Hardware Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Bad Marketing Muun You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "REPitchbook",
+    "sector": "web-app",
+    "country": "Canada",
+    "funding": "$0",
+    "cause": [
+      "product"
+    ],
+    "description": "Charlie Reese is a Canadian software developer who came with (what he thought it was) a revolutionary idea for a SaaS business in the real estate industry. Using his knowledge in JavaScript, React, and SQL, he built a prototype in 6 weeks. But he failed to validate his idea and shut down. Details of the startup: Founder: Charlie Reese Country: Canada Industry: Software & Hardware Started in: 2017 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Poor Product REPitchbook You can read more about their failure here .",
+    "founded": "2017",
+    "closed": "2018"
+  },
+  {
+    "startup": "Toki",
+    "sector": "web-app",
+    "country": "Russia",
+    "funding": "$0",
+    "cause": [
+      "team",
+      "execution"
+    ],
+    "description": "Vladimir was the founder of Toki, a one-stop solution to finding trends and analytics on TikTok. It started as a side-project, but after launching on Product Hunt, they realized they didn't have a deep connection with the problem they were tackling and lost motivation to keep going. Details of the startup: Founder: Vladimir Esaulov Country: Russia Industry: Marketing Started in: 2020 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Lack of Experience Toki You can read more about their failure here .",
+    "founded": "2020",
+    "closed": "2020"
+  },
+  {
+    "startup": "Twitch Highlights",
+    "sector": "entertainment",
+    "country": "Israel",
+    "funding": "$0",
+    "cause": [
+      "market",
+      "execution"
+    ],
+    "description": "Tzelon and Ron are two developers who came with an idea: creating a tool that allowed Twitch streamers analyze their streams and creating short videos with the best moments. But they failed to build an audience around the product and couldn\u2019t get any customers to keep going with the project. Details of the startup: Founder: Tzelon Machluf Country: Israel Industry: Entertainment Started in: 2015 Closed in: 2015 Funding Amount: $0 Specific cause of failure: Bad Marketing Twitch Highlights You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2015"
+  },
+  {
+    "startup": "Call9",
+    "sector": "Health",
+    "country": "United States",
+    "funding": "$34M",
+    "cause": [
+      "execution",
+      "unit_economics"
+    ],
+    "description": "Call9 was a health startup targeted at patients who needed to speak with a doctor. The founder's inability to achieve growth, led to its shut down in 2019. Details of the startup: Founders: Celina Tenev, Timothy Peck, XiaoSong Mu Country: United States Industry: Health Started in: 2015 Closed in: 2019 N\u00ba of employees: 100-250 Funding Amount: $10M-$50M Specific cause of failure: Bad Business Model Call9 You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2019"
+  },
+  {
+    "startup": "FoundationDB",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$22.7M",
+    "cause": [
+      "other"
+    ],
+    "description": "FoundationDB is a NoSQL scalable layered database that worked faster and needed less hardware than other services of its kind. Apple acquired it in 2015. Details of the startup: Founders: Dave Rosenthal, Dave Scherer, Nick Lavezzo Country: United States Industry: Software & Hardware Started in: 2009 Closed in: 2015 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Acquisition Flu FoundationDB You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2015"
+  },
+  {
+    "startup": "MatterFab",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$13.2M",
+    "cause": [
+      "unit_economics",
+      "execution"
+    ],
+    "description": "MatterFab had the goal of making metal-based manufacturing affordable. However, the business never found a profitable business model and pricing strategy. Details of the startup: Founders: Matthew Burris Country: United States Industry: Software & Hardware Started in: 2013 Closed in: 2019 N\u00ba of employees: 1-10 Funding Amount: $10M-$50M Specific cause of failure: Bad Business Model MatterFab You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2019"
+  },
+  {
+    "startup": "Parse",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$7M",
+    "cause": [
+      "other"
+    ],
+    "description": "Parse offered a platform for mobile app devs with tools to let them build, run and test applications. Facebook bought Parse and shut it down in 2017. Details of the startup: Founders: Ilya Sukhar, James Yu, Kevin Lacker, Tikhon Bernstam Country: United States Industry: Software & Hardware Started in: 2011 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $1M-$10M Specific cause of failure: Acquisition Flu Parse You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2016"
+  },
+  {
+    "startup": "Rafter",
+    "sector": "Education",
+    "country": "United States",
+    "funding": "$86M",
+    "cause": [
+      "competition"
+    ],
+    "description": "Rafter was a course material provider for colleges. They had lots of competition and had to deal with logistical, financial, and market challenges. Details of the startup: Founders: Sara Leoni Country: United States Industry: Education Started in: 2006 Closed in: 2016 N\u00ba of employees: 50-100 Funding Amount: > $50M Specific cause of failure: Competition Rafter You can read more about their failure here .",
+    "founded": "2006",
+    "closed": "2016"
+  },
+  {
+    "startup": "RethinkDB",
+    "sector": "Software & Hardware",
+    "country": "United States",
+    "funding": "$12.2M",
+    "cause": [
+      "market",
+      "product"
+    ],
+    "description": "RethinkDB is a distributed and scalable NoSQL database. Choosing the wrong market was mentioned by the founder as one of their major mistakes. Details of the startup: Founders: Michael Glukhovsky, Slava Akhmechet Country: United States Industry: Software & Hardware Started in: 2009 Closed in: 2016 N\u00ba of employees: 10-50 Funding Amount: $10M-$50M Specific cause of failure: Lack of PMF RethinkDB You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2016"
+  },
+  {
+    "startup": "Cam.ly",
+    "sector": "software-hardware",
+    "country": "United States",
+    "funding": "< $100K",
+    "cause": [
+      "product",
+      "execution"
+    ],
+    "description": "Dane built Cam.ly, a wifi camera that would stream and store video in the cloud. They competed with Google Nest's predecessor but failed to build a polished product before convincing investors to fund it. Details of the startup: Founder: Dane Jensen Country: United States Industry: Software & Hardware Started in: 2009 Closed in: 2010 Funding Amount: < $100K Specific cause of failure: Poor Product Cam.ly You can read more about their failure here .",
+    "founded": "2009",
+    "closed": "2010"
+  },
+  {
+    "startup": "Haptly",
+    "sector": "software-hardware",
+    "country": "New Zealand",
+    "funding": "< $100K",
+    "cause": [
+      "execution",
+      "product",
+      "technical_dependency",
+      "team"
+    ],
+    "description": "In 2016, Nelson entered the drone business when trying to develop a solution for farmers who aimed to monitor their grass growth. Things were progressing well and they soon applied for a startup accelerator who provided him and his co-founder $20,000. But after working 10 months on the project, they couldn\u2019t find a way to technically build the product and decided to shut down. Details of the startup: Founder: Nelson Shaw Country: New Zealand Industry: Software & Hardware Started in: 2016 Closed in: 2016 Funding Amount: < $100K Specific cause of failure: Lack of Experience Haptly You can read more about their failure here .",
+    "founded": "2016",
+    "closed": "2016"
+  },
+  {
+    "startup": "MotoBox",
+    "sector": "software-hardware",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Simple, WiFi-enabled, OBD-II vehicle data logger and cloud services creating a platform for custom software development, which couldn\u2019t reach customers. Details of the startup: Founder: Joe Stech Country: United States Industry: Transportation Started in: 2013 Closed in: 2013 Funding Amount: $0 Specific cause of failure: Bad Marketing MotoBox You can read more about their failure here .",
+    "founded": "2013",
+    "closed": "2013"
+  },
+  {
+    "startup": "RingDaddy",
+    "sector": "software-hardware",
+    "country": "Brazil",
+    "funding": "$0",
+    "cause": [
+      "market"
+    ],
+    "description": "Isaac Medeiros is a 23-year-old digital marketer that recently launched his first no-code SaaS project, a mass SMS marketing platform for streamers made with a bunch of no-code tools. We'll discuss how starting using no-code tools helped him realize that building an MVP is easier than ever. Details of the startup: Founder: Isaac Medeiros Country: Brazil Industry: Marketing Started in: 2020 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Bad Market Fit RingDaddy You can read more about their failure here .",
+    "founded": "2020",
+    "closed": "2020"
+  },
+  {
+    "startup": "Thepresence",
+    "sector": "software-hardware",
+    "country": "Russia",
+    "funding": "$0",
+    "cause": [
+      "other"
+    ],
+    "description": "Inspired by the iOS app Launchpad, Miloslav Voloskov started drafting ideas to what eventually was called Thepresence. This aimed to provide a more modern and unconventional take on website builders. But this venture got shut down even before it was able to take off. A mental illness shutting down a business that could have changed the drag-and-drop website builder game? It\u2019s more likely than you think. Details of the startup: Founder: Miloslav Voloskov Country: Russia Industry: Software & Hardware Started in: 2018 Closed in: 2018 Funding Amount: $0 Specific cause of failure: Other Thepresence You can read more about their failure here .",
+    "founded": "2018",
+    "closed": "2018"
+  },
+  {
+    "startup": "Waterproof Digital Camera",
+    "sector": "software-hardware",
+    "country": "Slovenia",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "bad_timing"
+    ],
+    "description": "Waterproof Digital Camera was a blog earning $250/month. Primoz started to look for faster results and carried out Black Hat SEO strategies. It was the failure of his business. Details of the startup: Founder: Primoz Cigler Country: Slovenia Industry: Software & Hardware Started in: 2011 Closed in: 2013 Funding Amount: $0 Specific cause of failure: Bad Marketing Waterproof Digital Camera You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2013"
+  },
+  {
+    "startup": "Munchery",
+    "sector": "Food & Beverage",
+    "country": "United States",
+    "funding": "$125.4M",
+    "cause": [
+      "execution",
+      "unit_economics",
+      "competition",
+      "product"
+    ],
+    "description": "Munchery allowed users to order gourmet food. However, they couldn't deliver the experience that it promised and build a profitable business model. Details of the startup: Founders: Conrad Chu, Tri Tran, Van Tran Country: United States Industry: Food & Beverage Started in: 2011 Closed in: 2019 N\u00ba of employees: 100-250 Funding Amount: > $50M Specific cause of failure: Multiple Reasons Munchery You can read more about their failure here .",
+    "founded": "2011",
+    "closed": "2019"
+  },
+  {
+    "startup": "Melon",
+    "sector": "food-beverage",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "unit_economics",
+      "team"
+    ],
+    "description": "Kevin was the founder of Melon, a food delivery startup aimed at being more cost-effective. Melon\u2019s unique approach was quickly validated through an MVP and in just two months, the business grew to $10k/mo and 500 users. However, they realized becoming profitable would be hard and decided to discontinue the service. Details of the startup: Founder: Kevin Wang Country: United States Industry: Food & Beverage Started in: 2019 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Lack of Experience Melon You can read more about their failure here .",
+    "founded": "2019",
+    "closed": "2020"
+  },
+  {
+    "startup": "Uptrend",
+    "sector": "b2b",
+    "country": "Singapore",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "market"
+    ],
+    "description": "Maverick shifted from being an athlete to becoming an entrepreneur after seriously pondering what he wanted in life. He founded Uptrend, a deal sourcing agency for M&A firms in the US. He had some trial and errors initially but found his footing after he met an M&A advisor on a Facebook group who became his accountability partner. However, the business eventually closed down in January 2020 due to burnout and not having a foreseeable future. Details of the startup: Founder: Maverick Lim Country: Singapore Industry: Marketing Started in: 2019 Closed in: 2020 Funding Amount: $0 Specific cause of failure: Bad Marketing Uptrend You can read more about their failure here .",
+    "founded": "2019",
+    "closed": "2020"
+  },
+  {
+    "startup": "Stratolaunch",
+    "sector": "Transportation",
+    "country": "United States",
+    "funding": "-",
+    "cause": [
+      "funding",
+      "execution"
+    ],
+    "description": "Stratolaunch aimed to launch orbital rockets from the stratosphere. Paul Allen\u2019s passing away in October of 2018 spell out the same fate for Stratolaunch. Details of the startup: Founders: Paul Allen Country: United States Industry: Transportation Started in: 2010 Closed in: 2019 N\u00ba of employees: 500-1,000 Funding Amount: $0 Specific cause of failure: Lack of Focus Stratolaunch You can read more about their failure here .",
+    "founded": "2010",
+    "closed": "2019"
+  },
+  {
+    "startup": "The Blogging Manifesto",
+    "sector": "education",
+    "country": "United States",
+    "funding": "$0",
+    "cause": [
+      "execution",
+      "team"
+    ],
+    "description": "The Blogging Manifesto was a blog to help readers with their blogging problems. The lack of passion resulted to be a big problem. Details of the startup: Founder: Ryan Biddulph Country: United States Industry: Education Started in: 2015 Closed in: 2016 Funding Amount: $0 Specific cause of failure: Lack of Focus The Blogging Manifesto You can read more about their failure here .",
+    "founded": "2015",
+    "closed": "2016"
+  }
+]

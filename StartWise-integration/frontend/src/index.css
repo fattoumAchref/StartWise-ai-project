@@ -1,0 +1,80 @@
+/* index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  
+  .dark * {
+    @apply border-gray-800;
+  }
+  
+  body {
+    @apply bg-light text-gray-900 antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  .dark body {
+    @apply bg-dark text-white;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-xl bg-white/70 border border-white/30;
+  }
+  
+  .dark .glass {
+    @apply bg-dark/70 border-dark-secondary/30;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 50%, #0369a1 100%);
+    background-size: 200% 200%;
+    animation: gradient 8s ease infinite;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 bg-clip-text text-transparent;
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:-translate-y-1;
+  }
+  
+  .terminal-text {
+    @apply font-mono text-xs tracking-tighter;
+  }
+}
+
+@keyframes gradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-light-secondary;
+}
+
+.dark ::-webkit-scrollbar-track {
+  @apply bg-dark-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-400 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-500;
+}

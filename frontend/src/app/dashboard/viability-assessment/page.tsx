@@ -1847,25 +1847,6 @@ export default function Home() {
         {/* ═══ ANALYSIS ZONE (left side, flex grows) ══════════════════════════ */}
         <div className="analysis-zone" style={{ flex: 100 - chatWidth }}>
 
-          {hasIdeaContext && (
-            <div className="cfo-synthese-card">
-              <div className="cfo-synthese-header">
-                <FileText style={{ width: 14, height: 14, flexShrink: 0 }} />
-                <span className="cfo-synthese-title">
-                  {modeText(expertMode, 'Analyse initiale depuis Business Idea', 'Point de depart de votre idee')}
-                </span>
-                <span className="cfo-synthese-badge">
-                  {modeText(expertMode, 'Contexte initial', 'Avant les questions')}
-                </span>
-              </div>
-              <div className="cfo-synthese-body md">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {composeIdeaNarrative(businessIdea, ideaSummary, expertMode)}
-                </ReactMarkdown>
-              </div>
-            </div>
-          )}
-
           {/* CFO Synthèse initiale — pinned, never replaced */}
           <div className="cfo-synthese-card">
             <div className="cfo-synthese-header">
