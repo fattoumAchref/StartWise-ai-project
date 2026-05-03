@@ -1,0 +1,79 @@
+{
+  "message_id": "52b5dce8-158d-438f-ac94-2b869618f14e",
+  "type": "investment.recommendation",
+  "from": "InvestmentAgent",
+  "to": [
+    "Orchestrator"
+  ],
+  "timestamp": "2026-04-12T21:55:03.765446Z",
+  "context": {
+    "project_id": "my_startup",
+    "session_id": "2026-04-12T21:54:58.358950"
+  },
+  "payload": {
+    "data": {
+      "valuation": {
+        "revenue_multiple": 1700000,
+        "dcf": 17900000,
+        "scorecard": 2000000,
+        "final_valuation": 5400000,
+        "method": "hybrid_dcf"
+      },
+      "optimal_scenario": {
+        "name": "optimal",
+        "raise_amount": 800000,
+        "grants": 100000,
+        "equity": 630000,
+        "debt": 70000,
+        "dilution_pct": 10.45,
+        "post_money": 6030000,
+        "score": 131.6,
+        "rationale": "Le scénario de financement sélectionné est optimal pour ce stade de startup en phase de démarrage (seed) car il offre un équilibre idéal entre la levée de fonds nécessaire pour soutenir la croissance et la minimisation de la dilution des parts. Avec une levée de fonds de 800 000 TND, la startup peut bénéficier de subventions de 100 000 TND et d'un financement en equity de 630 000 TND, tout en limitant la dilution à 10,4%. Ce scénario permet également de réduire le risque en évitant une dette trop importante, avec seulement 70 000 TND empruntés."
+      },
+      "all_scenarios": [
+        {
+          "name": "optimal",
+          "raise_amount": 800000,
+          "grants": 100000,
+          "equity": 630000,
+          "dilution_pct": 10.45,
+          "score": 131.6
+        },
+        {
+          "name": "conservative",
+          "raise_amount": 640000,
+          "grants": 100000,
+          "equity": 486000,
+          "dilution_pct": 8.26,
+          "score": 126.6
+        },
+        {
+          "name": "aggressive",
+          "raise_amount": 960000,
+          "grants": 100000,
+          "equity": 774000,
+          "dilution_pct": 12.54,
+          "score": 117.0
+        }
+      ],
+      "dilution": {
+        "pre_money": 5400000,
+        "post_money": 6030000,
+        "new_investor_pct": 10.45,
+        "founder_before_pct": 80.0,
+        "founder_after_pct": 64.48,
+        "founder_dilution_pct": 15.52
+      }
+    },
+    "recommendation": "ANALYSIS\n-------------------------------------------------------\nEn tant que conseiller en investissement, je recommande une levée de fonds de 800 000 TND pour cette startup en phase de démarrage (seed) dans le secteur de la healthtech, avec une valorisation pre-money de 5 400 000 TND. Cette stratégie permet un équilibre optimal entre la levée de fonds nécessaire pour soutenir la croissance et la minimisation de la dilution des parts, avec une dilution fondateurs de 15,5% et une ownership post-tour de 64,5%. La combinaison de subventions de 100 000 TND, de financement en equity de 630 000 TND et de dette de 70 000 TND offre une opportunité clé pour soutenir la croissance de la startup tout en limitant le risque.\n\nRECOMMANDATION D'INVESTISSEMENT\n=======================================================\nStade        : SEED\nSecteur      : healthtech\nDonnées marché : 1 startups healthtech similaires en Tunisie | Taux Startup Act: 100%\n\nVALORISATION  (hybrid_dcf)\n  Revenue multiple: 1,700,000 TND\n  DCF            : 17,900,000 TND\n  Scorecard      : 2,000,000 TND\n  >> Final: 5,400,000 TND (pre-money)\n\nSTRATEGIE OPTIMALE  (OPTIMAL)\n  Levée totale : 800,000 TND\n  Subventions  : 100,000 TND  (12%)\n  Equity       : 630,000 TND  (79%)\n  Dette        : 70,000 TND  (9%)\n  Post-money   : 6,030,000 TND\n  Pourquoi: Le scénario de financement sélectionné est optimal pour ce stade de startup en phase de démarrage (seed) car il offre un équilibre idéal entre la levée de fonds nécessaire pour soutenir la croissance et la minimisation de la dilution des parts. Avec une levée de fonds de 800 000 TND, la startup peut bénéficier de subventions de 100 000 TND et d'un financement en equity de 630 000 TND, tout en limitant la dilution à 10,4%. Ce scénario permet également de réduire le risque en évitant une dette trop importante, avec seulement 70 000 TND empruntés.\n\nDILUTION\n  Avant le tour : 80.0%\n  Après le tour : 64.5%\n  Dilué de      : 15.5%  (incl. 10% option pool)\n\nSUBVENTIONS ELIGIBLES\n  - Startup Act Label: 100,000 TND\n  Total potential: 100,000 TND\n\nPROCHAINES ETAPES\n1. Obtenir le label Startup Act (si pas encore labellisé)\n2. Cibler les accélérateurs : Flat6Labs, Wamda, Sawari Ventures\n3. Préparer un pitch deck avec les métriques de traction\nDATA NOTES\n  The burn rate seems inconsistent with the runway, as 40,000 TND/month would result in a runway of approximately 20 months with 800,000 TND, but the funding needed is also 800,000 TND, suggesting the runway is based on current funding, not the additional funding needed."
+  },
+  "confidence": 0.9,
+  "metadata": {
+    "priority": "high",
+    "requires_response": false,
+    "tags": [
+      "seed",
+      "healthtech"
+    ]
+  }
+}

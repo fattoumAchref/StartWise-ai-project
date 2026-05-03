@@ -1,0 +1,79 @@
+{
+  "message_id": "4213a13f-88cd-44d6-9091-7ac09e384c30",
+  "type": "investment.recommendation",
+  "from": "InvestmentAgent",
+  "to": [
+    "Orchestrator"
+  ],
+  "timestamp": "2026-04-22T17:06:23.763754Z",
+  "context": {
+    "project_id": "my_startup989899",
+    "session_id": "2026-04-22T17:06:18.913129"
+  },
+  "payload": {
+    "data": {
+      "valuation": {
+        "revenue_multiple": 1300000,
+        "dcf": 74800000,
+        "scorecard": 1600000,
+        "final_valuation": 10600000,
+        "method": "hybrid_dcf"
+      },
+      "optimal_scenario": {
+        "name": "optimal",
+        "raise_amount": 600000,
+        "grants": 100000,
+        "equity": 500000,
+        "debt": 0,
+        "dilution_pct": 4.5,
+        "post_money": 11100000,
+        "score": 134.3,
+        "rationale": "Le scénario de financement sélectionné est optimal pour ce stade de startup pré-seed car il offre un équilibre entre la levée de fonds nécessaire pour soutenir la croissance et la minimisation de la dilution des parts. Avec une levée de 600 000 TND, la startup peut bénéficier de subventions de 100 000 TND et d'un financement en equity de 500 000 TND, tout en évitant la dette. La dilution de 4,5% est raisonnable, permettant ainsi aux fondateurs de conserver une part significative de leur entreprise tout en bénéficiant d'un score élevé de 134,3."
+      },
+      "all_scenarios": [
+        {
+          "name": "optimal",
+          "raise_amount": 600000,
+          "grants": 100000,
+          "equity": 500000,
+          "dilution_pct": 4.5,
+          "score": 134.3
+        },
+        {
+          "name": "conservative",
+          "raise_amount": 480000,
+          "grants": 100000,
+          "equity": 380000,
+          "dilution_pct": 3.46,
+          "score": 127.2
+        },
+        {
+          "name": "aggressive",
+          "raise_amount": 720000,
+          "grants": 100000,
+          "equity": 620000,
+          "dilution_pct": 5.53,
+          "score": 121.7
+        }
+      ],
+      "dilution": {
+        "pre_money": 10600000,
+        "post_money": 11100000,
+        "new_investor_pct": 4.5,
+        "founder_before_pct": 80.0,
+        "founder_after_pct": 68.76,
+        "founder_dilution_pct": 11.24
+      }
+    },
+    "recommendation": "ANALYSIS\n-------------------------------------------------------\nJe recommande d'investir 500 000 TND dans cette startup fintech pré-seed, valorisée à 10 600 000 TND pré-argent, pour un montant total de levée de fonds de 600 000 TND, incluant 100 000 TND de subventions. Cette stratégie permettra de minimiser la dilution des parts des fondateurs à 11,2% tout en soutenant la croissance de l'entreprise. L'opportunité clé réside dans le potentiel de forte croissance de la startup, bien qu'il soit essentiel de réévaluer le taux de croissance et le burn rate pour garantir une utilisation optimale des fonds levés.\n\nRECOMMANDATION D'INVESTISSEMENT\n=======================================================\nStade        : PRE-SEED\nSecteur      : fintech\nDonnées marché : 2 startups fintech similaires en Tunisie | Taux Startup Act: 100%\n\nVALORISATION  (hybrid_dcf)\n  Revenue multiple: 1,300,000 TND\n  Scorecard      : 1,600,000 TND\n  >> Final: 10,600,000 TND (pre-money)\n\nSTRATEGIE OPTIMALE  (OPTIMAL)\n  Levée totale : 600,000 TND\n  Subventions  : 100,000 TND  (17%)\n  Equity       : 500,000 TND  (83%)\n  Dette        : 0 TND  (0%)\n  Post-money   : 11,100,000 TND\n  Pourquoi: Le scénario de financement sélectionné est optimal pour ce stade de startup pré-seed car il offre un équilibre entre la levée de fonds nécessaire pour soutenir la croissance et la minimisation de la dilution des parts. Avec une levée de 600 000 TND, la startup peut bénéficier de subventions de 100 000 TND et d'un financement en equity de 500 000 TND, tout en évitant la dette. La dilution de 4,5% est raisonnable, permettant ainsi aux fondateurs de conserver une part significative de leur entreprise tout en bénéficiant d'un score élevé de 134,3.\n\nDILUTION\n  Avant le tour : 80.0%\n  Après le tour : 68.8%\n  Dilué de      : 11.2%  (incl. 10% option pool)\n\nSUBVENTIONS ELIGIBLES\n  - Startup Act Label: 100,000 TND\n  Total potential: 100,000 TND\n\nPROCHAINES ETAPES\n1. Obtenir le label Startup Act sur startup.gov.tn\n2. Pitcher auprès des business angels et family offices\n3. Construire le MVP et atteindre les 10 premiers clients payants\nDATA NOTES\n  High growth rate (480%) seems inconsistent with the relatively long runway (20 months) considering the burn rate (30,000 TND/month)."
+  },
+  "confidence": 0.85,
+  "metadata": {
+    "priority": "high",
+    "requires_response": false,
+    "tags": [
+      "pre-seed",
+      "fintech"
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 """
-PDF Report Generator for Investment Agent.
-Uses reportlab — install with: pip install reportlab
+PDF Report Generator — StartWise Investment Agent
+Includes: core analysis + comparable deals + investor matching +
+          term sheet + multi-round dilution + sensitivity + exit scenarios
 """
 
 from io import BytesIO
@@ -8,268 +9,385 @@ from datetime import datetime
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
+    HRFlowable, PageBreak, KeepTogether,
 )
 
+# ── Palette ───────────────────────────────────────────────────────────────────
+PRIMARY  = colors.HexColor("#0F172A")
+ACCENT   = colors.HexColor("#2563EB")
+GREEN    = colors.HexColor("#059669")
+RED      = colors.HexColor("#DC2626")
+ORANGE   = colors.HexColor("#D97706")
+PURPLE   = colors.HexColor("#7C3AED")
+LIGHT_BG = colors.HexColor("#F0F7FF")
+GRAY     = colors.HexColor("#64748B")
+LGRAY    = colors.HexColor("#F1F5F9")
+WHITE    = colors.white
 
-# ── Color palette ─────────────────────────────────────────────────────────────
-PRIMARY   = colors.HexColor("#1B4F72")   # dark blue
-ACCENT    = colors.HexColor("#2E86C1")   # medium blue
-LIGHT_BG  = colors.HexColor("#EBF5FB")  # light blue bg
-GREEN     = colors.HexColor("#1E8449")
-ORANGE    = colors.HexColor("#D35400")
-GRAY      = colors.HexColor("#717D7E")
-WHITE     = colors.white
+
+# ── Style factory ─────────────────────────────────────────────────────────────
+def _s(name, **kw):
+    defaults = dict(fontName="Helvetica", fontSize=10, leading=14,
+                    textColor=colors.black, spaceAfter=4)
+    defaults.update(kw)
+    return ParagraphStyle(name, **defaults)
+
+TITLE    = _s("T", fontSize=22, fontName="Helvetica-Bold", textColor=PRIMARY, leading=26, spaceAfter=2)
+SUBTITLE = _s("ST", fontSize=11, textColor=GRAY, spaceAfter=10)
+H1       = _s("H1", fontSize=13, fontName="Helvetica-Bold", textColor=PRIMARY, spaceBefore=16, spaceAfter=5)
+H2       = _s("H2", fontSize=11, fontName="Helvetica-Bold", textColor=ACCENT, spaceBefore=10, spaceAfter=4)
+BODY     = _s("B", fontSize=9.5, leading=14, spaceAfter=5)
+SMALL    = _s("SM", fontSize=8.5, textColor=GRAY, leading=12)
+WARN     = _s("W", fontSize=9.5, textColor=ORANGE, fontName="Helvetica-Oblique", leading=13)
+FOOTER   = _s("F", fontSize=8, textColor=GRAY, alignment=1)
 
 
 def generate_pdf(inv: dict, project_id: str, user_id: str) -> bytes:
-    """
-    Generate a PDF investment report.
-
-    Args:
-        inv        : investment result dict (from InvestmentRecommendation.to_dict())
-        project_id : project identifier
-        user_id    : user identifier
-
-    Returns:
-        PDF as bytes
-    """
     buffer = BytesIO()
     doc = SimpleDocTemplate(
-        buffer,
-        pagesize=A4,
+        buffer, pagesize=A4,
         leftMargin=2*cm, rightMargin=2*cm,
         topMargin=2*cm,  bottomMargin=2*cm,
     )
 
-    styles = getSampleStyleSheet()
-    story  = []
+    data   = inv.get("data", {})
+    v      = data.get("valuation", {})
+    s      = data.get("optimal_scenario", {}) or {}
+    d      = data.get("dilution", {}) or {}
+    stage  = (data.get("stage") or "—").upper()
+    sector = data.get("sector") or data.get("industry", "—")
+    priority = d.get("priority") or data.get("priority", "OPTIMIZATION")
 
-    # ── Custom styles ─────────────────────────────────────────────────────────
-    title_style = ParagraphStyle("Title",
-        fontSize=22, textColor=PRIMARY, spaceAfter=4,
-        fontName="Helvetica-Bold", leading=26)
+    story = []
 
-    subtitle_style = ParagraphStyle("Subtitle",
-        fontSize=11, textColor=GRAY, spaceAfter=12,
-        fontName="Helvetica")
-
-    section_style = ParagraphStyle("Section",
-        fontSize=13, textColor=PRIMARY, spaceBefore=14, spaceAfter=6,
-        fontName="Helvetica-Bold", borderPad=4)
-
-    body_style = ParagraphStyle("Body",
-        fontSize=10, textColor=colors.black, spaceAfter=6,
-        fontName="Helvetica", leading=15)
-
-    warning_style = ParagraphStyle("Warning",
-        fontSize=10, textColor=ORANGE, spaceAfter=6,
-        fontName="Helvetica-Oblique", leading=14)
-
-    data  = inv.get("data", {})
-    v     = data.get("valuation", {})
-    s     = data.get("optimal_scenario", {})
-    d     = data.get("dilution", {})
-    stage = data.get("stage", "—").upper()
-    sector= data.get("sector") or data.get("industry", "—")
-
-    # ── Header ────────────────────────────────────────────────────────────────
-    story.append(Paragraph("StartWise", title_style))
-    story.append(Paragraph("Rapport d'Analyse d'Investissement", subtitle_style))
+    # ══════════════════════════════════════════════════════════════════════════
+    # PAGE 1 — COVER + SUMMARY
+    # ══════════════════════════════════════════════════════════════════════════
+    story.append(Paragraph("StartWise", TITLE))
+    story.append(Paragraph("Rapport d'Analyse d'Investissement", SUBTITLE))
     story.append(HRFlowable(width="100%", thickness=2, color=PRIMARY))
     story.append(Spacer(1, 0.3*cm))
 
+    # Meta table
     meta = [
-        ["Projet", project_id],
+        ["Projet",      project_id],
         ["Utilisateur", user_id],
-        ["Date", datetime.utcnow().strftime("%d/%m/%Y %H:%M UTC")],
-        ["Stade", stage],
-        ["Secteur", sector],
+        ["Date",        datetime.utcnow().strftime("%d/%m/%Y %H:%M UTC")],
+        ["Stade",       stage],
+        ["Secteur",     sector],
+        ["Priorite",    priority],
+        ["Confiance",   f"{inv.get('confidence_score', 0)*100:.0f}%"],
     ]
-    meta_table = Table(meta, colWidths=[4*cm, 12*cm])
-    meta_table.setStyle(TableStyle([
-        ("FONTNAME",  (0,0), (0,-1), "Helvetica-Bold"),
-        ("FONTNAME",  (1,0), (1,-1), "Helvetica"),
-        ("FONTSIZE",  (0,0), (-1,-1), 10),
-        ("TEXTCOLOR", (0,0), (0,-1), PRIMARY),
-        ("TEXTCOLOR", (1,0), (1,-1), colors.black),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 4),
-    ]))
-    story.append(meta_table)
-    story.append(Spacer(1, 0.4*cm))
+    _tbl(story, meta, [4*cm, 12*cm], header=False)
 
-    # ── Narrative ─────────────────────────────────────────────────────────────
+    # Narrative
     narrative = inv.get("recommendation", "")
-    if "INVESTMENT RECOMMENDATION" in narrative:
-        narrative = narrative.split("INVESTMENT RECOMMENDATION")[0]
-    narrative = narrative.replace("ANALYSIS", "").replace("-"*55, "").strip()
-
+    for sep in ["RECOMMANDATION D INVESTISSEMENT", "RECOMMANDATION D'INVESTISSEMENT"]:
+        if sep in narrative:
+            narrative = narrative.split(sep)[0]
+            break
+    narrative = narrative.replace("ANALYSE", "").replace("-"*55, "").strip()
     if narrative and "unavailable" not in narrative:
-        story.append(Paragraph("Analyse", section_style))
-        story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-        story.append(Spacer(1, 0.2*cm))
-        story.append(Paragraph(narrative, body_style))
+        _section(story, "Analyse")
+        story.append(Paragraph(narrative, BODY))
 
-    # ── Key metrics ───────────────────────────────────────────────────────────
-    story.append(Paragraph("Chiffres Clés", section_style))
-    story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-    story.append(Spacer(1, 0.2*cm))
-
+    # Key metrics
+    _section(story, "Chiffres Cles")
+    raise_amt = s.get("raise_amount", 1) or 1
+    runway    = d.get("runway_months", s.get("runway_months", 0))
     metrics = [
-        ["Indicateur", "Valeur"],
-        ["Valorisation pre-money", f"{v.get('final_valuation', 0):,.0f} TND  [{v.get('method', '')}]"],
-        ["Levée recommandée",      f"{s.get('raise_amount', 0):,.0f} TND"],
-        ["Dilution fondateurs",    f"{d.get('founder_dilution_pct', 0):.1f}%"],
-        ["Score de confiance",     f"{inv.get('confidence_score', 0)*100:.0f}%"],
-        ["Post-money",             f"{d.get('post_money', 0):,.0f} TND"],
+        ["Indicateur",              "Valeur"],
+        ["Valorisation pre-money",  f"{v.get('final_valuation',0):,.0f} TND  [{v.get('method','')}]"],
+        ["Levee recommandee",       f"{raise_amt:,.0f} TND"],
+        ["Cash existant",           f"{d.get('current_cash', 0):,.0f} TND"],
+        ["Runway total",            f"{runway:.1f} mois" if runway and runway < 99 else "infini"],
+        ["Dilution fondateurs",     f"{d.get('founder_dilution_pct',0):.1f}%"],
+        ["Ownership apres tour",    f"{d.get('founder_after_pct',0):.1f}%"],
+        ["Post-money",              f"{d.get('post_money',0):,.0f} TND"],
+        ["Score de confiance",      f"{inv.get('confidence_score',0)*100:.0f}%"],
     ]
-    _add_table(story, metrics, col_widths=[8*cm, 8*cm], header=True)
+    _tbl(story, metrics, [8*cm, 8*cm])
 
-    # ── Funding structure ─────────────────────────────────────────────────────
-    story.append(Paragraph("Structure de la Levée", section_style))
-    story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-    story.append(Spacer(1, 0.2*cm))
-
-    raise_amt = s.get("raise_amount", 1)
+    # ══════════════════════════════════════════════════════════════════════════
+    # SECTION 2 — FUNDING STRUCTURE + VALUATION
+    # ══════════════════════════════════════════════════════════════════════════
+    _section(story, "Structure de la Levee")
     funding = [
         ["Composante", "Montant (TND)", "Part"],
-        ["Subventions", f"{s.get('grants', 0):,.0f}", f"{s.get('grants',0)/raise_amt*100:.0f}%"],
-        ["Equity",      f"{s.get('equity', 0):,.0f}", f"{s.get('equity',0)/raise_amt*100:.0f}%"],
-        ["Dette",       f"{s.get('debt', 0):,.0f}",   f"{s.get('debt',0)/raise_amt*100:.0f}%"],
-        ["TOTAL",       f"{raise_amt:,.0f}", "100%"],
+        ["Subventions", f"{s.get('grants',0):,.0f}", f"{s.get('grants',0)/raise_amt*100:.0f}%"],
+        ["Equity",      f"{s.get('equity',0):,.0f}", f"{s.get('equity',0)/raise_amt*100:.0f}%"],
+        ["Dette",       f"{s.get('debt',0):,.0f}",   f"{s.get('debt',0)/raise_amt*100:.0f}%"],
+        ["TOTAL",       f"{raise_amt:,.0f}",          "100%"],
     ]
-    _add_table(story, funding, col_widths=[6*cm, 6*cm, 4*cm], header=True, total_row=True)
+    _tbl(story, funding, [6*cm, 6*cm, 4*cm], total_row=True)
 
-    # ── Valuation methods ─────────────────────────────────────────────────────
-    story.append(Paragraph("Méthodes de Valorisation", section_style))
-    story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-    story.append(Spacer(1, 0.2*cm))
-
-    show_dcf = data.get("stage", "") not in ("idea", "pre-seed")
-    val_rows = [["Méthode", "Valeur (TND)", "Utilisée"]]
+    _section(story, "Methodes de Valorisation")
+    show_dcf = (data.get("stage") or "") not in ("idea",)
+    val_rows = [["Methode", "Valeur (TND)", "Utilisee"]]
     if v.get("revenue_multiple"):
         val_rows.append(["Revenue Multiple", f"{v['revenue_multiple']:,.0f}", "Oui"])
     if v.get("dcf"):
-        val_rows.append(["DCF 5 ans", f"{v['dcf']:,.0f}", "Oui" if show_dcf else "Non (stade précoce)"])
+        val_rows.append(["DCF 5 ans", f"{v['dcf']:,.0f}", "Oui" if show_dcf else "Non (stade precoce)"])
     if v.get("scorecard"):
         val_rows.append(["Scorecard", f"{v['scorecard']:,.0f}", "Oui"])
-    val_rows.append(["FINAL (pondéré)", f"{v.get('final_valuation',0):,.0f}", "—"])
-    _add_table(story, val_rows, col_widths=[6*cm, 6*cm, 4*cm], header=True, total_row=True)
+    val_rows.append(["FINAL (pondere)", f"{v.get('final_valuation',0):,.0f}", "—"])
+    _tbl(story, val_rows, [6*cm, 6*cm, 4*cm], total_row=True)
 
-    # ── Scenarios ─────────────────────────────────────────────────────────────
-    story.append(Paragraph("Scénarios de Levée", section_style))
-    story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-    story.append(Spacer(1, 0.2*cm))
-
-    sc_rows = [["Scénario", "Levée (TND)", "Dilution", "Score"]]
-    for sc in sorted(data.get("all_scenarios", []), key=lambda x: x.get("score", 0), reverse=True):
+    _section(story, "Scenarios de Levee")
+    sc_rows = [["Scenario", "Levee (TND)", "Dilution", "Runway", "Score"]]
+    for sc in sorted(data.get("all_scenarios", []), key=lambda x: x.get("score",0), reverse=True):
+        rw = sc.get("runway_months", 0)
         sc_rows.append([
             sc["name"].capitalize(),
             f"{sc['raise_amount']:,.0f}",
             f"{sc['dilution_pct']:.1f}%",
+            f"{rw:.0f}m" if rw < 99 else "inf",
             f"{sc['score']:.0f}",
         ])
-    _add_table(story, sc_rows, col_widths=[4*cm, 5*cm, 4*cm, 3*cm], header=True)
+    _tbl(story, sc_rows, [4*cm, 4*cm, 3*cm, 3*cm, 2*cm])
 
-    # ── Dilution detail ───────────────────────────────────────────────────────
-    story.append(Paragraph("Détail de la Dilution", section_style))
-    story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-    story.append(Spacer(1, 0.2*cm))
-
+    # ══════════════════════════════════════════════════════════════════════════
+    # SECTION 3 — DILUTION + GRANTS + RATIONALE
+    # ══════════════════════════════════════════════════════════════════════════
+    _section(story, "Detail de la Dilution  [equity / (pre-money + equity)]")
     dil_rows = [
-        ["Indicateur", "Valeur"],
-        ["Ownership avant le tour",  f"{d.get('founder_before_pct', 0):.1f}%"],
-        ["Ownership après le tour",  f"{d.get('founder_after_pct', 0):.1f}%"],
-        ["Dilution totale",          f"{d.get('founder_dilution_pct', 0):.1f}%  (incl. 10% option pool)"],
-        ["Part investisseur",        f"{d.get('new_investor_pct', 0):.1f}%"],
+        ["Indicateur",           "Valeur"],
+        ["Avant le tour",        f"{d.get('founder_before_pct',80):.1f}%"],
+        ["Part investisseur",    f"{d.get('new_investor_pct',0):.1f}%"],
+        ["Option pool",          f"{d.get('option_pool_pct',10):.0f}%"],
+        ["Apres le tour",        f"{d.get('founder_after_pct',0):.1f}%"],
+        ["Dilution totale",      f"{d.get('founder_dilution_pct',0):.1f}%"],
     ]
-    _add_table(story, dil_rows, col_widths=[8*cm, 8*cm], header=True)
+    _tbl(story, dil_rows, [8*cm, 8*cm])
 
-    # ── Grants ────────────────────────────────────────────────────────────────
     grants_list = data.get("available_grants", [])
     if grants_list:
-        story.append(Paragraph("Subventions Eligibles", section_style))
-        story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-        story.append(Spacer(1, 0.2*cm))
+        _section(story, "Subventions Eligibles")
         g_rows = [["Programme", "Montant (TND)"]]
         for g in grants_list:
             g_rows.append([g["name"], f"{g['amount']:,.0f}"])
-        total_g = sum(g["amount"] for g in grants_list)
-        g_rows.append(["TOTAL", f"{total_g:,.0f}"])
-        _add_table(story, g_rows, col_widths=[10*cm, 6*cm], header=True, total_row=True)
+        g_rows.append(["TOTAL", f"{sum(g['amount'] for g in grants_list):,.0f}"])
+        _tbl(story, g_rows, [10*cm, 6*cm], total_row=True)
 
-    # ── Rationale ─────────────────────────────────────────────────────────────
     rationale = s.get("rationale", "")
     if rationale and "unavailable" not in rationale:
-        story.append(Paragraph("Justification de la Stratégie", section_style))
-        story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-        story.append(Spacer(1, 0.2*cm))
-        story.append(Paragraph(rationale, body_style))
+        _section(story, "Justification de la Strategie")
+        story.append(Paragraph(rationale, BODY))
 
-    # ── Next steps ────────────────────────────────────────────────────────────
+    # Next steps
     full_rec = inv.get("recommendation", "")
     if "PROCHAINES ETAPES" in full_rec:
-        story.append(Paragraph("Prochaines Etapes", section_style))
-        story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-        story.append(Spacer(1, 0.2*cm))
+        _section(story, "Prochaines Etapes")
         steps_block = full_rec.split("PROCHAINES ETAPES")[1].split("NOTES")[0].strip()
         for line in steps_block.splitlines():
             line = line.strip()
-            if line:
-                story.append(Paragraph(f"• {line}", body_style))
+            if line and not line.startswith("-"):
+                story.append(Paragraph(f"• {line}", BODY))
 
-    # ── Data warnings ─────────────────────────────────────────────────────────
+    # ══════════════════════════════════════════════════════════════════════════
+    # PAGE 2 — DEAL INTELLIGENCE
+    # ══════════════════════════════════════════════════════════════════════════
+    comparables = data.get("comparable_deals", [])
+    investors   = data.get("matched_investors", [])
+    term_sheet  = data.get("term_sheet", "")
+
+    if comparables or investors or term_sheet:
+        story.append(PageBreak())
+        story.append(Paragraph("Intelligence Marche", TITLE))
+        story.append(HRFlowable(width="100%", thickness=2, color=PRIMARY))
+        story.append(Spacer(1, 0.3*cm))
+
+    if comparables:
+        _section(story, "Transactions Comparables en Tunisie")
+        story.append(Paragraph(
+            "Deals similaires identifies dans la base de donnees de financement tunisienne (Kaggle).",
+            SMALL))
+        story.append(Spacer(1, 0.2*cm))
+        comp_rows = [["Entreprise", "Secteur", "Tour", "Montant (TND)", "Investisseurs", "Similarite"]]
+        for c in comparables:
+            investors_short = c["investors"][:35] + "..." if len(c["investors"]) > 35 else c["investors"]
+            comp_rows.append([
+                c["company"],
+                c["sector"],
+                c["round_type"],
+                f"{c['amount_tnd']:,.0f}",
+                investors_short,
+                f"{c['similarity']}%",
+            ])
+        _tbl(story, comp_rows, [3*cm, 2.5*cm, 2*cm, 3*cm, 4.5*cm, 1.5*cm])
+
+    if investors:
+        _section(story, "Investisseurs Recommandes")
+        story.append(Paragraph(
+            "Classes par score de compatibilite (stage + secteur + taille du cheque).",
+            SMALL))
+        story.append(Spacer(1, 0.2*cm))
+        inv_rows = [["Investisseur", "Type", "Cheque (TND)", "Stades", "Fit"]]
+        for i in investors[:6]:
+            inv_rows.append([
+                i["name"],
+                i["type"].replace("_", " ").title(),
+                f"{i['check_min']:,.0f} - {i['check_max']:,.0f}",
+                ", ".join(i["stages"]),
+                f"{i['fit_score']}/100",
+            ])
+        _tbl(story, inv_rows, [4*cm, 3*cm, 4*cm, 3*cm, 2*cm])
+
+        # Notes per investor
+        story.append(Spacer(1, 0.2*cm))
+        for i in investors[:4]:
+            story.append(Paragraph(
+                f"<b>{i['name']}</b> — {i['note']}",
+                SMALL))
+
+    if term_sheet and "unavailable" not in term_sheet:
+        _section(story, "Term Sheet (Draft)")
+        story.append(Paragraph(
+            "Document indicatif. A faire valider par un avocat specialise en droit des societes tunisien.",
+            WARN))
+        story.append(Spacer(1, 0.2*cm))
+        # Split term sheet into paragraphs
+        for line in term_sheet.split("\n"):
+            line = line.strip()
+            if not line:
+                story.append(Spacer(1, 0.15*cm))
+            elif line.startswith("#") or line.isupper():
+                story.append(Paragraph(line.lstrip("#").strip(), H2))
+            else:
+                story.append(Paragraph(line, BODY))
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # PAGE 3 — ROBUSTNESS ANALYSIS
+    # ══════════════════════════════════════════════════════════════════════════
+    multi_round = data.get("multi_round_dilution", [])
+    sensitivity = data.get("sensitivity", [])
+    exit_sc     = data.get("exit_scenarios", [])
+
+    if multi_round or sensitivity or exit_sc:
+        story.append(PageBreak())
+        story.append(Paragraph("Analyse de Robustesse", TITLE))
+        story.append(HRFlowable(width="100%", thickness=2, color=PRIMARY))
+        story.append(Spacer(1, 0.3*cm))
+
+    if multi_round:
+        _section(story, "Dilution sur 3 Tours de Financement")
+        story.append(Paragraph(
+            "Projection de l'ownership des fondateurs apres chaque tour successif.",
+            SMALL))
+        story.append(Spacer(1, 0.2*cm))
+        mr_rows = [["Tour", "Levee (TND)", "Pre-money", "Post-money", "Part invest.", "Ownership fondateurs"]]
+        for r in multi_round:
+            mr_rows.append([
+                r["round_name"],
+                f"{r['raise_amount']:,.0f}",
+                f"{r['pre_money']:,.0f}",
+                f"{r['post_money']:,.0f}",
+                f"{r['investor_pct']:.1f}%",
+                f"{r['founder_pct']:.1f}%",
+            ])
+        _tbl(story, mr_rows, [3.5*cm, 2.5*cm, 2.5*cm, 2.5*cm, 2.5*cm, 3*cm])
+        if multi_round:
+            final = multi_round[-1]["founder_pct"]
+            story.append(Paragraph(
+                f"Apres {len(multi_round)} tours : fondateurs = {final:.1f}% | "
+                f"investisseurs + pool = {100-final:.1f}%",
+                SMALL))
+
+    if sensitivity:
+        _section(story, "Analyse de Sensibilite (+/-20% sur les hypotheses cles)")
+        story.append(Paragraph(
+            "Impact d'une variation de 20% sur chaque hypothese sur la valorisation finale.",
+            SMALL))
+        story.append(Spacer(1, 0.2*cm))
+        sens_rows = [["Hypothese", "Valeur base", "-20% → Valorisation", "Base", "+20% → Valorisation", "Impact"]]
+        for s_row in sensitivity:
+            variation = abs(s_row["plus_20"] - s_row["minus_20"]) / s_row["base"] * 50 if s_row["base"] > 0 else 0
+            sens_rows.append([
+                s_row["assumption"],
+                s_row["base_value"],
+                f"{s_row['minus_20']:,.0f} TND",
+                f"{s_row['base']:,.0f} TND",
+                f"{s_row['plus_20']:,.0f} TND",
+                f"{s_row['impact'].upper()} (±{variation:.0f}%)",
+            ])
+        _tbl(story, sens_rows, [3*cm, 2.5*cm, 3*cm, 3*cm, 3*cm, 2*cm])
+
+    if exit_sc:
+        _section(story, "Scenarios de Sortie — Annee 5")
+        rev_y5 = exit_sc[0]["revenue_year5"] if exit_sc else 0
+        story.append(Paragraph(
+            f"Revenus projetes en annee 5 : {rev_y5:,.0f} TND (croissance decroissante).",
+            SMALL))
+        story.append(Spacer(1, 0.2*cm))
+        exit_rows = [["Scenario", "Multiple sortie", "Valeur entreprise (TND)", "Part fondateurs (TND)", "ROI"]]
+        for e in exit_sc:
+            exit_rows.append([
+                e["name"],
+                f"{e['exit_multiple']}x",
+                f"{e['exit_valuation']:,.0f}",
+                f"{e['founder_proceeds']:,.0f}",
+                f"{e['roi_multiple']:.1f}x",
+            ])
+        _tbl(story, exit_rows, [3*cm, 3*cm, 4*cm, 4*cm, 2*cm])
+        story.append(Paragraph(
+            "Le ROI est calcule par rapport a la valorisation pre-money actuelle.",
+            SMALL))
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # WARNINGS + FOOTER
+    # ══════════════════════════════════════════════════════════════════════════
     warnings = data.get("data_warnings", "")
     if warnings and "No issues" not in warnings and "unavailable" not in warnings:
-        story.append(Paragraph("Points d'Attention", section_style))
-        story.append(HRFlowable(width="100%", thickness=0.5, color=ORANGE))
-        story.append(Spacer(1, 0.2*cm))
-        story.append(Paragraph(warnings, warning_style))
+        _section(story, "Points d'Attention", color=ORANGE)
+        story.append(Paragraph(warnings, WARN))
 
-    # ── Progress report ───────────────────────────────────────────────────────
-    progress = inv.get("progress_report", "")
-    if progress and "unavailable" not in progress:
-        story.append(Paragraph("Progression depuis la Derniere Session", section_style))
-        story.append(HRFlowable(width="100%", thickness=0.5, color=ACCENT))
-        story.append(Spacer(1, 0.2*cm))
-        story.append(Paragraph(progress, body_style))
-
-    # ── Footer ────────────────────────────────────────────────────────────────
     story.append(Spacer(1, 0.5*cm))
     story.append(HRFlowable(width="100%", thickness=1, color=PRIMARY))
     story.append(Paragraph(
-        f"Généré par StartWise Investment Agent — {datetime.utcnow().strftime('%d/%m/%Y')}",
-        ParagraphStyle("Footer", fontSize=8, textColor=GRAY, alignment=1)
+        f"Genere par StartWise Investment Agent — {datetime.utcnow().strftime('%d/%m/%Y')} — "
+        f"Document confidentiel. Ne pas diffuser sans autorisation.",
+        FOOTER,
     ))
 
     doc.build(story)
     return buffer.getvalue()
 
 
-def _add_table(story, rows, col_widths, header=True, total_row=False):
-    """Helper to add a styled table."""
-    t = Table(rows, colWidths=col_widths)
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _section(story, title: str, color=ACCENT):
+    story.append(Spacer(1, 0.2*cm))
+    story.append(Paragraph(title, H1))
+    story.append(HRFlowable(width="100%", thickness=0.5, color=color))
+    story.append(Spacer(1, 0.2*cm))
+
+
+def _tbl(story, rows, col_widths, header=True, total_row=False):
+    t = Table(rows, colWidths=col_widths, repeatRows=1 if header else 0)
     style = [
-        ("FONTSIZE",    (0,0), (-1,-1), 10),
-        ("BOTTOMPADDING", (0,0), (-1,-1), 5),
-        ("TOPPADDING",  (0,0), (-1,-1), 5),
-        ("GRID",        (0,0), (-1,-1), 0.3, colors.HexColor("#BDC3C7")),
-        ("ROWBACKGROUNDS", (0,1), (-1,-1), [WHITE, LIGHT_BG]),
+        ("FONTSIZE",      (0,0), (-1,-1), 9),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 4),
+        ("TOPPADDING",    (0,0), (-1,-1), 4),
+        ("GRID",          (0,0), (-1,-1), 0.3, colors.HexColor("#CBD5E1")),
+        ("ROWBACKGROUNDS",(0,1), (-1,-1), [WHITE, LGRAY]),
+        ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
     ]
     if header:
         style += [
-            ("BACKGROUND",  (0,0), (-1,0), PRIMARY),
-            ("TEXTCOLOR",   (0,0), (-1,0), WHITE),
-            ("FONTNAME",    (0,0), (-1,0), "Helvetica-Bold"),
+            ("BACKGROUND", (0,0), (-1,0), PRIMARY),
+            ("TEXTCOLOR",  (0,0), (-1,0), WHITE),
+            ("FONTNAME",   (0,0), (-1,0), "Helvetica-Bold"),
+            ("FONTSIZE",   (0,0), (-1,0), 9),
         ]
     if total_row:
         style += [
-            ("BACKGROUND",  (0,-1), (-1,-1), colors.HexColor("#D6EAF8")),
-            ("FONTNAME",    (0,-1), (-1,-1), "Helvetica-Bold"),
+            ("BACKGROUND", (0,-1), (-1,-1), colors.HexColor("#DBEAFE")),
+            ("FONTNAME",   (0,-1), (-1,-1), "Helvetica-Bold"),
         ]
     t.setStyle(TableStyle(style))
     story.append(t)
-    story.append(Spacer(1, 0.3*cm))
+    story.append(Spacer(1, 0.25*cm))

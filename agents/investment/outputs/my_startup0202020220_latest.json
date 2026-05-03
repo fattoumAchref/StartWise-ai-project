@@ -1,0 +1,79 @@
+{
+  "message_id": "11776216-af85-4c4e-a5b3-62bf616bf22f",
+  "type": "investment.recommendation",
+  "from": "InvestmentAgent",
+  "to": [
+    "Orchestrator"
+  ],
+  "timestamp": "2026-04-22T16:46:54.304854Z",
+  "context": {
+    "project_id": "my_startup0202020220",
+    "session_id": "2026-04-22T16:46:54.252393"
+  },
+  "payload": {
+    "data": {
+      "valuation": {
+        "revenue_multiple": 10000000,
+        "dcf": 30500000,
+        "scorecard": 13100000,
+        "final_valuation": 16800000,
+        "method": "hybrid_dcf"
+      },
+      "optimal_scenario": {
+        "name": "optimal",
+        "raise_amount": 3000000,
+        "grants": 100000,
+        "equity": 2030000,
+        "debt": 870000,
+        "dilution_pct": 10.78,
+        "post_money": 18830000,
+        "score": 149.1,
+        "rationale": "Le scénario de financement sélectionné est optimal pour ce stade de croissance car il offre un équilibre idéal entre la levée de fonds nécessaire pour soutenir la croissance de la startup et la dilution des parts des actionnaires existants. Avec une dilution de 10,8%, la startup peut lever 3 millions de dinars tunisiens tout en préservant une part importante de son capital. De plus, la combinaison de subventions, d'équity et de dette permet de minimiser le risque et de maximiser les ressources disponibles pour la croissance."
+      },
+      "all_scenarios": [
+        {
+          "name": "optimal",
+          "raise_amount": 3000000,
+          "grants": 100000,
+          "equity": 2030000,
+          "dilution_pct": 10.78,
+          "score": 149.1
+        },
+        {
+          "name": "conservative",
+          "raise_amount": 2400000,
+          "grants": 100000,
+          "equity": 1610000,
+          "dilution_pct": 8.75,
+          "score": 143.3
+        },
+        {
+          "name": "aggressive",
+          "raise_amount": 3600000,
+          "grants": 100000,
+          "equity": 2450000,
+          "dilution_pct": 12.73,
+          "score": 135.1
+        }
+      ],
+      "dilution": {
+        "pre_money": 16800000,
+        "post_money": 18830000,
+        "new_investor_pct": 10.78,
+        "founder_before_pct": 80.0,
+        "founder_after_pct": 64.24,
+        "founder_dilution_pct": 15.76
+      }
+    },
+    "recommendation": "ANALYSIS\n-------------------------------------------------------\nJe recommande d'investir 2,030,000 TND dans cette startup tunisienne spécialisée dans la gestion des ressources humaines, valorisée à 16,800,000 TND avant l'investissement. Cette levée de fonds, combinée à des subventions de 100,000 TND et à un financement par dette de 870,000 TND, permettra à la startup de poursuivre sa croissance tout en limitant la dilution des parts des actionnaires existants à 15,8%. Cette stratégie d'investissement équilibrée offre une opportunité clé de soutenir la croissance de la startup tout en préservant une part importante de son capital.\n\nRECOMMANDATION D'INVESTISSEMENT\n=======================================================\nStade        : GROWTH\nSecteur      : hr management\nDonnées marché : 0 startups hr management similaires en Tunisie\n\nVALORISATION  (hybrid_dcf)\n  Revenue multiple: 10,000,000 TND\n  DCF            : 30,500,000 TND\n  Scorecard      : 13,100,000 TND\n  >> Final: 16,800,000 TND (pre-money)\n\nSTRATEGIE OPTIMALE  (OPTIMAL)\n  Levée totale : 3,000,000 TND\n  Subventions  : 100,000 TND  (3%)\n  Equity       : 2,030,000 TND  (68%)\n  Dette        : 870,000 TND  (29%)\n  Post-money   : 18,830,000 TND\n  Pourquoi: Le scénario de financement sélectionné est optimal pour ce stade de croissance car il offre un équilibre idéal entre la levée de fonds nécessaire pour soutenir la croissance de la startup et la dilution des parts des actionnaires existants. Avec une dilution de 10,8%, la startup peut lever 3 millions de dinars tunisiens tout en préservant une part importante de son capital. De plus, la combinaison de subventions, d'équity et de dette permet de minimiser le risque et de maximiser les ressources disponibles pour la croissance.\n\nDILUTION\n  Avant le tour : 80.0%\n  Après le tour : 64.2%\n  Dilué de      : 15.8%  (incl. 10% option pool)\n\nSUBVENTIONS ELIGIBLES\n  - Startup Act Label: 100,000 TND\n  Total potential: 100,000 TND\n\nPROCHAINES ETAPES\n1. Cibler les VCs Series A : Partech Africa, AfricInvest, Endeavor\n2. Explorer le financement par dette via BTS ou Amen Bank\n3. Considérer la subvention FAMEX pour l'expansion à l'export\nDATA NOTES\n  The burn rate seems inconsistent with the runway, as 120,000 TND/month would result in a runway of approximately 25 months with 3,000,000 TND, but the startup already has funding, so the runway should be calculated based on the current funding, not the funding needed."
+  },
+  "confidence": 0.85,
+  "metadata": {
+    "priority": "high",
+    "requires_response": false,
+    "tags": [
+      "growth",
+      "hr management"
+    ]
+  }
+}

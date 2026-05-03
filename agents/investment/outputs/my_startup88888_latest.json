@@ -1,0 +1,79 @@
+{
+  "message_id": "9a2a47cd-52ab-49c4-ae5d-c48f175cc3ad",
+  "type": "investment.recommendation",
+  "from": "InvestmentAgent",
+  "to": [
+    "Orchestrator"
+  ],
+  "timestamp": "2026-04-22T16:44:57.658781Z",
+  "context": {
+    "project_id": "my_startup88888",
+    "session_id": "2026-04-22T16:44:54.853207"
+  },
+  "payload": {
+    "data": {
+      "valuation": {
+        "revenue_multiple": null,
+        "dcf": null,
+        "scorecard": 1100000,
+        "final_valuation": 1100000,
+        "method": "scorecard_only"
+      },
+      "optimal_scenario": {
+        "name": "optimal",
+        "raise_amount": 300000,
+        "grants": 90000,
+        "equity": 210000,
+        "debt": 0,
+        "dilution_pct": 16.03,
+        "post_money": 1310000,
+        "score": 110.8,
+        "rationale": "Le scénario de financement sélectionné est optimal pour ce stade de startup car il offre un équilibre entre la levée de fonds nécessaire pour développer l'idée et la dilution des parts de l'entreprise. Avec une levée de 300 000 TND, la startup peut bénéficier de subventions à hauteur de 90 000 TND et d'un financement en equity de 210 000 TND, sans endettement. Cela permet de minimiser le risque tout en maintenant une dilution raisonnable de 16,0%."
+      },
+      "all_scenarios": [
+        {
+          "name": "optimal",
+          "raise_amount": 300000,
+          "grants": 90000,
+          "equity": 210000,
+          "dilution_pct": 16.03,
+          "score": 110.8
+        },
+        {
+          "name": "conservative",
+          "raise_amount": 240000,
+          "grants": 72000,
+          "equity": 168000,
+          "dilution_pct": 13.25,
+          "score": 109.5
+        },
+        {
+          "name": "aggressive",
+          "raise_amount": 360000,
+          "grants": 100000,
+          "equity": 260000,
+          "dilution_pct": 19.12,
+          "score": 85.0
+        }
+      ],
+      "dilution": {
+        "pre_money": 1100000,
+        "post_money": 1310000,
+        "new_investor_pct": 16.03,
+        "founder_before_pct": 80.0,
+        "founder_after_pct": 60.46,
+        "founder_dilution_pct": 19.54
+      }
+    },
+    "recommendation": "ANALYSIS\n-------------------------------------------------------\nAnalyse d'investissement :\n\nJe recommande d'investir 210 000 TND dans cette startup du secteur agricole, valorisée à 1 100 000 TND avant financement, avec une levée totale de 300 000 TND. Cette stratégie permet de maintenir une dilution raisonnable des parts de l'entreprise à 16,0% tout en minimisant le risque grâce à un équilibre entre subventions et financement en equity. L'opportunité clé réside dans le potentiel de développement de l'idée avec un financement adapté, bien qu'il soit essentiel de réévaluer les prévisions de croissance et de trésorerie pour garantir la viabilité à long terme de la startup.\n\nRECOMMANDATION D'INVESTISSEMENT\n=======================================================\nStade        : IDEA\nSecteur      : agriculture\nDonnées marché : 0 startups agriculture similaires en Tunisie\n\nVALORISATION  (scorecard_only)\n  Scorecard      : 1,100,000 TND\n  >> Final: 1,100,000 TND (pre-money)\n\nSTRATEGIE OPTIMALE  (OPTIMAL)\n  Levée totale : 300,000 TND\n  Subventions  : 90,000 TND  (30%)\n  Equity       : 210,000 TND  (70%)\n  Dette        : 0 TND  (0%)\n  Post-money   : 1,310,000 TND\n  Pourquoi: Le scénario de financement sélectionné est optimal pour ce stade de startup car il offre un équilibre entre la levée de fonds nécessaire pour développer l'idée et la dilution des parts de l'entreprise. Avec une levée de 300 000 TND, la startup peut bénéficier de subventions à hauteur de 90 000 TND et d'un financement en equity de 210 000 TND, sans endettement. Cela permet de minimiser le risque tout en maintenant une dilution raisonnable de 16,0%.\n\nDILUTION\n  Avant le tour : 80.0%\n  Après le tour : 60.5%\n  Dilué de      : 19.5%  (incl. 10% option pool)\n\nSUBVENTIONS ELIGIBLES\n  - Startup Act Label: 100,000 TND\n  Total potential: 100,000 TND\n\nPROCHAINES ETAPES\n1. Rejoindre un incubateur (Flat6Labs, Cogite, ou StartupHouse)\n2. Valider votre idée avec 20+ clients potentiels\n3. Postuler à la subvention Smart Capital Pre-Seed (50k TND)\nDATA NOTES\n  Inconsistencies detected: With 0 revenue, a 50% growth rate is impossible, and a 20-month runway seems unrealistic given the high monthly burn rate."
+  },
+  "confidence": 0.6,
+  "metadata": {
+    "priority": "high",
+    "requires_response": false,
+    "tags": [
+      "idea",
+      "agriculture"
+    ]
+  }
+}

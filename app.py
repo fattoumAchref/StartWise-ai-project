@@ -218,6 +218,120 @@ if run_btn:
                 )
         st.info(progress)
 
+    # ── Comparable transactions ───────────────────────────────────────────────
+    comparables = data.get("comparable_deals", [])
+    if comparables:
+        st.divider()
+        st.subheader("Transactions comparables en Tunisie")
+        import pandas as pd
+        df_comp = pd.DataFrame([{
+            "Entreprise":  c["company"],
+            "Secteur":     c["sector"],
+            "Tour":        c["round_type"],
+            "Montant (TND)": f"{c['amount_tnd']:,.0f}",
+            "Investisseurs": c["investors"],
+            "Date":        c["date"],
+            "Similarité":  f"{c['similarity']}%",
+        } for c in comparables])
+        st.dataframe(df_comp, use_container_width=True, hide_index=True)
+        st.caption("Source : données de financement tunisiennes (Kaggle). Montants convertis USD→TND.")
+
+    # ── Investor matching ─────────────────────────────────────────────────────
+    investors = data.get("matched_investors", [])
+    if investors:
+        st.divider()
+        st.subheader("Investisseurs recommandés")
+        for inv_item in investors:
+            fit = inv_item.get("fit_score", 0)
+            fit_color = "🟢" if fit >= 70 else "🟡" if fit >= 40 else "🔴"
+            with st.expander(
+                f"{fit_color} **{inv_item['name']}** — {inv_item['type'].replace('_',' ').title()} "
+                f"| {inv_item['check_min']:,.0f}–{inv_item['check_max']:,.0f} TND "
+                f"| Fit : {fit}/100"
+            ):
+                st.markdown(f"**Stades :** {', '.join(inv_item['stages'])}")
+                st.markdown(f"**Secteurs :** {', '.join(inv_item['sectors'])}")
+                st.markdown(f"**Note :** {inv_item['note']}")
+                if inv_item.get("website") and inv_item["website"] != "N/A":
+                    st.markdown(f"**Site :** {inv_item['website']}")
+
+    # ── Term sheet ────────────────────────────────────────────────────────────
+    term_sheet = data.get("term_sheet", "")
+    if term_sheet and "unavailable" not in term_sheet:
+        st.divider()
+        with st.expander("📄 Term sheet (draft)"):
+            st.markdown(term_sheet)
+            import json as _json
+            st.download_button(
+                "Télécharger le term sheet",
+                data=term_sheet,
+                file_name=f"term_sheet_{project_id}_{datetime.now().strftime('%Y%m%d')}.txt",
+                mime="text/plain",
+                use_container_width=True,
+            )
+
+    # ── Multi-round dilution waterfall ────────────────────────────────────────
+    multi_round = data.get("multi_round_dilution", [])
+    if multi_round:
+        st.divider()
+        st.subheader("Dilution sur 3 tours de financement")
+        import pandas as pd
+        df_mr = pd.DataFrame([{
+            "Tour":           r["round_name"],
+            "Levée (TND)":    f"{r['raise_amount']:,.0f}",
+            "Pre-money":      f"{r['pre_money']:,.0f}",
+            "Post-money":     f"{r['post_money']:,.0f}",
+            "Part investisseur": f"{r['investor_pct']:.1f}%",
+            "Ownership fondateurs": f"{r['founder_pct']:.1f}%",
+        } for r in multi_round])
+        st.dataframe(df_mr, use_container_width=True, hide_index=True)
+        # Visual ownership bar
+        final_founder = multi_round[-1]["founder_pct"]
+        st.caption(
+            f"Après {len(multi_round)} tours : fondateurs = **{final_founder:.1f}%** "
+            f"| investisseurs + pool = **{100 - final_founder:.1f}%**"
+        )
+
+    # ── Sensitivity analysis ──────────────────────────────────────────────────
+    sensitivity = data.get("sensitivity", [])
+    if sensitivity:
+        st.divider()
+        st.subheader("Analyse de sensibilité (±20% sur les hypothèses clés)")
+        import pandas as pd
+        df_sens = pd.DataFrame([{
+            "Hypothèse":    s["assumption"],
+            "Valeur base":  s["base_value"],
+            "-20%":         f"{s['minus_20']:,.0f} TND",
+            "Base":         f"{s['base']:,.0f} TND",
+            "+20%":         f"{s['plus_20']:,.0f} TND",
+            "Impact":       s["impact"].upper(),
+            "Variation":    f"±{abs(s['plus_20'] - s['minus_20']) / s['base'] * 50:.0f}%",
+        } for s in sensitivity])
+        st.dataframe(df_sens, use_container_width=True, hide_index=True)
+        st.caption("La variation montre l'amplitude de la fourchette de valorisation pour chaque hypothèse.")
+
+    # ── Exit scenarios ────────────────────────────────────────────────────────
+    exit_sc = data.get("exit_scenarios", [])
+    if exit_sc:
+        st.divider()
+        st.subheader("Scénarios de sortie — Année 5")
+        rev_y5 = exit_sc[0]["revenue_year5"] if exit_sc else 0
+        st.caption(f"Revenus projetés en année 5 : **{rev_y5:,.0f} TND** (croissance décroissante)")
+        ex_cols = st.columns(3)
+        colors = {"Pessimiste": "🔴", "Realiste": "🟡", "Optimiste": "🟢"}
+        for i, ex in enumerate(exit_sc):
+            with ex_cols[i]:
+                icon = colors.get(ex["name"], "⚪")
+                st.metric(
+                    f"{icon} {ex['name']}",
+                    f"{ex['founder_proceeds']:,.0f} TND",
+                    f"{ex['roi_multiple']:.1f}x ROI",
+                )
+                st.caption(
+                    f"Multiple sortie : {ex['exit_multiple']}x\n"
+                    f"Valeur entreprise : {ex['exit_valuation']:,.0f} TND"
+                )
+
     # ── Raw recommendation (expandable) ──────────────────────────────────────
     with st.expander("Voir la recommandation complète (texte brut)"):
         st.text(inv["recommendation"])
