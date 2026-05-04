@@ -152,7 +152,6 @@ Exemple minimal (Risk) :
 
 Réponse : tâche avec `artifacts` (ex. `risk_report` en `DataPart`).
 
-Documentation complémentaire : [`docs/a2a_integration_guide.md`](docs/a2a_integration_guide.md), [`CLAUDE.md`](CLAUDE.md).
 
 ---
 
