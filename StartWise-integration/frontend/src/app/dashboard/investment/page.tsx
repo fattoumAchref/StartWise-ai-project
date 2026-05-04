@@ -67,6 +67,7 @@ export default function InvestmentPage() {
           a2a={a2a}
           elapsedSeconds={elapsed}
           onClarificationSent={() => setElapsed(0)}
+          showCrossAgentConflicts={false}
         />
       ) : (
         <div style={{

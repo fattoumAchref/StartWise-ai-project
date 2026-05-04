@@ -31,11 +31,9 @@ import {
 import { useApp } from "@/context/AppContext"
 
 /**
- * Single-gate unlock — everything becomes available once the user completes
- * ideation (startwise_summary exists in localStorage) OR manually unlocks
- * via the "Unlock all tools" button which sets startwise_unlocked=1.
- *
- * Reach to Investors stays behind a second gate: marketing must be completed.
+ * Single-gate unlock — post-ideation tools become available once
+ * startwise_summary exists OR the user sets startwise_unlocked=1.
+ * Reach to Investors uses the same gate (marketing hub lives on /dashboard).
  */
 function useJourneyStages() {
   const [stages, setStages] = useState({
@@ -75,8 +73,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const [mounted, setMounted] = useState(false)
   const { resolvedTheme } = useTheme()
   const router = useRouter()
-  const { analysisHistory, loadAnalysis } = useApp()
+  const app = useApp() as {
+    analysisHistory: unknown
+    loadAnalysis: (item: Record<string, unknown>) => void
+  }
+  const { analysisHistory, loadAnalysis } = app
   const stages = useJourneyStages()
+  /** AppContext is .jsx — widen for .tsx */
+  const marketingHistory = (analysisHistory ?? []) as Array<{
+    id: string
+    project: string
+    date: string
+    results?: Record<string, unknown>
+  }>
 
   useEffect(() => { setMounted(true) }, [])
 
@@ -86,7 +95,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const getNavData = () => {
     const { unlocked, marketingDone } = stages
     const gtmStatus      = unlocked ? (marketingDone ? 'completed' : 'available') : 'locked'
-    const investorsStatus = s(!marketingDone)
+    const investorsStatus = s(!unlocked)
 
     return [
       {
@@ -140,7 +149,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       },
       {
         title: "Reach to Investors",
-        url: "/dashboard",
+        url: "/dashboard#reach-investors",
         icon: Presentation,
         status: investorsStatus,
         items: [],
@@ -195,7 +204,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={getNavData()} />
 
         {/* Marketing Analysis History — only rendered client-side to avoid SSR/localStorage mismatch */}
-        {mounted && analysisHistory.length > 0 && (
+        {mounted && marketingHistory.length > 0 && (
           <SidebarGroup className="mt-2">
             <SidebarGroupLabel className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground px-2">
               <BarChart2 className="h-3.5 w-3.5" />
@@ -203,10 +212,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu className="gap-0.5">
-                {analysisHistory.slice(0, 6).map((item: any, idx: number) => (
+                {marketingHistory.slice(0, 6).map((item, idx) => (
                   <SidebarMenuItem key={`${item.id}-${idx}`}>
                     <SidebarMenuButton
-                      onClick={() => { loadAnalysis(item); router.push('/dashboard') }}
+                      onClick={() => { loadAnalysis(item as Record<string, unknown>); router.push('/dashboard') }}
                       className="h-auto py-2 px-3 flex-col items-start hover:bg-sidebar-accent/50 cursor-pointer rounded-lg transition-colors"
                     >
                       <span className="text-xs font-medium truncate w-full text-sidebar-foreground leading-tight">

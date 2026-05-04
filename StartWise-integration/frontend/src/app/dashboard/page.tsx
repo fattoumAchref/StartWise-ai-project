@@ -3,7 +3,7 @@
  * Wraps the existing Dashboard.jsx component (ported from Vite/React).
  * All interactivity is client-side (WebSocket, Context, animations).
  */
-import Dashboard from '../../pages/Dashboard'
+import Dashboard from '../../marketing/Dashboard'
 
 export default function DashboardPage() {
   return <Dashboard />

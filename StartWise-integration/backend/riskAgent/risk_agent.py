@@ -369,7 +369,11 @@ class RiskAgent:
             if not description:
                 return self._fail(task, "Missing description")
 
-            db_conn = sqlite3.connect(db_path) if db_path else sqlite3.connect(":memory:")
+            db_conn = (
+                sqlite3.connect(db_path)
+                if os.path.isfile(db_path)
+                else sqlite3.connect(":memory:")
+            )
 
             # Accept pre-loaded outputs from an orchestrator
             self._load_agent_outputs(payload.get("agent_outputs", []))
@@ -535,7 +539,8 @@ class RiskAgent:
         """Single lightweight fuse for stability sampling."""
         mc_risk, mc_ci   = monte_carlo_risk(agents)
         mc_conf          = max(0.05, 1 - (mc_ci[1] - mc_ci[0]))
-        conflicts        = detect_conflicts_llm(agents) + rule_based_checks(agents)
+        llm_c            = detect_conflicts_llm(agents) if len(agents) >= 2 else []
+        conflicts        = llm_c + rule_based_checks(agents)
         conflict_score   = compute_conflict_score(conflicts, agents)
         uncertainty      = compute_uncertainty(agents)
         rag_risk, rag_conf, _, _cases = compute_rag_risk(description)

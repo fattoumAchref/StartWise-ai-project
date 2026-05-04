@@ -286,7 +286,7 @@ export function parseFinancialAssessment(output: string) {
          parseFloat(fa.three_year_projections.estimated_annual_revenue_y3?.amount || 1)) * 100 : 0;
       
       // Generate realistic revenue projections based on business model
-      const revenueProjections = [];
+      const revenueProjections: number[] = [];
       if (fa.cash_flow_projection_annual) {
         // Use existing cash flow data
         for (const year of fa.cash_flow_projection_annual) {
@@ -1392,7 +1392,7 @@ export async function configurePlatform(platform: string, config: any): Promise<
 
 // Configure all platform credentials at once
 export async function configureAllPlatforms(configurations: Record<string, any>): Promise<{ success: boolean; message: string }> {
-  const results = [];
+  const results: Array<{ platform: string; success: boolean; message: string }> = [];
   
   for (const [platform, config] of Object.entries(configurations)) {
     if (config && Object.keys(config).length > 0) {

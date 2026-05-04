@@ -1086,7 +1086,7 @@ function ExecutiveSynthesis({ agentsResults, agentsStatus, t, lang, isDarkMode, 
   ] : []
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+    <div id="reach-investors" className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 overflow-hidden scroll-mt-24">
       {/* Header */}
       <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
         <div>

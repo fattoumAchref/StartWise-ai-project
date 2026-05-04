@@ -1,4 +1,6 @@
+'use client'
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -7,10 +9,17 @@ import { User, Settings, LogOut } from "lucide-react";
 import DarkModeToggle from "./ui/DarkModeToggle";
 
 export function SiteHeader() {
-  // Example: get status from localStorage (or context/provider in real app)
-  const savedSummary = typeof window !== 'undefined' ? localStorage.getItem('startwise_summary') : null;
-  const savedBusinessIdea = typeof window !== 'undefined' ? localStorage.getItem('startwise_business_idea') : null;
-  const hasRealData = savedSummary && savedBusinessIdea;
+  const [hasRealData, setHasRealData] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    try {
+      const s = localStorage.getItem("startwise_summary");
+      const b = localStorage.getItem("startwise_business_idea");
+      setHasRealData(!!(s && b));
+    } catch {
+      setHasRealData(false);
+    }
+  }, []);
 
   return (
     <header className="flex h-12 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 border-b">
@@ -29,10 +38,13 @@ export function SiteHeader() {
             <li className="text-muted-foreground">Documents</li>
           </ol>
         </nav>
-        {hasRealData && (
+        {hasRealData === null ? (
+          <Badge variant="outline" className="ml-4 text-muted-foreground border-muted">
+            …
+          </Badge>
+        ) : hasRealData ? (
           <Badge className="bg-green-100 text-green-800 border-green-200 ml-4">Live Data</Badge>
-        )}
-        {!hasRealData && (
+        ) : (
           <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-200 ml-4">Demo Mode</Badge>
         )}
       </div>

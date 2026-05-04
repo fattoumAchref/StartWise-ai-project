@@ -8,6 +8,8 @@ interface Props {
   elapsedSeconds: number
   onClarificationSent: () => void
   expertMode?: boolean
+  /** When false, hide cross-agent conflict callouts (e.g. Investment page = verdict only). */
+  showCrossAgentConflicts?: boolean
 }
 
 const ratingClass = (r?: string) =>
@@ -23,7 +25,20 @@ const fmt = (v?: string | number) => {
   return String(v)
 }
 
-export default function A2APanel({ a2a, elapsedSeconds, onClarificationSent, expertMode }: Props) {
+/** Reactive conflict-stance note — must not be shown as the investment narrative (see Risk page). */
+function isInvestmentConflictStanceText(s?: string) {
+  if (!s) return false
+  const t = s.toLowerCase()
+  return t.includes('cross-agent conflict') && t.includes('confidence is reduced')
+}
+
+export default function A2APanel({
+  a2a,
+  elapsedSeconds,
+  onClarificationSent,
+  expertMode,
+  showCrossAgentConflicts = true,
+}: Props) {
   const [answer, setAnswer] = useState('')
   const [sending, setSending] = useState(false)
 
@@ -83,9 +98,15 @@ export default function A2APanel({ a2a, elapsedSeconds, onClarificationSent, exp
               </span>
             )}
           </div>
-          {a2a.investment_recommendation && (
+          {a2a.investment_recommendation && !isInvestmentConflictStanceText(a2a.investment_recommendation) && (
             <p style={{ fontSize: '.83rem', color: '#374151', marginBottom: '.5rem' }}>
               {a2a.investment_recommendation}
+            </p>
+          )}
+          {a2a.investment_recommendation && isInvestmentConflictStanceText(a2a.investment_recommendation) && (
+            <p style={{ fontSize: '.78rem', color: '#6b7280', marginBottom: '.5rem', fontStyle: 'italic' }}>
+              Un signal de cohérence entre agents est enregistré — ouvrez la page <strong>Risque</strong> pour le détail.
+              Les éléments ci-dessous (valorisation, scénario) restent issus de la dernière analyse d’investissement complète.
             </p>
           )}
         </div>
@@ -148,8 +169,8 @@ export default function A2APanel({ a2a, elapsedSeconds, onClarificationSent, exp
           </div>
         )}
 
-        {/* Conflict */}
-        {a2a.conflict_type && (
+        {/* Cross-agent conflicts — hidden on dedicated Investment view */}
+        {showCrossAgentConflicts && a2a.conflict_type && (
           <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 8, padding: '.6rem', fontSize: '.8rem' }}>
             ⚠️ <strong>{expertMode ? a2a.conflict_type : 'Point d\'attention'}</strong> — {a2a.conflict_message}
           </div>

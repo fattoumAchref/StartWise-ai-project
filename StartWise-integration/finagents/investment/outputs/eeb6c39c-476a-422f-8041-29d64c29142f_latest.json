@@ -1,0 +1,79 @@
+{
+  "message_id": "ece46a9f-0948-479c-b144-dfd17637803d",
+  "type": "investment.recommendation",
+  "from": "InvestmentAgent",
+  "to": [
+    "Orchestrator"
+  ],
+  "timestamp": "2026-05-04T00:15:10.030807Z",
+  "context": {
+    "project_id": "eeb6c39c-476a-422f-8041-29d64c29142f",
+    "session_id": "2026-05-04T00:15:10.012084"
+  },
+  "payload": {
+    "data": {
+      "valuation": {
+        "revenue_multiple": 100000,
+        "dcf": 200000,
+        "scorecard": 100000,
+        "final_valuation": 100000,
+        "method": "hybrid_dcf"
+      },
+      "optimal_scenario": {
+        "name": "optimal",
+        "raise_amount": 0,
+        "grants": 0,
+        "equity": 0,
+        "debt": 0,
+        "dilution_pct": 0.0,
+        "post_money": 100000,
+        "score": 140.0,
+        "rationale": "Au stade de l'idée, le scénario de financement sélectionné est optimal car il ne nécessite aucun financement externe (levée de fonds, subventions, equity ou dette), ce qui permet d'éviter toute dilution des parts (0,0 %). Cela réduit le risque pour les fondateurs tout en leur permettant de conserver le contrôle total de leur startup."
+      },
+      "all_scenarios": [
+        {
+          "name": "optimal",
+          "raise_amount": 0,
+          "grants": 0,
+          "equity": 0,
+          "dilution_pct": 0.0,
+          "score": 140.0
+        },
+        {
+          "name": "conservative",
+          "raise_amount": 0,
+          "grants": 0,
+          "equity": 0,
+          "dilution_pct": 0.0,
+          "score": 130.0
+        },
+        {
+          "name": "aggressive",
+          "raise_amount": 0,
+          "grants": 0,
+          "equity": 0,
+          "dilution_pct": 0.0,
+          "score": 130.0
+        }
+      ],
+      "dilution": {
+        "pre_money": 100000,
+        "post_money": 100000,
+        "new_investor_pct": 0.0,
+        "founder_before_pct": 80.0,
+        "founder_after_pct": 72.0,
+        "founder_dilution_pct": 8.0
+      }
+    },
+    "recommendation": "ANALYSIS\n-------------------------------------------------------\nAnalyse d'investissement :\n\nÉtant donné le stade précoce de l'idée et la valorisation pré-money de 100 000 TND, il est recommandé de ne pas procéder à une levée de fonds à ce stade, ce qui maintiendrait la dilution des fondateurs à 8,0 % et leur permettrait de conserver 72,0 % de parts. Cependant, il est crucial de noter que le taux de combustion de 0 TND/mois et les scores d'équipe et de marché de 0,5 soulèvent des inquiétudes quant à la viabilité financière et commerciale de la startup. Il est essentiel de réévaluer ces aspects avant de prendre toute décision d'investissement.\n\nRECOMMANDATION D'INVESTISSEMENT\n=======================================================\nStade        : IDEA\nSecteur      : unknown\nDonnées marché : 0 startups unknown similaires en Tunisie\n\nVALORISATION  (hybrid_dcf)\n  Revenue multiple: 100,000 TND\n  Scorecard      : 100,000 TND\n  >> Final: 100,000 TND (pre-money)\n\nSTRATEGIE OPTIMALE  (OPTIMAL)\n  Levée totale : 0 TND\n  Subventions  : 0 TND  (—)\n  Equity       : 0 TND  (—)\n  Dette        : 0 TND  (—)\n  Post-money   : 100,000 TND\n  Pourquoi: Au stade de l'idée, le scénario de financement sélectionné est optimal car il ne nécessite aucun financement externe (levée de fonds, subventions, equity ou dette), ce qui permet d'éviter toute dilution des parts (0,0 %). Cela réduit le risque pour les fondateurs tout en leur permettant de conserver le contrôle total de leur startup.\n\nDILUTION\n  Avant le tour : 80.0%\n  Après le tour : 72.0%\n  Dilué de      : 8.0%  (incl. 10% option pool)\n\nSUBVENTIONS ELIGIBLES\n  - Startup Act Label: 100,000 TND\n  Total potential: 100,000 TND\n\nPROCHAINES ETAPES\n1. Rejoindre un incubateur (Flat6Labs, Cogite, ou StartupHouse)\n2. Valider votre idée avec 20+ clients potentiels\n3. Postuler à la subvention Smart Capital Pre-Seed (50k TND)\nDATA NOTES\n  The burn rate of 0 TND/month is highly suspicious, as it's unlikely a startup has zero expenses. Additionally, the team score and market score of 0.5 are unusually low, indicating potential issues with the team's capabilities and market viability."
+  },
+  "confidence": 0.8,
+  "metadata": {
+    "priority": "high",
+    "requires_response": false,
+    "tags": [
+      "idea",
+      "unknown"
+    ]
+  }
+}

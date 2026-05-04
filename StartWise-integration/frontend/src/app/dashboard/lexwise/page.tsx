@@ -153,7 +153,11 @@ export default function LexWisePage() {
   }, [ideation]);
 
   useEffect(() => {
-    setMicSupported(!!(window.SpeechRecognition || (window as any).webkitSpeechRecognition));
+    const w = window as Window & {
+      SpeechRecognition?: unknown
+      webkitSpeechRecognition?: unknown
+    }
+    setMicSupported(!!(w.SpeechRecognition || w.webkitSpeechRecognition));
     const pick = () => {
       const all = window.speechSynthesis.getVoices();
       const fr  = all.filter(v => v.lang.startsWith("fr"));

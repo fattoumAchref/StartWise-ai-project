@@ -1,278 +1,287 @@
-# StartWise — Plateforme Multi-Agents IA pour Startups
+# StartWise / FinAgent — Multi-Agent AI Platform for Startups
 
-> Plusieurs agents IA autonomes collaborent pour analyser une startup : viabilité financière, conseil juridique, intelligence marketing, idéation et audit produit — le tout en langage naturel.
+**Keywords:** multi-agent AI, startup viability, financial analysis, investment recommendation, risk scoring, legal compliance Tunisia, marketing intelligence, A2A agent protocol, JSON-RPC, Redis, FastAPI, Django, Next.js, LangGraph, RAG, FAISS, Monte Carlo simulation, Tunisia startups, B2B SaaS, automation, API, ESPRIT TokenFactory, **Esprit School of Engineering**
 
----
-
-## Modules de la plateforme
-
-| Module | Description | Responsable |
-|---|---|---|
-| **CFO Financier** | Analyse financière complète + recommandation investissement | Notre équipe |
-| **Legal Advisor** | Conseil juridique tunisien : création, IP, contrats, conformité | Salim |
-| **Marketing Intelligence** | 5 agents LangGraph : Trend → Vision → Émotion → Créatif → Commercial | Collègues |
-| **Idéation** | Tunnel Q&A ADK → résumé business + logo + image | Collègues |
-| **Product Audit** | Scraping Firecrawl → Gemini embed → Qdrant → rapport concurrentiel | Collègues |
+> Plateforme open source où plusieurs agents IA spécialisés collaborent (bus A2A, tâches JSON-RPC, sessions Redis) pour accompagner une startup : finance, investissement, risque, juridique tunisien, marketing, idéation et audit produit — en langage naturel, avec une UI Next.js guidée par parcours utilisateur.
 
 ---
 
-## Stack Technique
+## Overview
 
-| Couche | Technologie | Port |
-|---|---|---|
-| Frontend | Next.js · React 19 · TypeScript · Tailwind CSS | **3000** |
-| Backend API | Django 5 · Daphne (ASGI) | **8000** |
-| Finance A2A Server | FastAPI · Uvicorn | **8001** |
-| Investment A2A Server | FastAPI · Uvicorn | **8002** |
-| Legal Advisor API | FastAPI · Uvicorn | **8003** |
-| Bus de Communication | FastAPI · Redis pub-sub | **8765** |
-| Question Agent (Idéation) | ADK standalone | **8101** |
-| Research Agent (Idéation) | ADK standalone | **8102** |
-| Formulator Agent (Idéation) | ADK standalone | **8103** |
-| Sessions / État | Redis (pickle) | **6379** |
-| Vectorstore Product Audit + Legal | Qdrant (Docker) | **6333** |
+**StartWise** (dépôt racine **finAgent**) est un projet de recherche et d’ingénierie développé dans le cadre des enseignements et projets à **Esprit School of Engineering** (Tunisie). Il combine :
+
+- un **pipeline financier déterministe** (pas de calcul d’argent par LLM) ;
+- des **agents spécialisés** (investissement, risque, juridique, marketing) reliés par un **bus A2A** et des **serveurs A2A FastAPI** (protocole JSON-RPC de type `tasks/send`) ;
+- un **frontend** (Next.js, App Router) avec parcours progressif (idéation → outils → synthèse marketing / investisseurs).
+
+L’objectif est double : **outil utilisable** par un fondateur, et **base technique** pour des contributeurs (architecture claire, points d’extension documentés).
 
 ---
 
-## Démarrage Rapide
+## Features
 
-### Prérequis
+| Domain | Capabilities |
+|--------|----------------|
+| **Financial viability (CFO)** | Extraction structurée des messages (LLM), validation, KPIs (runway, LTV/CAC, MRR, marge), 3 scénarios × 24 mois, Monte Carlo (probabilité de survie 12 mois), benchmarks sectoriels (RAG / Chroma + recherche web), score de confiance, **diffusion A2A** vers investissement, risque, marketing, juridique. |
+| **Investment agent** | Analyse levée / dilution / valorisation (TND), notation **STRONG_BUY / BUY / HOLD / PASS**, clarifications autonomes si drapeaux rouges, publication `investment.recommendation` sur le bus. Les **conflits inter-agents** signalés par le risque vont dans un message dédié `investment.conflict_stance` (stocké à part) — **pas** comme texte de recommandation principal. |
+| **Risk agent** | **HTTP A2A** (`tasks/send`) : risque global fusionné (Monte Carlo multi-agents, score de conflit, incertitude, RAG **FAISS** sur cas d’échec, scores SQL secteur, risques par domaine marketing / juridique / investissement), liste de conflits, cas similaires, métriques d’ablation et de stabilité. **Adaptateur bus** : consommation d’analyses financières, publication `risk.assessment`, rapports de conflit vers l’investissement. |
+| **Legal advisor (LexWise)** | RAG Qdrant (collections juridiques tunisiennes), Claude + embeddings + reranker, modules création, IP, contrats, levée, conformité — API sous Django (`/legal/`). |
+| **Marketing intelligence** | Chaîne d’agents (LangGraph) : tendance, vision, émotion, créatif, commercial — intégration Django. |
+| **Ideation** | Agents ADK (question, recherche, formulator) — ports 8101–8103. |
+| **Product audit** | Scraping, embeddings, Qdrant, rapport concurrentiel. |
 
-- Python 3.10+, Node.js 18+
-- Redis en cours d'exécution (`redis-server` ou Docker)
-- Docker (pour Qdrant)
-- Accès réseau ESPRIT (pour `tokenfactory.esprit.tn`)
+---
+
+## Tech Stack
+
+### Frontend
+
+- **Next.js** (App Router), **React**, **TypeScript**
+- **Tailwind CSS**, composants UI (sidebar, dashboard)
+- Appels **REST** au backend Django (`/api/cfo/*`, etc.) et **JSON-RPC** direct vers le Risk Agent (port 8003) depuis la page Risque
+- Parcours utilisateur : déverrouillage après idéation (`localStorage`), pages **Viabilité financière**, **Investissement**, **Risque**, **LexWise**, **Go to Market**, **Reach to Investors** (ancre dashboard)
+
+### Backend
+
+- **Django 5** + **Daphne (ASGI)** — API session CFO, marketing, idéation, legal, product audit (**port 8000**)
+- **FastAPI** + **Uvicorn** — serveurs A2A : Finance **8001**, Investment **8002**, Risk **8003**
+- **Redis** — files d’attente `a2a:{agent_id}:inbox`, hash d’état `a2a:{agent_id}:state`, sessions Django (pickle)
+- **PostgreSQL** + SQLAlchemy async (Legal Advisor)
+- **Qdrant** — recherche vectorielle (legal, product audit)
+- **ChromaDB** — benchmarks / documents CFO (selon configuration)
+- **FAISS** + **sentence-transformers** — RAG cas startups échouées (Risk Agent)
+- **SQLite** — scores sectoriels (`riskAgent/data`)
+
+### Other tools & integrations
+
+- **ESPRIT TokenFactory** (`tokenfactory.esprit.tn`) — LLM hébergé (variables `ESPRIT_*`)
+- **Anthropic / OpenAI / Cohere** — selon modules (legal, embeddings, reranking)
+- **Docker** — Redis, Qdrant (voir `start.bat`)
+- **httpx**, **numpy** — bus HTTP, simulations Monte Carlo
+
+---
+
+## Architecture & agent logic
+
+### High-level data flow
+
+```
+Founder UI (Next.js :3000)
+    │  HTTP + session header
+    ▼
+Django (:8000)  →  CFO engine  →  Finance pipeline  →  A2A publish (bus :8765)
+                              │
+                              ├→ FinanceCommAgent (thread)  →  Redis state  →  GET /api/cfo/a2a/state
+                              │
+                              └→ Inboxes: investment_agent, risk_agent, legal_agent, marketing_agent …
+                                      │
+                                      ▼
+                              FastAPI A2A servers (:8001 / :8002 / :8003)  ←  JSON-RPC tasks/*
+```
+
+### CFO / Finance agent (`finagents/finance/`)
+
+1. **Parser (LLM)** : extrait burn, MRR, churn, secteur, etc. depuis le texte fondateur.
+2. **Validateur** : qualité des données, champs manquants.
+3. **Pipeline déterministe** (ordre logique) : `validate_inputs` → `calculate_kpis` → `route_by_phase` → `scenario_projection` → `monte_carlo` → `seasonality_trend` → `scenario_comparator` → **confidence** puis **message A2A** vers le bus.
+4. **Décision** : aucun KPI monétaire n’est « inventé » par le LLM ; les scénarios et la survie Monte Carlo sont **reproductibles**.
+
+### Finance communication agent (`FinanceCommAgent`, `bus_publisher.py`)
+
+- **Classification d’intent** sur le type de message (`recommendation`, `clarification_request`, `assessment`, `error`, `conflict_stance`, …) puis dispatch.
+- **Stockage générique** : `{sender_id}_recommendation`, `{sender_id}_rating`, etc.
+- **Clés legacy** pour l’UI : `investment_rating`, `investment_recommendation`, `risk_level`, …
+- **Messages `investment.conflict_stance`** : détectés explicitement (et par heuristique sur le contenu) ; seuls `investment_conflict_stance*` sont mis à jour — **les champs de verdict d’investissement ne sont pas écrasés** par le texte de conflit.
+
+### Investment agent (`finagents/investment/`)
+
+- **Engagement** : le bus adapter peut refuser d’analyser si le payload financier est vide (LLM d’engagement + garde-fous).
+- **Rounds** : analyse financière → éventuellement **clarification** (`investment.clarification_request`) → réponse → **`investment.recommendation`** avec données structurées (valorisation, scénario optimal, dilution).
+- **Conflits (risk)** : sur `risk.conflict_report`, publication d’un **`investment.conflict_stance`** (note dans `payload.data.note`) — information pour la page **Risque** et l’état session, distincte de la recommandation.
+
+### Risk agent (`StartWise-integration/backend/riskAgent/`)
+
+- **Entrée A2A** : `tasks/send` avec `description`, `sector`, `country`, optionnellement `agent_outputs` (claims multi-agents).
+- **Signaux fusionnés** : Monte Carlo (tirages multi-agents), score de conflit, incertitude, RAG, SQL secteur, risques marketing / juridique / investissement → **fusion pondérée** par confiance.
+- **Métriques** : variance de stabilité (`STABILITY_RUNS`), ablation leave-one-out, densité de conflits, liste de conflits (LLM + règles si ≥ 2 agents).
+
+### Legal, marketing, ideation, product audit
+
+- **Legal** : pipeline RAG (reformulation → retrieval Qdrant → rerank Cohere → génération Claude), intégré Django.
+- **Marketing** : graphe multi-nœuds (LangGraph), résultats agrégés côté dashboard marketing.
+- **Ideation** : pipeline ADK multi-services.
+- **Product audit** : enrichissement données + Qdrant + rapport.
+
+---
+
+## Communication & A2A protocol
+
+### Message bus (HTTP + Redis fallback)
+
+| Operation | Description |
+|-----------|-------------|
+| `POST /publish` | Publie un message JSON vers les `to: [agent_id, …]` (HTTP vers `A2A_BUS_URL`, ou LPUSH Redis sur `a2a:{id}:inbox`). |
+| `POST /inbox/{agent_id}/pop` | Consommation (tests / debug). |
+| `GET /health` | Santé du bus. |
+
+Chaque agent **écoute** sa file Redis ; le **FinanceCommAgent** (côté Django) met à jour le **hash d’état** partagé lu par `GET /api/cfo/a2a/state`.
+
+### JSON-RPC 2.0 (Finance, Investment, Risk servers)
+
+Méthodes supportées (schéma commun) :
+
+- **`tasks/send`** — crée ou continue une tâche (`input-required` pour clarifications finance).
+- **`tasks/get`**, **`tasks/cancel`**, **`tasks/sendSubscribe`** — suivi / annulation / streaming selon implémentation.
+
+Exemple minimal (Risk) :
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "uuid",
+  "method": "tasks/send",
+  "params": {
+    "id": "task-uuid",
+    "message": {
+      "role": "user",
+      "parts": [{ "type": "data", "data": { "description": "…", "sector": "SaaS", "country": "Tunisia", "agent_outputs": [] } }]
+    }
+  }
+}
+```
+
+Réponse : tâche avec `artifacts` (ex. `risk_report` en `DataPart`).
+
+Documentation complémentaire : [`docs/a2a_integration_guide.md`](docs/a2a_integration_guide.md), [`CLAUDE.md`](CLAUDE.md).
+
+---
+
+## UI / UX & user guidance
+
+- **Parcours** : idéation complétée (`startwise_summary`) ou bouton **Unlock all tools** → accès Product Audit, Finance, Investment, Risk, LexWise, Go to Market, **Reach to Investors** (lien vers `/dashboard#reach-investors`).
+- **CFO** : conversation, graphiques, benchmarks, état A2A (polling / WebSocket selon build).
+- **Investment** : panneau **A2APanel** — affiche la **recommandation** et les chiffres (valorisation, scénario) ; les alertes de conflit détaillées sont orientées vers la **page Risque**.
+- **Risk** : formulaire description + secteur + pays, analyse JSON-RPC, cartes diagnostics (fusion, ablation, RAG, conflits), aperçu session live (`getA2AState`).
+- **Accessibilité** : libellés français pour les cotes (ex. « Favorable »), mode expert possible sur certains composants.
+
+---
+
+## Evaluation metrics (résumé)
+
+| Zone | Métrique / usage |
+|------|------------------|
+| **Finance** | KPIs explicites, probabilité survie 12 mois (Monte Carlo), score de **confiance** pondéré (cohérence données, benchmarks, scénarios). |
+| **Investment** | `confidence_score` → notation STRONG_BUY … PASS ; scénarios et dilution cohérents avec les entrées. |
+| **Risk** | `global_risk` (fusion), intervalle de confiance Monte Carlo sur taux d’échec simulé, `conflict_score`, `uncertainty`, scores RAG / secteur / par agent, **stabilité** (variance des fusions resamplées), **ablation** (sensibilité par signal retiré). |
+| **Legal** | Score conformité, traçabilité des sources (JORT, INNORPI, etc.). |
+| **Qualité produit** | Tests manuels par parcours ; bus `GET /health` ; endpoints `/health` des serveurs A2A. |
+
+---
+
+## Directory structure (indicative)
+
+```
+finAgent/
+├── start.bat                    # Windows: bus, agents A2A, Django, Next.js
+├── .env.example
+├── requirements-agents.txt      # Python agents (racine venv)
+├── a2a_bus/                     # FastAPI bus :8765
+├── finagents/
+│   ├── finance/                 # FinanceAgent, pipeline, a2a_server :8001, bus_publisher
+│   └── investment/              # InvestmentAgent, bus_adapter, a2a_server :8002
+├── backend/                     # Django (racine legacy) — marketing, ideation, cfo si présent
+├── chroma_db/                   # Persistance Chroma (si utilisée)
+├── docs/
+├── StartWise-integration/
+│   ├── frontend/                # Next.js :3000 (dashboard, risk, investment, lexwise, …)
+│   └── backend/
+│       ├── riskAgent/           # Risk A2A :8003, RAG FAISS, SQL sectoriel
+│       ├── legal_advisor/
+│       ├── cfo/                 # Vues API CFO, session Redis, WebSocket A2A
+│       ├── ideation/
+│       ├── agents/              # Marketing LangGraph
+│       └── finagents/           # Copie / import finance-investment alignée déploiement
+└── README.md
+```
+
+---
+
+## Getting started
+
+### Prerequisites
+
+- **Python 3.10+**, **Node.js 18+**
+- **Redis** (Docker recommandé, voir `start.bat`)
+- **Docker** pour **Qdrant** (Legal + Product audit)
+- Accès réseau **Esprit School of Engineering** / **TokenFactory** si utilisation des LLM ESPRIT
 
 ### Installation
 
 ```bash
-# 1. Dépendances Python agents (Finance + Investment)
 pip install -r requirements-agents.txt
-
-# 2. Dépendances Django backend
 pip install -r backend/requirements-base.txt
-
-# 3. Dépendances Legal Advisor
 pip install -r StartWise-integration/backend/requirements.txt
 
-# 4. Base de données Django
-cd backend && python manage.py migrate && cd ..
-
-# 5. Dépendances frontend
-cd frontend && npm install && cd ..
+cd StartWise-integration/backend && python manage.py migrate
+cd StartWise-integration/frontend && npm install
 ```
 
-### Configuration `.env` (à la racine du projet)
+Copier **`.env.example`** → **`.env`** (racine). Variables typiques : `ESPRIT_API_KEY`, `ESPRIT_BASE_URL`, `A2A_BUS_URL`, `INVESTMENT_AGENT_URL`, `RISK_AGENT_URL`, clés Legal (Anthropic, Cohere, OpenAI) selon modules.
 
-Copier `.env.example` → `.env` et remplir les clés. Variables obligatoires :
+### Usage (Windows)
 
-```env
-# LLM principal
-ESPRIT_API_KEY=sk-...
-ESPRIT_BASE_URL=https://tokenfactory.esprit.tn/api
+À la racine du dépôt :
 
-# Agent légal
-ANTHROPIC_API_KEY=sk-ant-...
-COHERE_API_KEY=...
-
-# Communication inter-agents
-A2A_BUS_URL=http://localhost:8765
-
-# Idéation
-OPENAI_API_KEY=sk-...
+```bat
+start.bat
 ```
 
-### Lancement
+Puis ouvrir **http://localhost:3000** (frontend), **http://localhost:8000** (Django API, Legal sous `/legal/`).
+
+| Service | Port |
+|---------|------|
+| Next.js frontend | **3000** |
+| Django (CFO API, Legal, marketing, …) | **8000** |
+| Finance A2A (FastAPI) | **8001** |
+| Investment A2A (FastAPI) | **8002** |
+| Risk A2A (FastAPI) | **8003** |
+| A2A bus | **8765** |
+| Redis | **6379** |
+| Qdrant | **6333** |
+| Ideation ADK agents | **8101–8103** |
+
+### Quick A2A checks
 
 ```bash
-start.bat    # lance tous les processus → ouvrir http://localhost:3000
+curl http://localhost:8765/health
+curl http://localhost:8003/health
+curl http://localhost:8000/api/cfo/a2a/state   # avec en-tête session si requis
 ```
 
 ---
 
-## Module CFO — Viabilité Financière
+## Design choices (why)
 
-Un fondateur décrit sa startup :
-
-> *"SaaS B2B, 12 clients à 800 TND/mois, churn 2%, burn rate 5 000 TND/mois, trésorerie 45 000 TND."*
-
-Le système répond avec :
-
-- KPIs calculés (runway, LTV/CAC, gross margin, MRR)
-- 3 scénarios de projection × 24 mois (pessimiste / réaliste / optimiste)
-- Simulation Monte Carlo (probabilité de survie 12 mois sur 1 000 tirages)
-- Prévision de saisonnalité sectorielle (calendrier MENA)
-- Benchmarks sectoriels (RAG ChromaDB + Tavily)
-- Recommandation investissement : **STRONG_BUY / BUY / HOLD / PASS** + valorisation + dilution
-
-### Architecture CFO
-
-```
-Fondateur
-    │ POST /api/cfo/chat
-    ▼
-Django :8000 → parser (LLM) → validator → pipeline → benchmarks → confidence
-                                                                         │
-                                                               broadcast A2A bus
-                                                               ┌─────────┴─────────┐
-                                                     Finance :8001       Investment :8002
-                                                                         Legal :8003
-```
-
-### Pipeline déterministe (zéro LLM pour les calculs)
-
-| Étape | Ce qu'il calcule |
-|---|---|
-| `validate_inputs` | Qualité des données, champs manquants |
-| `calculate_kpis` | Runway, LTV, CAC, Gross Margin, MRR |
-| `route_by_phase` | SEED / TRACTION / FUNDRAISING |
-| `scenario_projection` | 3 scénarios × 24 mois |
-| `monte_carlo` | P10/P50/P90, probabilité survie 12m |
-| `seasonality_trend` | Saisonnalité + calendrier MENA |
-| `scenario_comparator` | vs benchmarks sectoriels |
-| `confidence + A2A` | Score pondéré + broadcast |
-
-### Endpoints CFO
-
-| Méthode | URL | Description |
-|---|---|---|
-| `POST` | `/api/cfo/chat` | Message fondateur |
-| `GET` | `/api/cfo/state` | État session |
-| `GET` | `/api/cfo/a2a/state` | Résultats agents spécialistes |
-| `POST` | `/api/cfo/whatif` | Simulation hypothétique |
-| `POST` | `/api/cfo/pdf` | Export PDF |
-| `POST` | `/api/cfo/upload` | Upload PDF/CSV |
-| `DELETE` | `/api/cfo/reset` | Reset session |
+| Choice | Rationale |
+|--------|-----------|
+| **Deterministic financial core** | Éviter les hallucinations sur runway, MRR ou marges — le LLM structure et explique, les calculs sont code + données. |
+| **A2A bus + dedicated state** | Découplage des agents ; ajout d’un consommateur = configuration + inbox, sans refonte monolithique. |
+| **Redis + pickle sessions** | Persistance rapide des objets Python (`FinancialContext`, …) pour le CFO Django. |
+| **Separate conflict channel** | Cohérence UX : la **recommandation investissement** reste la sortie métier ; les **conflits** sont portés par le **Risk** et des champs session dédiés. |
+| **Dual risk path** | Bus pour signaux temps réel ; **HTTP A2A** pour rapport complet interactif depuis l’UI. |
 
 ---
 
-## Module Legal Advisor — Conseil Juridique Tunisien
+## Acknowledgments
 
-**Fichiers :** `StartWise-integration/backend/legal_advisor/`
+Ce projet est réalisé dans le cadre des cours et projets de **software engineering**, **intelligence artificielle** et systèmes distribués à **[Esprit School of Engineering](https://esprit.tn)** (Tunisie), avec contributions d’équipes sur les modules marketing, idéation, audit produit et agent légal, et développement cœur CFO / A2A / risk / intégration StartWise.
 
-Conseiller juridique intelligent pour startups tunisiennes. Aucune connaissance juridique préalable requise.
-
-| Module | Ce qu'il fait |
-|---|---|
-| **Création** | Choisit la forme juridique (SARL/SA/SUARL), génère les statuts et la checklist RNE |
-| **Protection IP** | Vérifie disponibilité d'une marque à l'INNORPI (similarité phonétique), audite les licences logicielles |
-| **Contrats** | Génère CDI, CDD, NDA, Prestation, Pacte d'actionnaires — détecte les clauses dangereuses |
-| **Levée de fonds** | Explique BSA Air / Convertible / Equity, calcule la dilution, traduit un term sheet |
-| **Conformité** | Score 0–100, alertes INPDP/CNSS/TVA/Travail, calendrier des échéances |
-
-### Stack technique Legal Agent
-
-- **LLM :** Claude Sonnet 4.6 (Anthropic)
-- **Embeddings :** text-embedding-3-large (OpenAI)
-- **Reranker :** rerank-multilingual-v3.0 (Cohere)
-- **Vector Store :** Qdrant (6 collections)
-- **Base de données :** PostgreSQL + SQLAlchemy async
-- **API :** FastAPI :8003
-
-### Workflow RAG Légal
-
-```
-Question fondateur
-    │
-    ▼ [Reformulateur] Claude décompose en N sous-requêtes Qdrant
-    │
-    ▼ [Retriever — parallèle] embed → search top-20 par collection
-    │
-    ▼ [Reranker Cohere] top-20 → top-5, pénalité textes abrogés
-    │
-    ▼ [Générateur Claude] prompt = chunks + sources + contexte
-    │
-    Réponse structurée : base légale + action recommandée + ⚖️ avocat si besoin
-```
-
-### Communication A2A avec le Legal Agent
-
-Le Legal Agent reçoit les analyses financières du CFO via le bus A2A. Son inbox :
-
-```
-a2a:legal_agent:inbox   (bus: http://localhost:8765)
-```
-
-Pour envoyer une analyse vers le Legal Agent, le CFO inclut `"legal_agent"` dans le champ `to`.
-
-### Sources légales
-
-| Source | Données | Fréquence |
-|---|---|---|
-| JORT (legislation.tn) | Lois, décrets, arrêtés | Quotidienne |
-| INNORPI | Marques déposées classes Nice 1–45 | Hebdomadaire |
-| DGI | Taux TVA, IS, IRPP | Annuelle (après loi de finances) |
-| CNSS | Taux cotisations | Annuelle |
-| SPDX | Licences logicielles | Trimestrielle |
+Pour contribuer : respecter la structure des dossiers, documenter les nouveaux types de messages A2A, et lancer les tests / health checks des services avant une PR.
 
 ---
 
-## Protocole A2A — Communication Inter-Agents
+## See also
 
-Le bus A2A est un routeur HTTP/Redis. Chaque agent a sa propre inbox. Pour intégrer un nouvel agent, voir [docs/a2a_integration_guide.md](docs/a2a_integration_guide.md).
-
-```
-Publication  : POST /publish  { "to": ["finance_agent", "legal_agent", ...] }
-Réception    : POST /inbox/{agent_id}/pop
-Bus health   : GET  /health
-```
-
-| Agent ID | Port | Inbox Redis |
-|---|---|---|
-| `finance_agent` | 8001 | `a2a:finance_agent:inbox` |
-| `investment_agent` | 8002 | `a2a:investment_agent:inbox` |
-| `legal_agent` | 8003 | `a2a:legal_agent:inbox` |
-
----
-
-## Structure des Fichiers
-
-```
-finAgent/
-│
-├── backend/                          Django REST API
-│   ├── cfo/                          Module CFO (notre équipe)
-│   ├── agents/                       Marketing LangGraph (collègues)
-│   ├── ideation/                     Idéation ADK (collègues)
-│   └── product_audit/                Product Audit (collègues)
-│
-├── StartWise-integration/            Intégration Agent Légal (Salim)
-│   └── backend/
-│       ├── legal_advisor/            Agent légal Django app
-│       │   ├── modules/              Création · IP · Contrats · Levée · Conformité
-│       │   ├── rag/                  Pipeline RAG (reformulateur → retriever → reranker → générateur)
-│       │   └── scrapers/             JORT · INNORPI · DGI · CNSS · SPDX
-│       └── finagents/                Copie intégrée Finance + Investment
-│
-├── finagents/                        NOS agents autonomes
-│   ├── finance/                      FinanceAgent + pipeline 8 étapes
-│   └── investment/                   InvestmentAgent + pipeline 7 étapes
-│
-├── frontend/src/
-│   ├── app/dashboard/
-│   │   ├── viability-assessment/     Page CFO (notre équipe)
-│   │   └── lexwise/                  Page Legal Advisor (Salim)
-│   └── components/cfo/               Charts · KPICards · A2APanel
-│
-├── a2a_bus/                          Bus FastAPI + Redis :8765
-├── docs/                             Guides d'intégration
-├── .env.example                      Template variables d'environnement
-├── start.bat                         Lance tous les processus
-└── CLAUDE.md                         Référence architecture complète
-```
-
----
-
-## Choix de Design
-
-**Pourquoi le LLM ne calcule-t-il jamais les KPIs ?**
-Un LLM peut halluciner 5% d'erreur sur un runway — inacceptable pour des décisions financières. Le pipeline déterministe garantit des chiffres reproductibles.
-
-**Pourquoi A2A et pas des appels directs ?**
-Les appels directs créent du couplage fort. Avec A2A, chaque agent est indépendant. Ajouter un agent = une env var, zéro modification de code.
-
-**Pourquoi Redis + pickle pour les sessions ?**
-Les dataclasses Python (`FinancialContext`, `KPIResult`) sont préservées telles quelles — zéro mapping ORM, TTL 24h.
-
-**Limites du Legal Advisor**
-Les documents générés (statuts, pacte d'actionnaires) doivent être validés par un avocat avant toute signature. L'agent ne représente pas les parties devant les tribunaux.
+- [`docs/a2a_integration_guide.md`](docs/a2a_integration_guide.md) — intégration d’un nouvel agent A2A  
+- [`CLAUDE.md`](CLAUDE.md) — notes d’architecture détaillées  
+- [`StartWise-integration/backend/cfo/README.md`](StartWise-integration/backend/cfo/README.md) — module CFO Django  

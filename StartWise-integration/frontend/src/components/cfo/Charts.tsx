@@ -1,8 +1,10 @@
 'use client'
 import dynamic from 'next/dynamic'
+import type { ComponentType } from 'react'
 import type { Scenarios, MonteCarloResult, SeasonalityResult, Benchmark, BenchmarkExtra, KPIs } from '@/lib/types'
 
-const Plot = dynamic(() => import('react-plotly.js'), { ssr: false })
+/** dynamic() drops Plotly prop types — widen so `data` / `layout` typecheck */
+const Plot = dynamic(() => import('react-plotly.js'), { ssr: false }) as ComponentType<Record<string, unknown>>
 
 const MONTH_NAMES = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc']
 const fmt = (v?: number | null) => v != null ? v.toLocaleString('fr-FR', { maximumFractionDigits: 0 }) : '—'

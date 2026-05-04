@@ -227,7 +227,6 @@ class InvestmentBusAdapter(CommAgent):
                     "confidence_reduced": True,
                     "note":               note,
                 },
-                "recommendation": note,
             },
             "confidence": 0.40,   # deliberately lower — conflicts present
             "metadata": {

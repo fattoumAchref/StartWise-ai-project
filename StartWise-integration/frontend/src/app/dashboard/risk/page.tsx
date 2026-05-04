@@ -1,5 +1,6 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
+import type { LucideIcon } from 'lucide-react'
 import {
   TriangleAlert, ShieldAlert, ShieldCheck, ShieldQuestion,
   Loader2, Search, Building2, Globe, AlertTriangle, Users,
@@ -42,7 +43,23 @@ function riskLevel(score: number): { label: string; color: string; bg: string; b
 
 function pct(v: number) { return `${Math.round(v * 100)}%` }
 
-function RiskBar({ label, value, icon: Icon }: { label: string; value: number; icon: React.ElementType }) {
+function parseRiskDetailLines(raw: unknown): string[] {
+  if (raw == null || raw === '') return []
+  if (Array.isArray(raw)) {
+    return raw.map((x) => (typeof x === 'string' ? x : JSON.stringify(x)))
+  }
+  if (typeof raw !== 'string') return []
+  try {
+    const j = JSON.parse(raw)
+    if (Array.isArray(j)) return j.map((x: unknown) => (typeof x === 'string' ? x : JSON.stringify(x)))
+    if (j && typeof j === 'object' && Array.isArray((j as { risks?: unknown[] }).risks)) {
+      return ((j as { risks: unknown[] }).risks).map((x) => (typeof x === 'string' ? x : JSON.stringify(x)))
+    }
+  } catch { /* not JSON */ }
+  return raw.split(/\n+/).map((s) => s.trim()).filter(Boolean)
+}
+
+function RiskBar({ label, value, icon: Icon }: { label: string; value: number; icon: LucideIcon }) {
   const lv = riskLevel(value)
   return (
     <div style={{ marginBottom: '0.75rem' }}>
@@ -71,8 +88,8 @@ export default function RiskPage() {
   const [result,   setResult]   = useState<RiskPayload | null>(null)
   const [error,    setError]    = useState<string | null>(null)
 
-  // ── A2A secondary state (finance-triggered) ──
-  const [a2aRisk, setA2aRisk] = useState<any>(null)
+  // ── A2A session snapshot (finance bus — risk signal + optional stance text) ──
+  const [a2aSnap, setA2aSnap] = useState<Record<string, unknown> | null>(null)
 
   // Pre-fill from ideation localStorage
   useEffect(() => {
@@ -94,11 +111,17 @@ export default function RiskPage() {
     } catch { /* ignore */ }
   }, [])
 
-  // Background A2A poll (secondary data, non-blocking)
   useEffect(() => {
-    getA2AState().then(data => {
-      if (data?.risk_level) setA2aRisk(data)
-    }).catch(() => {})
+    const tick = () => {
+      getA2AState()
+        .then((data: unknown) => {
+          if (data && typeof data === 'object') setA2aSnap(data as Record<string, unknown>)
+        })
+        .catch(() => {})
+    }
+    tick()
+    const id = setInterval(tick, 8000)
+    return () => clearInterval(id)
   }, [])
 
   // ── Run analysis ──
@@ -138,7 +161,10 @@ export default function RiskPage() {
       const json = await resp.json()
 
       if (json.error) {
-        setError(json.error.message || 'Risk agent returned an error')
+        const msg = json.error && typeof json.error === 'object' && 'message' in json.error
+          ? String((json.error as { message?: unknown }).message ?? '')
+          : ''
+        setError(msg || 'Risk agent returned an error')
         return
       }
 
@@ -146,7 +172,7 @@ export default function RiskPage() {
       const taskResult = json.result
       if (taskResult?.status?.state === 'failed') {
         const errPart = taskResult?.artifacts?.[0]?.parts?.[0]
-        setError(errPart?.text || 'Risk agent failed')
+        setError(errPart?.text != null ? String(errPart.text) : 'Risk agent failed')
         return
       }
 
@@ -154,7 +180,7 @@ export default function RiskPage() {
       if (!artifacts?.length) { setError('No artifacts returned'); return }
 
       const part = artifacts[0]?.parts?.[0]
-      if (!part?.data && part?.text) { setError(part.text); return }
+      if (!part?.data && part?.text) { setError(String(part.text)); return }
       const payload: RiskPayload = part?.data
       setResult(payload)
     } catch (e: any) {
@@ -167,6 +193,11 @@ export default function RiskPage() {
   // ─── Render ───────────────────────────────────────────────────────────────
 
   const lv = result ? riskLevel(result.global_risk) : null
+
+  const hasA2aSnapshot = Boolean(
+    a2aSnap
+    && (a2aSnap.risk_level || a2aSnap.conflict_type || a2aSnap.conflict_message || a2aSnap.investment_conflict_stance),
+  )
 
   return (
     <div style={{ padding: '2rem', maxWidth: 900, margin: '0 auto' }}>
@@ -363,6 +394,70 @@ export default function RiskPage() {
             </div>
           </div>
 
+          {/* Deeper diagnostics */}
+          <div style={{
+            border: '1.5px solid var(--border,#e5e7eb)', borderRadius: 12,
+            padding: '1.1rem 1.25rem', marginBottom: '1.25rem',
+            background: 'var(--card,#fff)',
+          }}>
+            <p style={{ margin: '0 0 0.85rem', fontSize: '0.78rem', fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              Model diagnostics
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem 1.25rem', fontSize: '0.8rem' }}>
+              <div>
+                <span style={{ color: '#9ca3af', display: 'block', fontSize: '0.72rem' }}>Cross-agent conflict score</span>
+                <span style={{ fontWeight: 700, color: riskLevel(result.conflict_score).color }}>{pct(result.conflict_score)}</span>
+              </div>
+              <div>
+                <span style={{ color: '#9ca3af', display: 'block', fontSize: '0.72rem' }}>Conflict density</span>
+                <span style={{ fontWeight: 700 }}>{pct(result.metrics.conflict_density)}</span>
+                <span style={{ color: '#9ca3af', fontSize: '0.68rem', marginLeft: 6 }}>vs. agent count</span>
+              </div>
+              <div>
+                <span style={{ color: '#9ca3af', display: 'block', fontSize: '0.72rem' }}>Fusion stability (σ²)</span>
+                <span style={{ fontWeight: 700 }}>{result.metrics.stability.toFixed(5)}</span>
+                <span style={{ color: '#9ca3af', fontSize: '0.68rem', display: 'block', marginTop: 2 }}>Lower = more robust global score</span>
+              </div>
+              <div>
+                <span style={{ color: '#9ca3af', display: 'block', fontSize: '0.72rem' }}>RAG confidence</span>
+                <span style={{ fontWeight: 700 }}>{pct(result.rag.confidence)}</span>
+              </div>
+              <div>
+                <span style={{ color: '#9ca3af', display: 'block', fontSize: '0.72rem' }}>Monte Carlo band tightness</span>
+                <span style={{ fontWeight: 700 }}>{pct(result.monte_carlo.conf)}</span>
+                <span style={{ color: '#9ca3af', fontSize: '0.68rem', display: 'block', marginTop: 2 }}>Higher = narrower 95% CI on failure rate</span>
+              </div>
+            </div>
+
+            {Array.isArray(result.metrics.ablation) && result.metrics.signal_labels?.length > 0 && (
+              <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border,#e5e7eb)' }}>
+                <p style={{ margin: '0 0 0.5rem', fontSize: '0.72rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Leave-one-out fusion (each row = fused global risk if that signal is removed)
+                </p>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', fontSize: '0.78rem', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ textAlign: 'left', color: '#9ca3af' }}>
+                        <th style={{ padding: '0.35rem 0.5rem', borderBottom: '1px solid var(--border,#e5e7eb)' }}>Signal</th>
+                        <th style={{ padding: '0.35rem 0.5rem', borderBottom: '1px solid var(--border,#e5e7eb)' }}>Fused risk without it</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {result.metrics.signal_labels.map((label, i) => (
+                        <tr key={`${label}-${i}`}>
+                          <td style={{ padding: '0.35rem 0.5rem', borderBottom: '1px solid var(--muted,#f3f4f6)', fontWeight: 500 }}>{label}</td>
+                          <td style={{ padding: '0.35rem 0.5rem', borderBottom: '1px solid var(--muted,#f3f4f6)', fontWeight: 700, color: riskLevel(result.metrics.ablation[i] ?? 0).color }}>
+                            {result.metrics.ablation[i] != null ? pct(result.metrics.ablation[i]!) : '—'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Similar failed startups (RAG) */}
           {(result.rag.similar_cases?.length ?? 0) > 0 && (
             <div style={{
@@ -425,6 +520,14 @@ export default function RiskPage() {
                           Funding: {c.funding}
                         </div>
                       )}
+                      {c.description && (
+                        <p style={{
+                          margin: '0.45rem 0 0', fontSize: '0.78rem', color: '#4b5563', lineHeight: 1.55,
+                          display: '-webkit-box', WebkitLineClamp: 5, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                        } as CSSProperties}>
+                          {c.description}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -469,29 +572,62 @@ export default function RiskPage() {
         </>
       )}
 
-      {/* Secondary: A2A finance-triggered risk data */}
-      {a2aRisk?.risk_level && (
+      {/* Session snapshot from finance A2A bus (complements task run above) */}
+      {hasA2aSnapshot && a2aSnap && (
         <div style={{
           border: '1.5px dashed var(--border,#e5e7eb)', borderRadius: 12,
           padding: '1rem 1.25rem', marginTop: result ? '1rem' : 0,
           background: 'var(--muted,#f9fafb)',
         }}>
-          <p style={{ margin: '0 0 0.5rem', fontSize: '0.75rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            Finance Agent Risk Signal
+          <p style={{ margin: '0 0 0.65rem', fontSize: '0.75rem', fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            Live session — risk & alignment signals
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          {Boolean(a2aSnap.risk_level) && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
             <span style={{
               fontSize: '0.9rem', fontWeight: 700,
-              color: riskLevel(parseFloat(a2aRisk.risk_score || '0.5') / 10).color,
+              color: riskLevel(parseFloat(String(a2aSnap.risk_score || '0.5')) / 10).color,
             }}>
-              {a2aRisk.risk_level}
+              {String(a2aSnap.risk_level)}
             </span>
-            {a2aRisk.risk_score && (
+            {a2aSnap.risk_score != null && a2aSnap.risk_score !== '' && (
               <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>
-                Score {parseFloat(a2aRisk.risk_score).toFixed(1)} / 10
+                Score {parseFloat(String(a2aSnap.risk_score)).toFixed(1)} / 10
+              </span>
+            )}
+            {a2aSnap.risk_confidence != null && a2aSnap.risk_confidence !== '' && (
+              <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                Confidence {String(a2aSnap.risk_confidence)}
               </span>
             )}
           </div>
+          )}
+          {parseRiskDetailLines(a2aSnap.risk_details).length > 0 && (
+            <ul style={{ margin: '0.5rem 0 0', paddingLeft: '1.1rem', fontSize: '0.78rem', color: '#4b5563', lineHeight: 1.55 }}>
+              {parseRiskDetailLines(a2aSnap.risk_details).slice(0, 12).map((line, i) => (
+                <li key={i}>{line}</li>
+              ))}
+            </ul>
+          )}
+          {(Boolean(a2aSnap.conflict_type) || Boolean(a2aSnap.conflict_message)) && (
+            <div style={{
+              marginTop: '0.75rem', padding: '0.65rem 0.85rem', borderRadius: 8,
+              background: '#fffbeb', border: '1px solid #fde68a', fontSize: '0.8rem', color: '#92400e',
+            }}>
+              <strong style={{ display: 'block', marginBottom: 4 }}>Cross-agent note (session)</strong>
+              {Boolean(a2aSnap.conflict_type) && <span style={{ fontWeight: 600 }}>{String(a2aSnap.conflict_type)}</span>}
+              {Boolean(a2aSnap.conflict_message) && (
+                <p style={{ margin: '0.25rem 0 0', fontWeight: 400 }}>{String(a2aSnap.conflict_message)}</p>
+              )}
+            </div>
+          )}
+          {Boolean(a2aSnap.investment_conflict_stance) && (
+            <div style={{ marginTop: '0.65rem', fontSize: '0.76rem', color: '#6b7280' }}>
+              <span style={{ fontWeight: 600, color: '#92400e' }}>Investment stance after conflicts: </span>
+              {String(a2aSnap.investment_conflict_stance).slice(0, 400)}
+              {String(a2aSnap.investment_conflict_stance).length > 400 ? '…' : ''}
+            </div>
+          )}
         </div>
       )}
 

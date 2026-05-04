@@ -1,8 +1,8 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { AppProvider } from './context/AppContext'
-import Dashboard from './pages/Dashboard'
-import AgentPage from './pages/AgentPage'
+import Dashboard from './marketing/Dashboard'
+import AgentPage from './marketing/AgentPage'
 import SecurityToast from './components/SecurityToast'
 
 function App() {

@@ -1,0 +1,79 @@
+{
+  "message_id": "c2f27cb0-2547-45d2-9346-dc6cd14eeb7e",
+  "type": "investment.recommendation",
+  "from": "InvestmentAgent",
+  "to": [
+    "Orchestrator"
+  ],
+  "timestamp": "2026-05-04T00:13:50.576396Z",
+  "context": {
+    "project_id": "60e12f9c-537d-4d2f-839e-eabf385386e7",
+    "session_id": "2026-05-04T00:13:50.545434"
+  },
+  "payload": {
+    "data": {
+      "valuation": {
+        "revenue_multiple": 100000,
+        "dcf": 200000,
+        "scorecard": 100000,
+        "final_valuation": 100000,
+        "method": "hybrid_dcf"
+      },
+      "optimal_scenario": {
+        "name": "optimal",
+        "raise_amount": 0,
+        "grants": 0,
+        "equity": 0,
+        "debt": 0,
+        "dilution_pct": 0.0,
+        "post_money": 100000,
+        "score": 140.0,
+        "rationale": "Le scénario de financement sélectionné est optimal pour ce stade de startup car il ne nécessite aucun financement externe, ce qui permet d'éviter la dilution des parts et de maintenir le contrôle total de l'entreprise. De plus, l'absence de dette et de subventions réduit le risque financier et permet de se concentrer sur le développement de l'idée sans pression externe."
+      },
+      "all_scenarios": [
+        {
+          "name": "optimal",
+          "raise_amount": 0,
+          "grants": 0,
+          "equity": 0,
+          "dilution_pct": 0.0,
+          "score": 140.0
+        },
+        {
+          "name": "conservative",
+          "raise_amount": 0,
+          "grants": 0,
+          "equity": 0,
+          "dilution_pct": 0.0,
+          "score": 130.0
+        },
+        {
+          "name": "aggressive",
+          "raise_amount": 0,
+          "grants": 0,
+          "equity": 0,
+          "dilution_pct": 0.0,
+          "score": 130.0
+        }
+      ],
+      "dilution": {
+        "pre_money": 100000,
+        "post_money": 100000,
+        "new_investor_pct": 0.0,
+        "founder_before_pct": 80.0,
+        "founder_after_pct": 72.0,
+        "founder_dilution_pct": 8.0
+      }
+    },
+    "recommendation": "ANALYSIS\n-------------------------------------------------------\nAnalyse d'investissement :\n\nÉtant donné le stade précoce de l'idée et l'absence de secteur d'activité clairement défini, il est recommandé de ne pas procéder à une levée de fonds pour le moment, ce qui maintiendrait la valorisation pré-money à 100 000 TND. Cette approche permettrait d'éviter une dilution des parts des fondateurs, qui resteraient à 72,0 % après la levée de fonds, et de conserver le contrôle total de l'entreprise. Cependant, il est important de noter que le taux de brûlage de trésorerie de 0 TND par mois est inhabituellement bas et pourrait indiquer une erreur ou une hypothèse irréaliste, nécessitant une réévaluation des prévisions financières.\n\nRECOMMANDATION D'INVESTISSEMENT\n=======================================================\nStade        : IDEA\nSecteur      : unknown\nDonnées marché : 0 startups unknown similaires en Tunisie\n\nVALORISATION  (hybrid_dcf)\n  Revenue multiple: 100,000 TND\n  Scorecard      : 100,000 TND\n  >> Final: 100,000 TND (pre-money)\n\nSTRATEGIE OPTIMALE  (OPTIMAL)\n  Levée totale : 0 TND\n  Subventions  : 0 TND  (—)\n  Equity       : 0 TND  (—)\n  Dette        : 0 TND  (—)\n  Post-money   : 100,000 TND\n  Pourquoi: Le scénario de financement sélectionné est optimal pour ce stade de startup car il ne nécessite aucun financement externe, ce qui permet d'éviter la dilution des parts et de maintenir le contrôle total de l'entreprise. De plus, l'absence de dette et de subventions réduit le risque financier et permet de se concentrer sur le développement de l'idée sans pression externe.\n\nDILUTION\n  Avant le tour : 80.0%\n  Après le tour : 72.0%\n  Dilué de      : 8.0%  (incl. 10% option pool)\n\nSUBVENTIONS ELIGIBLES\n  - Startup Act Label: 100,000 TND\n  Total potential: 100,000 TND\n\nPROCHAINES ETAPES\n1. Rejoindre un incubateur (Flat6Labs, Cogite, ou StartupHouse)\n2. Valider votre idée avec 20+ clients potentiels\n3. Postuler à la subvention Smart Capital Pre-Seed (50k TND)\nDATA NOTES\n  Red flag: Burn rate is 0 TND/month, which is highly unlikely for a startup, especially with a revenue stream. This may indicate an error or unrealistic assumption."
+  },
+  "confidence": 0.8,
+  "metadata": {
+    "priority": "high",
+    "requires_response": false,
+    "tags": [
+      "idea",
+      "unknown"
+    ]
+  }
+}

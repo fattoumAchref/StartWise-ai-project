@@ -1143,7 +1143,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false)      // free chat only
   const [blockLoading, setBlockLoading] = useState(false) // block inline Q&A only
   // Per-block feedback shown inside each block after an answer
-  const [blockFeedback, setBlockFeedback] = useState<Record<string, { text: string; type: 'success'|'warn'|'error' }>>({})
+  const [blockFeedback, setBlockFeedback] = useState<Record<string, { text: string; type: 'success'|'warn'|'error'|'info' }>>({})
   // Stacked CFO analysis entries — initial narrative pinned, each new pipeline run appends
   const [analysisUpdates, setAnalysisUpdates] = useState<Array<{ text: string; label: string }>>([])
   // Global set of questions already shown to user — agent doesn't repeat, but frontend also tracks
@@ -1638,7 +1638,11 @@ export default function Home() {
     try {
       const data = await sendMessage(msg)
       const reply = (data.reply || data.data_text || '') as string
-      setMessages(prev => [...prev, { role: 'assistant', content: reply, msgType: (data.type as string) || 'general' }])
+      const replyMsgType: Message['msgType'] =
+        data.type === 'analysis' || data.type === 'ideation_onboarding' || data.type === 'general' || data.type === 'whatif'
+          ? data.type
+          : 'general'
+      setMessages(prev => [...prev, { role: 'assistant', content: reply, msgType: replyMsgType }])
       // Silently sync analysis state so the left zone stays up to date
       if (data.type === 'analysis') {
         if (data.analysis?.kpis) applyAnalysisData(data)

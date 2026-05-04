@@ -162,6 +162,40 @@ async def agent_card():
     return JSONResponse(content=_AGENT_CARD)
 
 
+_ALLOWED_INTERNAL_STATES = frozenset({
+    "submitted",
+    "working",
+    "input-required",
+    "completed",
+    "failed",
+    "canceled",
+})
+
+
+@app.post("/internal/tasks/{task_id}/state/{state}", include_in_schema=False)
+async def set_task_state_internal(task_id: str, state: str):
+    """
+    Called by RiskBusAdapter (Django process) to align HTTP task state with the
+    Redis bus pipeline — same pattern as Investment A2A :8002.
+    """
+    if state not in _ALLOWED_INTERNAL_STATES:
+        return JSONResponse(
+            {"ok": False, "error": "invalid_state", "state": state},
+            status_code=400,
+        )
+    task = _store.get(task_id)
+    if not task:
+        logger.debug("[RiskA2AServer] internal state update: unknown task %s", task_id)
+        return JSONResponse(
+            {"ok": False, "task_id": task_id, "error": "not_found"},
+            status_code=404,
+        )
+    task.status = TaskStatus(state=state)  # type: ignore[arg-type]
+    _store.save(task)
+    logger.info("[RiskA2AServer] task %s → %s (internal bridge)", task_id, state)
+    return {"ok": True, "task_id": task_id, "state": state}
+
+
 # ── JSON-RPC Dispatcher ───────────────────────────────────────────────────────
 
 @app.post("/", tags=["A2A"])

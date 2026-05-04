@@ -80,6 +80,20 @@ def _score_to_rating(confidence: float) -> str:
     return "PASS"
 
 
+def _is_investment_conflict_stance_bus_message(msg: Dict[str, Any], rec_text: str) -> bool:
+    t = (msg.get("type") or "").lower()
+    if "conflict_stance" in t:
+        return True
+    pl = msg.get("payload")
+    if not isinstance(pl, dict):
+        pl = {}
+    data = pl.get("data") or {}
+    if data.get("confidence_reduced") is True and data.get("conflict_severity"):
+        return True
+    rt = (rec_text or "").lower()
+    return "cross-agent conflict" in rt and "confidence is reduced" in rt
+
+
 # ── Finance Comm Agent ────────────────────────────────────────────────────────
 
 class FinanceCommAgent(CommAgent):
@@ -109,7 +123,9 @@ class FinanceCommAgent(CommAgent):
 
         if intent == "recommendation":
             self._handle_recommendation(msg)
-            self._reason_about_conflicts()
+
+        elif intent == "conflict_stance":
+            self._handle_recommendation(msg)
 
         elif intent == "clarification_request":
             # Finance agent reasons autonomously before involving the founder
@@ -117,7 +133,6 @@ class FinanceCommAgent(CommAgent):
 
         elif intent == "assessment":
             self._handle_assessment(msg)
-            self._reason_about_conflicts()
 
         elif intent == "error":
             error_detail = msg.get("payload", {}).get("data", {}).get("error", "(no detail)")
@@ -153,6 +168,8 @@ class FinanceCommAgent(CommAgent):
         t = msg_type.lower()
 
         # Fast path — type string is unambiguous for all known agent message types
+        if "conflict_stance" in t:
+            return "conflict_stance"
         if any(x in t for x in ("recommendation", "scoring", "rating")):
             return "recommendation"
         if "clarification_request" in t:
@@ -202,11 +219,22 @@ class FinanceCommAgent(CommAgent):
         Backward-compat investment_* keys are maintained for app.py.
         """
         sender     = msg.get("from", "unknown_agent").lower().replace(" ", "_")
+        msg_type   = msg.get("type", "")
         payload    = msg.get("payload", {})
         data       = payload.get("data", {})
         rec_text   = payload.get("recommendation", "")
         confidence = msg.get("confidence", 0.0)
         rating     = data.get("rating") or _score_to_rating(confidence)
+
+        if _is_investment_conflict_stance_bus_message(msg, rec_text):
+            note = str(data.get("note") or rec_text or "")[:800]
+            self.set_state({
+                "investment_conflict_stance":          note,
+                "investment_conflict_stance_severity": str(data.get("conflict_severity", "")),
+                "investment_conflict_stance_ts":       msg.get("timestamp", ""),
+            })
+            logger.info("[finance_comm] investment conflict stance stored (verdict keys unchanged)")
+            return
 
         # Generic keys — work for any sender
         self.set_state({
@@ -220,8 +248,12 @@ class FinanceCommAgent(CommAgent):
             "last_recommendation_ts":   msg.get("timestamp", ""),
         })
 
-        # Backward-compat keys for app.py (investment agent only)
-        if "investment" in sender:
+        # Backward-compat keys for app.py — only real verdicts / errors, never conflict stance text.
+        if (
+            "investment" in sender
+            and msg_type in ("investment.recommendation", "investment.error")
+            and not _is_investment_conflict_stance_bus_message(msg, rec_text)
+        ):
             val = data.get("valuation") or {}
             opt = data.get("optimal_scenario") or {}
             dil = data.get("dilution") or {}
@@ -243,6 +275,11 @@ class FinanceCommAgent(CommAgent):
                 "dilution_pct":              str(dil.get("founder_dilution_pct", "")),
                 "founder_after_pct":         str(dil.get("founder_after_pct", "")),
             })
+            if msg_type == "investment.recommendation":
+                self._redis.hdel(
+                    self._state_key,
+                    "conflict_type", "conflict_message", "conflict_severity",
+                )
 
         logger.info(
             "[finance_comm] %s → recommendation: %s (%.0f%%)",
