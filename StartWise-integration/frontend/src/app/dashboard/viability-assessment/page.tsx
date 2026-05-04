@@ -5,7 +5,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import dynamic from 'next/dynamic'
 import {
-  AlertTriangle, CheckCircle2, Building2, BrainCircuit,
+  AlertTriangle, CheckCircle2, BrainCircuit,
   Download, FlaskConical, History, Upload, Lock, Lightbulb, X, MessageCircle, FileText,
 } from 'lucide-react'
 
@@ -14,7 +14,6 @@ import { sendMessage, getState, getA2AState, toggleWhatif, downloadPdf, newConve
 import { updateWorkflowStatus, markStepAsCompleted } from '@/services/agents'
 import KPICards from '@/components/cfo/KPICards'
 import { ScenariosChart, MonteCarloChart, SeasonalityChart, BenchmarkChart } from '@/components/cfo/Charts'
-import A2APanel from '@/components/cfo/A2APanel'
 
 dynamic(() => import('react-plotly.js'), { ssr: false })
 
@@ -1522,7 +1521,6 @@ export default function Home() {
       if (data.validation) localStorage.setItem('cfo_validation_cache', JSON.stringify(data.validation))
     } catch { /* quota */ }
     markStepAsCompleted('viability_assessment')
-    updateWorkflowStatus({ swot_analysis: 'available' })
   }
 
   // ── Block answer — user responds to an agent question inside a block ───────
@@ -2266,87 +2264,6 @@ export default function Home() {
           })()}
 
 
-          {/* ── Agents Insights — dedicated space, separate from free chat ── */}
-          {showAgentZone && (
-            <div className="cfo-block" style={{ borderLeft: '3px solid #6366f1' }}>
-              <div className="block-header">
-                <Building2 style={{ width: 13, height: 13, color: '#6366f1', flexShrink: 0 }} />
-                <span className="block-title" style={{ color: '#6366f1' }}>
-                  {modeText(expertMode, 'Investment Agent — Insights', 'Recommandations Agent Investissement')}
-                </span>
-                {a2aPublishTime && !a2a?.investment_rating && (
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.68rem', color: '#3b82f6' }}>
-                    <span className="spinner" style={{ width: 10, height: 10, borderWidth: 1.5 }} />
-                    {a2aElapsed}s
-                  </span>
-                )}
-                <span className="block-status block-status-ok" style={{ background: '#ede9fe', color: '#7c3aed' }}>
-                  {a2a ? 'Réponse reçue' : 'En cours...'}
-                </span>
-              </div>
-              <div className="block-body">
-                {a2a ? (
-                  <A2APanel a2a={a2a} elapsedSeconds={a2aElapsed} onClarificationSent={() => setA2aElapsed(0)} expertMode={expertMode} />
-                ) : (
-                  <p style={{ fontSize: '.82rem', color: '#6366f1', lineHeight: 1.6 }}>
-                    {modeText(
-                      expertMode,
-                      "L'Investment Agent analyse votre profil financier et prépare ses recommandations stratégiques…",
-                      "Votre agent d'investissement étudie vos données et prépare ses conseils…"
-                    )}
-                  </p>
-                )}
-
-                {/* ── A2A history archive ── */}
-                {a2aHistory.length > 0 && (
-                  <div style={{ marginTop: '1rem', borderTop: '1px solid #ede9fe', paddingTop: '.75rem' }}>
-                    <button
-                      className="analysis-archive-toggle"
-                      style={{ color: '#7c3aed', borderColor: '#c4b5fd' }}
-                      onClick={() => setExpandedA2A(prev => {
-                        const s = new Set(prev); s.has(-1) ? s.delete(-1) : s.add(-1); return s
-                      })}
-                    >
-                      <span>{expandedA2A.has(-1) ? '▾' : '▸'}</span>
-                      <span>
-                        {modeText(expertMode,
-                          `${a2aHistory.length} recommandation${a2aHistory.length > 1 ? 's' : ''} archivée${a2aHistory.length > 1 ? 's' : ''}`,
-                          `${a2aHistory.length} avis précédent${a2aHistory.length > 1 ? 's' : ''}`)}
-                      </span>
-                    </button>
-                    {expandedA2A.has(-1) && (
-                      <div className="analysis-archive-group" style={{ marginTop: '.5rem' }}>
-                        {[...a2aHistory].reverse().map((entry, i) => (
-                          <div key={i} className="analysis-archive-item" style={{ borderLeft: '2px solid #c4b5fd' }}>
-                            <div
-                              className="analysis-archive-item-header"
-                              onClick={() => setExpandedA2A(prev => {
-                                const s = new Set(prev); s.has(i) ? s.delete(i) : s.add(i); return s
-                              })}
-                            >
-                              <span style={{ fontSize: '.72rem', fontWeight: 600, color: '#7c3aed' }}>
-                                {expertMode ? `Recommandation archivée` : `Avis précédent`}
-                                {entry.snapshot.investment_rating ? ` — ${entry.snapshot.investment_rating}` : ''}
-                              </span>
-                              <span style={{ fontSize: '.69rem', color: '#9ca3af' }}>
-                                {new Date(entry.time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                              <span style={{ fontSize: '.7rem', color: '#9ca3af' }}>{expandedA2A.has(i) ? '▴' : '▾'}</span>
-                            </div>
-                            {expandedA2A.has(i) && (
-                              <div className="analysis-archive-item-body">
-                                <A2APanel a2a={entry.snapshot} elapsedSeconds={0} onClarificationSent={() => {}} expertMode={expertMode} />
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
         </div>
 
@@ -2489,6 +2406,8 @@ export default function Home() {
           onClose={() => setShowHistory(false)}
         />
       )}
+
+
 
     </div>
   )

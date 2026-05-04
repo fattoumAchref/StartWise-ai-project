@@ -51,6 +51,27 @@ from finagents.finance.protocol_models import (
 
 logger = logging.getLogger(__name__)
 
+# ── Terminal visibility — ensure our logs show in uvicorn output ──────────────
+_root_logger = logging.getLogger()
+if not _root_logger.handlers:
+    _h = logging.StreamHandler()
+    _h.setFormatter(logging.Formatter("%(asctime)s  %(levelname)-8s  %(name)s  %(message)s", "%H:%M:%S"))
+    _root_logger.addHandler(_h)
+logging.getLogger("finagents").setLevel(logging.DEBUG)
+
+_SEP = "─" * 68
+
+
+def _emit(label: str, task_id: str = "", **fields) -> None:
+    """Print a clearly visible structured agent thought block to the terminal."""
+    tid = f"  task={task_id[:14]}" if task_id else ""
+    print(f"\n{_SEP}", flush=True)
+    print(f"[FinanceAgent]  {label}{tid}", flush=True)
+    for k, v in fields.items():
+        print(f"  {k:<26} {v}", flush=True)
+    print(_SEP, flush=True)
+
+
 # ── LLM helper (mirrors app.py _call_llm_text) ───────────────────────────────
 
 _LLM_URL   = os.getenv("ESPRIT_BASE_URL", "https://tokenfactory.esprit.tn/api") + "/chat/completions"
@@ -156,19 +177,31 @@ class FinanceAgent:
 
         # ── Step 1: Parse ─────────────────────────────────────────────────────
         from finagents.finance.tools.parser import parse_founder_input
-        context = parse_founder_input(input_text)
+
+        _ACCUMULATE_FIELDS = (
+            "burn_rate", "cash_balance", "monthly_revenue", "n_clients",
+            "prix_client", "churn_rate", "secteur", "pays",
+            "marketing_budget", "cogs", "new_clients_month",
+        )
+
+        # Build known_context from the accumulated parent so the LLM can resolve
+        # relative answers like "j'ai perdu 3 clients" when n_clients is already known.
+        parent_ctx = task.metadata.get("_parent_context")
+        known_context: dict = {}
+        if parent_ctx is not None:
+            known_context = {
+                f: getattr(parent_ctx, f)
+                for f in _ACCUMULATE_FIELDS
+                if getattr(parent_ctx, f, None) is not None
+            }
+
+        context = parse_founder_input(input_text, known_context=known_context or None)
 
         # Fill in any fields the parser missed on this turn using the accumulated
         # context from all previous turns (_parent_context is set by process_ctx).
         # This is critical for short block answers ("5000 TND") that don't carry
         # enough text context for the LLM parser to re-extract all prior fields.
-        parent_ctx = task.metadata.get("_parent_context")
         if parent_ctx is not None:
-            _ACCUMULATE_FIELDS = (
-                "burn_rate", "cash_balance", "monthly_revenue", "n_clients",
-                "prix_client", "churn_rate", "secteur", "pays",
-                "marketing_budget", "cogs", "new_clients_month",
-            )
             carry = {
                 f: getattr(parent_ctx, f)
                 for f in _ACCUMULATE_FIELDS
@@ -178,6 +211,18 @@ class FinanceAgent:
                 context = dataclasses.replace(context, **carry)
                 logger.debug("[FinanceAgent] task=%s carried fields from parent: %s", task.id, list(carry))
 
+        _emit(
+            "STEP 1 — PARSE COMPLETE", task.id,
+            phase=getattr(context, "phase_hint", "?"),
+            secteur=getattr(context, "secteur", "—"),
+            burn_rate=getattr(context, "burn_rate", None),
+            cash_balance=getattr(context, "cash_balance", None),
+            monthly_revenue=getattr(context, "monthly_revenue", None),
+            n_clients=getattr(context, "n_clients", None),
+            churn_rate=getattr(context, "churn_rate", None),
+            known_ctx_fields=list(known_context.keys()) if known_context else "none (first turn)",
+            carried_fields=list(carry.keys()) if parent_ctx and carry else "—",
+        )
         logger.info(
             "[FinanceAgent] task=%s parsed — phase=%s secteur=%s",
             task.id,
@@ -208,8 +253,22 @@ class FinanceAgent:
                     "questions": questions,
                 })
                 task.metadata["clarification_rounds"] = rounds + 1
+                _emit(
+                    "DECISION POINT 1 — INPUT REQUIRED", task.id,
+                    round=f"{rounds + 1}/{self.MAX_CLARIFICATION_ROUNDS}",
+                    missing_critical=", ".join(getattr(validation, "missing_critical", []) or []),
+                    data_quality_score=getattr(validation, "data_quality_score", "?"),
+                    questions_asked=questions,
+                )
                 return self._ask_clarification(task, questions)
 
+        _emit(
+            "DECISION POINT 1 — PROCEED (enough data)", task.id,
+            is_valid=validation.is_valid,
+            data_quality_score=getattr(validation, "data_quality_score", "?"),
+            missing_fields=getattr(validation, "missing_critical", []),
+            round=rounds,
+        )
         log.append({
             "dp":       "DP1",
             "decision": "proceed",
@@ -238,6 +297,18 @@ class FinanceAgent:
         task.metadata["_analysis"]    = result
         task.metadata["_benchmarks"]  = benchmarks
 
+        kpis = result.get("kpis")
+        _emit(
+            "STEP 4 — PIPELINE COMPLETE", task.id,
+            confidence_score=f"{confidence_score:.0%}",
+            runway_months=getattr(kpis, "runway_months", "—"),
+            mrr=getattr(kpis, "mrr", "—"),
+            gross_margin=f"{getattr(kpis, 'gross_margin_pct', None):.1f}%" if getattr(kpis, 'gross_margin_pct', None) is not None else "—",
+            ltv_cac=f"{getattr(kpis, 'ltv_cac_ratio', None):.2f}x" if getattr(kpis, 'ltv_cac_ratio', None) is not None else "—",
+            cash_alert=getattr(kpis, "cash_out_alert", "—"),
+            phase=getattr(result.get("phase"), "value", result.get("phase", "?")),
+        )
+
         # ── DECISION POINT 2 — is confidence acceptable? ──────────────────────
         if confidence_score < self.MIN_CONFIDENCE and rounds < self.MAX_CLARIFICATION_ROUNDS:
             question = self._reason_about_low_confidence(context, result, confidence_score)
@@ -249,8 +320,20 @@ class FinanceAgent:
                     "questions": [question],
                 })
                 task.metadata["clarification_rounds"] = rounds + 1
+                _emit(
+                    "DECISION POINT 2 — CONFIDENCE TOO LOW", task.id,
+                    confidence=f"{confidence_score:.0%}",
+                    threshold=f"{self.MIN_CONFIDENCE:.0%}",
+                    round=f"{rounds + 1}/{self.MAX_CLARIFICATION_ROUNDS}",
+                    question_asked=question,
+                )
                 return self._ask_clarification(task, [question])
 
+        _emit(
+            "DECISION POINT 2 — PROCEED (confidence ok)", task.id,
+            confidence=f"{confidence_score:.0%}",
+            threshold=f"{self.MIN_CONFIDENCE:.0%}",
+        )
         log.append({
             "dp":       "DP2",
             "decision": "proceed",
@@ -480,6 +563,11 @@ class FinanceAgent:
             logger.warning("[FinanceAgent] no agents in registry — skipping delegation")
             return
 
+        _emit(
+            "STEP 5 — BROADCASTING TO SPECIALIST AGENTS",
+            targets=[a["id"] for a in agents],
+            count=len(agents),
+        )
         logger.info(
             "[FinanceAgent] broadcasting to all %d registered agents: %s",
             len(agents),
@@ -524,16 +612,25 @@ class FinanceAgent:
                     }
                 },
             }
+            _emit(f"A2A HTTP → {agent_id}", url=url)
             r = httpx.post(url, json=rpc_payload, timeout=5.0, verify=False)
             if r.status_code == 200 and "result" in r.json():
+                task_returned = r.json().get("result", {}).get("id", "?")
+                _emit(
+                    f"A2A HTTP ✓ {agent_id} — DELEGATED",
+                    remote_task=task_returned,
+                    status=r.json().get("result", {}).get("status", {}).get("state", "?"),
+                )
                 logger.info(
                     "[FinanceAgent] delegated via A2A HTTP → %s (task=%s)",
-                    agent_id, r.json().get("result", {}).get("id", "?"),
+                    agent_id, task_returned,
                 )
                 # Log to conversation log (was previously done by pipeline.py step 8)
                 self._log_sent_to_conversation(msg_dict, agent_id)
                 return
+            _emit(f"A2A HTTP ✗ {agent_id} — bad response", status=r.status_code, body=r.text[:120])
         except Exception as exc:
+            _emit(f"A2A HTTP ✗ {agent_id} — FAILED", error=str(exc))
             logger.debug("[FinanceAgent] A2A HTTP failed for %s: %s", agent_id, exc)
 
         # ── Redis bus fallback (only for agents with bus_fallback=True) ────────

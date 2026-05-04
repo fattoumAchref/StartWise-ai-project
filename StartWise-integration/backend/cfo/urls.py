@@ -5,6 +5,7 @@ urlpatterns = [
     path("chat", views.chat_view),
     path("state", views.state_view),
     path("a2a/state", views.a2a_state_view),
+    path("a2a/network", views.a2a_network_view),
     path("a2a/clarification", views.a2a_clarification_view),
     path("a2a/toggle-whatif", views.toggle_whatif_view),
     path("toggle-section", views.toggle_section_view),

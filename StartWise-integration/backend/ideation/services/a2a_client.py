@@ -117,6 +117,10 @@ class A2AClient:
         result = payload.get("result") or {}
         final_agent_text = self._extract_final_agent_text(result)
         if final_agent_text:
+            # Google ADK sometimes returns LLM exceptions as agent text instead
+            # of JSON-RPC errors — catch them here so fallback triggers correctly.
+            self._raise_if_quota_or_rate_limit(final_agent_text)
+            self._raise_if_agent_error_text(final_agent_text)
             return final_agent_text
         parts = self._extract_text_parts(result)
         if parts:
@@ -139,6 +143,8 @@ class A2AClient:
         result = data.get("result") or {}
         final_agent_text = self._extract_final_agent_text(result)
         if final_agent_text:
+            self._raise_if_quota_or_rate_limit(final_agent_text)
+            self._raise_if_agent_error_text(final_agent_text)
             return final_agent_text
         parts = self._extract_text_parts(result)
         if parts:
@@ -171,6 +177,29 @@ class A2AClient:
         markers = ("rate limit", "quota", "resource_exhausted", "too many requests")
         if any(marker in lowered for marker in markers):
             raise RuntimeError("Model provider quota/rate limit reached")
+
+    def _raise_if_agent_error_text(self, text: str) -> None:
+        """Raise if agent response text is actually an LLM exception (ADK anti-pattern).
+
+        Google ADK LlmAgent catches quota/rate-limit errors internally and returns
+        the exception traceback as the agent reply text (role=agent) instead of
+        surfacing it as a JSON-RPC error field.  Detect these strings here so the
+        orchestrator's fallback logic fires correctly.
+        """
+        lowered = text.lower()
+        markers = (
+            "ratelimiterror",
+            "quotaexceedederror",
+            "you exceeded your current quota",
+            "litellm.ratelimiterror",
+            "openaiexception",
+            "resource_exhausted",
+            "rateLimitError".lower(),
+        )
+        if any(m in lowered for m in markers):
+            raise RuntimeError(
+                f"Model provider error returned as agent text: {text[:200]}"
+            )
 
     def _is_streaming_unsupported(self, message: str | None) -> bool:
         lowered = (message or "").lower()

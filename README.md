@@ -5,6 +5,18 @@ Aucune connaissance juridique préalable requise.
 
 ---
 
+## Intégration StartWise (plateforme complète)
+
+Le dossier **`StartWise-integration/`** contient le **frontend Next.js**, le **backend Django** (CFO, idéation, legal advisor, audit produit, agents), le **bus A2A Redis** et les services **Finance / Investment / Risk** (Uvicorn).
+
+- **Documentation détaillée (architecture, ports, variables, idéation, bus, correctifs)** :  
+  [**StartWise-integration/README.md**](StartWise-integration/README.md)
+- **Lancement tout-en-un sous Windows** : à la racine de ce dépôt, exécuter **`start.bat`** ou **`stat.bat`** (venv `.venv` ou `venv` requis à la racine `agent legal`).
+
+Les sections ci-dessous décrivent le projet **Agent Légal** (API FastAPI autonome dans ce même workspace si présent).
+
+---
+
 ## Ce que fait l'agent
 
 | Module | Ce qu'il fait |

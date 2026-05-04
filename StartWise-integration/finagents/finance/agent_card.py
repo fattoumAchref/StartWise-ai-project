@@ -35,6 +35,21 @@ _BUILTIN: List[Dict] = [
         "url":          os.getenv("INVESTMENT_AGENT_URL", "http://localhost:8002"),
         "bus_fallback": True,   # fall back to Redis bus if HTTP fails (backward compat)
     },
+    {
+        "id":           "risk_agent",
+        "url":          os.getenv("RISK_AGENT_URL", "http://localhost:8003"),
+        "bus_fallback": True,   # fall back to Redis bus if HTTP fails
+    },
+    {
+        "id":           "marketing_agent",
+        "url":          os.getenv("MARKETING_AGENT_URL", "http://localhost:8000/api"),
+        "bus_fallback": True,   # marketing runs inside Django — use bus only
+    },
+    {
+        "id":           "legal_agent",
+        "url":          os.getenv("LEGAL_AGENT_URL", "http://localhost:8000/legal"),
+        "bus_fallback": True,   # legal runs inside Django — use bus only
+    },
 ]
 
 

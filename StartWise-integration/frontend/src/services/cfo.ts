@@ -33,6 +33,9 @@ export const getState = () =>
 export const getA2AState = () =>
   http.get('/a2a/state').then(r => r.data)
 
+export const getA2ANetwork = () =>
+  http.get('/a2a/network').then(r => r.data)
+
 export const sendClarification = (answer: string) =>
   http.post('/a2a/clarification', { answer }).then(r => r.data)
 

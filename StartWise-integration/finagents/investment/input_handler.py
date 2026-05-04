@@ -2,9 +2,7 @@
 Input handler - validates incoming data and detects inconsistencies with LLM.
 """
 
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from finagents.investment.config import TOKENFACTORY_API_KEY, BASE_URL, MODEL_NAME
+from finagents.investment.llm_client import chat_completion
 
 
 class InputHandler:
@@ -17,13 +15,7 @@ class InputHandler:
     ]
 
     def __init__(self):
-        self.llm = ChatOpenAI(
-            model=MODEL_NAME,
-            base_url=BASE_URL,
-            api_key=TOKENFACTORY_API_KEY,
-            temperature=0.1,
-            max_tokens=300,
-        )
+        pass
 
     def validate_and_extract(self, finance_data: dict, marketing_data: dict) -> dict:
         """
@@ -58,30 +50,28 @@ class InputHandler:
 
     def _check_consistency(self, data: dict) -> str:
         """Ask LLM to flag any suspicious or inconsistent data points."""
-        try:
-            prompt = ChatPromptTemplate.from_messages([
-                ("system",
-                 "You are a startup financial analyst. Review these startup metrics and flag "
-                 "any inconsistencies, suspicious values, or red flags in 1-2 short sentences. "
-                 "If everything looks reasonable, reply with 'No issues detected.' "
-                 "Be concise and specific. Currency is TND (Tunisian Dinar)."),
-                ("user",
-                 "Revenue: {revenue} TND/year | Growth: {growth}% | "
-                 "Burn: {burn} TND/month | Funding needed: {funding} TND | "
-                 "Runway: {runway} months | Sector: {sector} | "
-                 "Team score: {team} | Market score: {market}")
-            ])
-            chain = prompt | self.llm
-            response = chain.invoke({
-                "revenue":  f"{data['annual_revenue']:,.0f}",
-                "growth":   f"{data['growth_rate']*100:.0f}",
-                "burn":     f"{data['monthly_burn_rate']:,.0f}",
-                "funding":  f"{data['funding_needed']:,.0f}",
-                "runway":   data["runway_months"],
-                "sector":   data["industry"],
-                "team":     data["team_score"],
-                "market":   data["market_score"],
-            })
-            return response.content.strip()
-        except Exception as e:
-            return f"(consistency check unavailable: {e})"
+        user = (
+            f"Revenue: {data['annual_revenue']:,.0f} TND/year | Growth: {data['growth_rate']*100:.0f}% | "
+            f"Burn: {data['monthly_burn_rate']:,.0f} TND/month | Funding needed: {data['funding_needed']:,.0f} TND | "
+            f"Runway: {data['runway_months']} months | Sector: {data['industry']} | "
+            f"Team score: {data['team_score']} | Market score: {data['market_score']}"
+        )
+        text = chat_completion(
+            [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a startup financial analyst. Review these startup metrics and flag "
+                        "any inconsistencies, suspicious values, or red flags in 1-2 short sentences. "
+                        "If everything looks reasonable, reply with 'No issues detected.' "
+                        "Be concise and specific. Currency is TND (Tunisian Dinar)."
+                    ),
+                },
+                {"role": "user", "content": user},
+            ],
+            temperature=0.1,
+            max_tokens=300,
+        )
+        if not text:
+            return "(consistency check unavailable: empty LLM response)"
+        return text

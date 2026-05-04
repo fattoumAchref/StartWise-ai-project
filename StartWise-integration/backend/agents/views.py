@@ -9,6 +9,38 @@ from .document_processor import extract_text
 from .notion_service import export_to_notion
 from .telegram_service import format_creative_message, send_telegram_message, send_telegram_photo, send_telegram_photo_bytes
 
+def agent_card(request):
+    """A2A Agent Card — /.well-known/agent.json for the Marketing Agent."""
+    return JsonResponse({
+        "name":        "marketing_agent",
+        "displayName": "StartWise Marketing Agent",
+        "description": "LangGraph multi-agent pipeline: Trend → Vision → Emotion → Creative → Commercial analysis for startup marketing strategy.",
+        "version":     "1.0.0",
+        "capabilities": {
+            "streaming": True,
+            "push_notifications": False,
+            "state_transition_history": False,
+        },
+        "defaultInputModes":  ["text"],
+        "defaultOutputModes": ["text", "json"],
+        "skills": [
+            {
+                "id":          "marketing_analysis",
+                "name":        "Marketing Analysis",
+                "description": "Analyse complète trend/vision/émotion/créatif/commercial pour une startup.",
+                "inputModes":  ["text"],
+                "outputModes": ["json"],
+            }
+        ],
+        "a2a": {
+            "agent_id":    "marketing_agent",
+            "bus_enabled": True,
+            "publishes":   ["marketing.analysis"],
+            "subscribes":  ["financial_analysis", "risk.assessment", "investment.recommendation", "legal.assessment"],
+        },
+    })
+
+
 @csrf_exempt
 @require_http_methods(["POST"])
 def analyze_project(request):
@@ -85,6 +117,21 @@ def analyze_project_sync(request):
     }
 
     final_state = compiled_graph.invoke(initial_state)
+
+    # A2A: broadcast marketing results to all specialist agents on the bus
+    try:
+        from cfo.session_manager import get_marketing_adapter
+        adapter = get_marketing_adapter()
+        if adapter:
+            adapter.publish_analysis(
+                trend_result=final_state.get("trend_result", {}),
+                vision_result=final_state.get("vision_result", {}),
+                emotion_result=final_state.get("emotion_result", {}),
+                creative_result=final_state.get("creative_result", {}),
+                project_description=project_description,
+            )
+    except Exception:
+        pass
 
     return JsonResponse({
         "trend": final_state.get("trend_result", {}),

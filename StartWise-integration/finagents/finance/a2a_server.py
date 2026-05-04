@@ -55,6 +55,16 @@ from finagents.finance.agent import FinanceAgent
 
 logger = logging.getLogger(__name__)
 
+# ── Terminal logging setup — ensure finagents logs appear in uvicorn output ──
+_root = logging.getLogger()
+if not _root.handlers:
+    _h = logging.StreamHandler()
+    _h.setFormatter(logging.Formatter("%(asctime)s  %(levelname)-8s  %(name)s  %(message)s", "%H:%M:%S"))
+    _root.addHandler(_h)
+    _root.setLevel(logging.INFO)
+for _ns in ("finagents", "a2a_bus"):
+    logging.getLogger(_ns).setLevel(logging.DEBUG)
+
 # ── Agent Card ────────────────────────────────────────────────────────────────
 # Published at GET /.well-known/agent.json — any A2A client uses this for
 # discovery: who is this agent, what can it do, how to talk to it.

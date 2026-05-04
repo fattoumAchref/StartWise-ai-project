@@ -9,13 +9,10 @@ import { useRouter } from "next/navigation"
 import {
   Lamp,
   FileText,
-  Grid,
-  Target,
   TrendingUp,
   Presentation,
-  ChartLine,
 } from "@mynaui/icons-react"
-import { BarChart2, Scale } from "lucide-react"
+import { BarChart2, Scale, Building2, TriangleAlert } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -31,195 +28,129 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@/components/ui/sidebar"
-import { getWorkflowStatus, WorkflowStatus } from "@/services/agents"
 import { useApp } from "@/context/AppContext"
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [mounted, setMounted] = useState(false)
-  const [workflowStatus, setWorkflowStatus] = useState<WorkflowStatus | null>(null)
-  const { resolvedTheme } = useTheme()
-  const router = useRouter()
-  const { analysisHistory, loadAnalysis } = useApp()
+/**
+ * Single-gate unlock — everything becomes available once the user completes
+ * ideation (startwise_summary exists in localStorage) OR manually unlocks
+ * via the "Unlock all tools" button which sets startwise_unlocked=1.
+ *
+ * Reach to Investors stays behind a second gate: marketing must be completed.
+ */
+function useJourneyStages() {
+  const [stages, setStages] = useState({
+    unlocked:      false,
+    marketingDone: false,
+  })
+
+  const refresh = () => {
+    const ideationDone  = !!localStorage.getItem('startwise_summary')
+    const manualUnlock  = !!localStorage.getItem('startwise_unlocked')
+    const unlocked      = ideationDone || manualUnlock
+    const marketingDone = localStorage.getItem('startwise_workflow_status')
+      ? (() => {
+          try {
+            const s = JSON.parse(localStorage.getItem('startwise_workflow_status')!)
+            return s?.marketing_strategy === 'completed'
+          } catch { return false }
+        })()
+      : false
+    setStages({ unlocked, marketingDone })
+  }
 
   useEffect(() => {
-    setMounted(true)
-    // Load workflow status
-    loadWorkflowStatus()
-    
-    // Listen for storage changes to update sidebar
-    const handleStorageChange = () => {
-      loadWorkflowStatus()
-    }
-    
-    window.addEventListener('storage', handleStorageChange)
-    // Also listen for custom events when localStorage is updated in the same tab
-    window.addEventListener('workflowUpdated', handleStorageChange)
-    
+    refresh()
+    window.addEventListener('storage', refresh)
+    window.addEventListener('workflowUpdated', refresh)
     return () => {
-      window.removeEventListener('storage', handleStorageChange)
-      window.removeEventListener('workflowUpdated', handleStorageChange)
+      window.removeEventListener('storage', refresh)
+      window.removeEventListener('workflowUpdated', refresh)
     }
   }, [])
 
-  const loadWorkflowStatus = async () => {
-    try {
-      const status = await getWorkflowStatus()
-      console.log('Sidebar workflow status:', status)
-      
-      // Check actual data existence to override status if needed
-      if (typeof window !== 'undefined') {
-        const financialData = localStorage.getItem('startwise_financial_data');
-        const marketData = localStorage.getItem('startwise_market_data');
-        const swotData = localStorage.getItem('startwise_swot_data');
-        const bmcData = localStorage.getItem('startwise_bmc_data');
-        const brandIdentityData = localStorage.getItem('startwise_brand_identity_data');
-        
-        // Update status based on actual data
-        const dataBasedStatus = { ...status };
-        if (financialData && marketData) {
-          dataBasedStatus.viability_assessment = 'completed';
-          // After viability assessment is completed, unlock SWOT
-          if (dataBasedStatus.swot_analysis === 'locked') {
-            dataBasedStatus.swot_analysis = 'available';
-          }
-        }
-        if (swotData) {
-          dataBasedStatus.swot_analysis = 'completed';
-          // After SWOT is completed, unlock BMC
-          if (dataBasedStatus.bmc === 'locked') {
-            dataBasedStatus.bmc = 'available';
-          }
-        }
-        if (bmcData) {
-          dataBasedStatus.bmc = 'completed';
-          // After BMC is completed, unlock Brand Identity
-          if (!brandIdentityData) {
-            dataBasedStatus.brand_identity = 'available';
-          }
-        }
-        if (brandIdentityData) {
-          dataBasedStatus.brand_identity = 'completed';
-          // After Brand Identity is completed, unlock Marketing Strategy
-          if (dataBasedStatus.marketing_strategy === 'locked') {
-            dataBasedStatus.marketing_strategy = 'available';
-          }
-        }
-        
-        setWorkflowStatus(dataBasedStatus);
-      } else {
-        setWorkflowStatus(status);
-      }
-    } catch (error) {
-      console.error('Failed to load workflow status:', error)
-      // Set a default fallback status
-      setWorkflowStatus({
-        ideation: 'completed',
-        viability_assessment: 'locked',
-        swot_analysis: 'locked', 
-        bmc: 'locked',
-        brand_identity: 'locked',
-        marketing_strategy: 'locked',
-        pitch_deck: 'locked'
-      })
-    }
-  }
+  return stages
+}
 
-  // Create navigation data with dynamic status
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme } = useTheme()
+  const router = useRouter()
+  const { analysisHistory, loadAnalysis } = useApp()
+  const stages = useJourneyStages()
+
+  useEffect(() => { setMounted(true) }, [])
+
+  const s = (locked: boolean, done = false): string =>
+    done ? 'completed' : locked ? 'locked' : 'available'
+
   const getNavData = () => {
+    const { unlocked, marketingDone } = stages
+    const gtmStatus      = unlocked ? (marketingDone ? 'completed' : 'available') : 'locked'
+    const investorsStatus = s(!marketingDone)
+
     return [
       {
         title: "Ideation",
         url: "/dashboard/ideation",
         icon: Lamp,
-        status: "completed", // Always completed after onboarding
+        status: "completed",
         items: [],
       },
       {
         title: "Product Audit",
         url: "/dashboard/product-audit",
         icon: FileText,
-        status: "available",
+        status: s(!unlocked),
         items: [],
       },
       {
-        title: "Viability Assessment",
+        title: "Finance",
         url: "/dashboard/viability-assessment",
         icon: FileText,
-        status: "available", // Always available
-        progress: 0,
+        status: s(!unlocked),
         items: [],
       },
       {
-        title: "SWOT Analysis",
-        url: "/dashboard/swot-analysis",
-        icon: ChartLine,
-        status: workflowStatus?.swot_analysis || "locked",
+        title: "Investment",
+        url: "/dashboard/investment",
+        icon: Building2,
+        status: s(!unlocked),
         items: [],
       },
       {
-        title: "Business Model Canvas",
-        url: "/dashboard/bmc",
-        icon: Grid,
-        status: workflowStatus?.bmc || "locked",
+        title: "Risk",
+        url: "/dashboard/risk",
+        icon: TriangleAlert,
+        status: s(!unlocked),
         items: [],
       },
-      {
-        title: "Brand Identity",
-        url: "/dashboard/brand-identity",
-        icon: Target,
-        status: workflowStatus?.brand_identity || "locked",
-        items: [],
-      },
-      {
-        title: "Go to Market",
-        icon: TrendingUp,
-        status: workflowStatus?.marketing_strategy || "locked",
-        isExpandedByDefault: true,
-        items: [
-          {
-            title: "Marketing Strategie",
-            url: "/dashboard/go-to-market/marketing-strategy",
-            status: workflowStatus?.marketing_strategy || "locked",
-          },
-          {
-            title: "Online Presence",
-            url: "/dashboard/go-to-market/online-presence",
-            status: workflowStatus?.marketing_strategy || "locked",
-          },
-          {
-            title: "Company Profile",
-            url: "/dashboard/go-to-market/company-profile",
-            status: workflowStatus?.marketing_strategy || "locked",
-          }
-        ],
-      },
-
       {
         title: "LexWise",
         url: "/dashboard/lexwise",
         icon: Scale,
-        status: "available",
+        status: s(!unlocked),
+        items: [],
+      },
+      {
+        title: "Go to Market",
+        url: "/dashboard",
+        icon: TrendingUp,
+        status: gtmStatus,
         items: [],
       },
       {
         title: "Reach to Investors",
+        url: "/dashboard",
         icon: Presentation,
-        status: workflowStatus?.marketing_strategy || "locked",
-        isExpandedByDefault: true,
-        items: [
-          {
-            title: "Contact",
-            url: "/dashboard/reach-to-investors/contact",
-            status: workflowStatus?.marketing_strategy || "locked",
-          },
-          {
-            title: "Pitch Deck",
-            url: "/dashboard/reach-to-investors/pitch-deck",
-            status: workflowStatus?.marketing_strategy || "locked",
-          }
-        ],
+        status: investorsStatus,
+        items: [],
       },
     ]
+  }
+
+  const handleUnlockAll = () => {
+    localStorage.setItem('startwise_unlocked', '1')
+    window.dispatchEvent(new Event('workflowUpdated'))
   }
 
   return (
@@ -250,6 +181,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="px-2 py-4">
+        {mounted && !stages.unlocked && (
+          <div className="px-2 mb-3">
+            <button
+              onClick={handleUnlockAll}
+              className="w-full rounded-lg py-2 px-3 text-xs font-semibold text-white transition-colors"
+              style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', border: 'none', cursor: 'pointer' }}
+            >
+              Unlock all tools
+            </button>
+          </div>
+        )}
         <NavMain items={getNavData()} />
 
         {/* Marketing Analysis History — only rendered client-side to avoid SSR/localStorage mismatch */}

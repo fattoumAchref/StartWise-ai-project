@@ -12,6 +12,11 @@ _SW_ROOT = str(BASE_DIR.parent)
 if _SW_ROOT not in sys.path:
     sys.path.insert(0, _SW_ROOT)
 
+# Force CWD to the project root (finAgent/) so all relative paths —
+# chroma_db/, data/ — resolve correctly regardless of where Django is launched from.
+_PROJECT_ROOT = str(BASE_DIR.parent.parent)
+os.chdir(_PROJECT_ROOT)
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-zq&ypcr445e2b1*)s7pua%9-+2kzrh=6!+@7l$$h8%*rm4c5dr')
 

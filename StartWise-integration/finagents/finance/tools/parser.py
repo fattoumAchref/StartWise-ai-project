@@ -240,6 +240,14 @@ def _build_extraction_prompt() -> str:
         "Input: 'solde bancaire exactement 95 000 dinars, verifie ce matin' → cash_balance: 95000, cash quality: REAL\n"
         "Input: 'churn autour de 7%' → churn_rate: 0.07\n"
         "Input: 'je cherche a lever des fonds' → intent_fundraising: true\n"
+        "Input: '3 clients perdus sur 20' → churn_rate: 0.15 (calculate: 3/20)\n"
+        "Input: 'on perd 2 clients par mois, on en a 50' → churn_rate: 0.04 (calculate: 2/50)\n"
+        "Input: 'j ai perdu 3 clients ce mois' → set n_clients_lost=3; if n_clients known divide to get churn_rate\n"
+        "Input: 'startup EdTech, formation en ligne pour etudiants' → secteur: 'EdTech'\n"
+        "Input: 'plateforme SaaS B2B pour les PME tunisiennes' → secteur: 'SaaS B2B'\n"
+        "Input: 'marketplace de livraison, on connecte restaurants et clients' → secteur: 'Marketplace / Livraison'\n"
+        "Input: 'application de sante, telemedicine' → secteur: 'HealthTech'\n"
+        "Input: 'solution fintech, paiement mobile en Tunisie' → secteur: 'FinTech'\n"
     )
 
 
@@ -283,8 +291,35 @@ def _call_esprit_llm(messages: list[dict[str, Any]]) -> dict[str, Any]:
     return json.loads(cleaned)
 
 
-def _extract_from_text_with_llm(text: str) -> dict[str, Any]:
-    system_prompt = _build_extraction_prompt() + _build_currency_hint(text)
+def _build_known_context_hint(known_context: Optional[dict]) -> str:
+    """Inject previously known field values into the prompt so the LLM can reason about relative answers."""
+    if not known_context:
+        return ""
+    lines = []
+    for k, v in known_context.items():
+        if v is not None:
+            lines.append(f"  - {k}: {v}")
+    if not lines:
+        return ""
+    return (
+        "\n\nKNOWN VALUES FROM PREVIOUS CONVERSATION TURNS (already confirmed by founder):\n"
+        + "\n".join(lines)
+        + "\n\nUse these known values to resolve relative answers in the current message.\n"
+        "Examples:\n"
+        "- If n_clients=20 is known and founder says 'j ai perdu 3 clients' → churn_rate = 3/20 = 0.15\n"
+        "- If n_clients=50 is known and founder says 'on perd 2 par mois' → churn_rate = 2/50 = 0.04\n"
+        "- If burn_rate is already known and founder does NOT mention it again → return null (don't repeat it)\n"
+        "- If secteur is already known and founder does NOT contradict it → return null (don't overwrite it)\n"
+        "Only extract fields explicitly provided or clearly computable from the current message + known values.\n"
+    )
+
+
+def _extract_from_text_with_llm(text: str, known_context: Optional[dict] = None) -> dict[str, Any]:
+    system_prompt = (
+        _build_extraction_prompt()
+        + _build_known_context_hint(known_context)
+        + _build_currency_hint(text)
+    )
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": text},
@@ -522,7 +557,15 @@ def _build_context(extracted: dict[str, Any], source_text: str = "") -> Financia
     )
 
 
-def parse_founder_input(input_value: str) -> FinancialContext:
+def parse_founder_input(input_value: str, known_context: Optional[dict] = None) -> FinancialContext:
+    """Parse a founder message (text, PDF, CSV) into a FinancialContext.
+
+    Args:
+        input_value: raw founder message or file path
+        known_context: dict of already-confirmed field values from prior conversation turns.
+            The LLM uses these to resolve relative answers like "j'ai perdu 3 clients"
+            when n_clients is already known.
+    """
     try:
         path = Path(input_value)
         if path.exists() and path.is_file():
@@ -544,7 +587,7 @@ def parse_founder_input(input_value: str) -> FinancialContext:
             return _empty_context()
 
         try:
-            extracted = _extract_from_text_with_llm(input_value)
+            extracted = _extract_from_text_with_llm(input_value, known_context=known_context)
             return _build_context(extracted, source_text=input_value)
         except Exception:
             return _empty_context()

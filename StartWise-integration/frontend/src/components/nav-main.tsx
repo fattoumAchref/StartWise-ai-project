@@ -45,6 +45,7 @@ export function NavMain({
     progress?: number
     isActive?: boolean
     isExpandedByDefault?: boolean
+    unread?: boolean
     items?: {
       title: string
       url: string
@@ -207,7 +208,12 @@ export function NavMain({
                       <a href={item.url} className="flex items-center gap-3 w-full" onClick={(e) => handleItemClick(item, e)}>
                         <div className="flex items-center gap-3 flex-1">
                           {item.icon && (
-                            <item.icon className={`h-5 w-5 shrink-0 ${getIconStyles(item)}`} />
+                            <div className="relative shrink-0">
+                              <item.icon className={`h-5 w-5 ${getIconStyles(item)}`} />
+                              {item.unread && (
+                                <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />
+                              )}
+                            </div>
                           )}
                           <div className="flex flex-col items-start">
                             <span className="truncate font-medium text-sm leading-tight">{item.title}</span>
@@ -231,7 +237,12 @@ export function NavMain({
                       <div className="flex items-center gap-3 w-full">
                         <div className="flex items-center gap-3 flex-1">
                           {item.icon && (
-                            <item.icon className={`h-5 w-5 shrink-0 ${getIconStyles(item)}`} />
+                            <div className="relative shrink-0">
+                              <item.icon className={`h-5 w-5 ${getIconStyles(item)}`} />
+                              {item.unread && (
+                                <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500" />
+                              )}
+                            </div>
                           )}
                           <div className="flex flex-col items-start">
                             <span className="truncate font-medium text-sm leading-tight">{item.title}</span>

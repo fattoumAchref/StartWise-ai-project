@@ -20,14 +20,41 @@ import threading
 import uuid
 from datetime import datetime, timezone
 
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
+import httpx
 
 from a2a_bus.comm_agent import CommAgent
 from finagents.investment.main import InvestmentAgent
 from finagents.investment.config import TOKENFACTORY_API_KEY, BASE_URL, MODEL_NAME
 
 logger = logging.getLogger(__name__)
+
+_SEP = "═" * 68
+
+
+def _call_llm(messages: list[dict], max_tokens: int = 400) -> str:
+    """Call Token Factory LLM directly (same pattern as agent.py / cfo_engine.py)."""
+    try:
+        r = httpx.post(
+            BASE_URL + "/chat/completions",
+            headers={"Authorization": f"Bearer {TOKENFACTORY_API_KEY}"},
+            json={"model": MODEL_NAME, "messages": messages, "temperature": 0.3, "max_tokens": max_tokens},
+            timeout=30.0,
+            verify=False,
+        )
+        r.raise_for_status()
+        return r.json()["choices"][0]["message"]["content"].strip()
+    except Exception as exc:
+        logger.warning("[InvestmentBusAdapter] LLM call failed: %s", exc)
+        return ""
+
+
+def _emit(label: str, **fields) -> None:
+    """Visible terminal block for investment agent internal thoughts."""
+    print(f"\n{_SEP}", flush=True)
+    print(f"[InvestmentBusAdapter]  {label}", flush=True)
+    for k, v in fields.items():
+        print(f"  {k:<26} {v}", flush=True)
+    print(_SEP, flush=True)
 
 _instance: "InvestmentBusAdapter | None" = None
 _lock = threading.Lock()
@@ -54,10 +81,6 @@ class InvestmentBusAdapter(CommAgent):
     def __init__(self):
         super().__init__()
         self._agent = InvestmentAgent()
-        self._llm = ChatOpenAI(
-            model=MODEL_NAME, base_url=BASE_URL, api_key=TOKENFACTORY_API_KEY,
-            temperature=0.3, max_tokens=400,
-        )
         # pending clarification state keyed by project_id
         self._pending: dict[str, dict] = {}
         self._pending_lock = threading.Lock()
@@ -81,19 +104,143 @@ class InvestmentBusAdapter(CommAgent):
         msg_type = msg.get("type", "")
 
         if msg_type == "financial_analysis":
+            data = msg.get("payload", {}).get("data", {})
+            kpis = data.get("kpis") or {}
+            _emit(
+                f"MSG RECEIVED — type={msg_type}",
+                from_agent=msg.get("from", "?"),
+                msg_id=msg.get("message_id", "?")[:16],
+                mrr=kpis.get("mrr", "—"),
+                runway=kpis.get("runway_months", "—"),
+                phase=data.get("phase", "—"),
+                secteur=data.get("secteur", "—"),
+            )
             should, reason = self._should_engage(msg)
+            _emit(
+                "AUTONOMOUS DECISION — engage?" ,
+                engage=should,
+                reason=reason,
+            )
             if should:
                 logger.info("[InvestmentBusAdapter] engaging: %s", reason)
                 self._handle_financial_analysis(msg)
             else:
                 logger.info("[InvestmentBusAdapter] staying silent: %s", reason)
+                self._notify_no_engagement(msg, reason)
 
         elif msg_type == "finance.clarification_response":
             # Always handle our own clarification responses
             self._handle_clarification_response(msg)
 
+        elif msg_type == "marketing.analysis":
+            _emit(f"MSG RECEIVED — type={msg_type}", from_agent=msg.get("from", "?"))
+            self._store_peer_context(msg, "marketing_agent")
+
+        elif msg_type in ("marketing.strategy_note", "marketing.investment_alignment"):
+            _emit(f"MSG RECEIVED — type={msg_type}", from_agent=msg.get("from", "?"))
+            self._store_peer_context(msg, "marketing_agent")
+
+        elif msg_type == "legal.assessment":
+            _emit(f"MSG RECEIVED — type={msg_type}", from_agent=msg.get("from", "?"))
+            self._store_peer_context(msg, "legal_agent")
+
+        elif msg_type in ("legal.regulatory_note", "legal.investment_note",
+                          "legal.conflict_review"):
+            _emit(f"MSG RECEIVED — type={msg_type}", from_agent=msg.get("from", "?"))
+            self._store_peer_context(msg, "legal_agent")
+
+        elif msg_type == "risk.assessment":
+            _emit(f"MSG RECEIVED — type={msg_type}", from_agent=msg.get("from", "?"))
+            self._store_peer_context(msg, "risk_agent")
+
+        elif msg_type == "risk.conflict_report":
+            _emit(f"MSG RECEIVED — type={msg_type}", from_agent=msg.get("from", "?"))
+            self._handle_conflict_report(msg)
+
         else:
             logger.debug("[InvestmentBusAdapter] ignoring unrecognised type=%s", msg_type)
+
+    def _store_peer_context(self, msg: dict, sender_id: str) -> None:
+        """Store a peer agent's signal in Investment state for cross-agent awareness."""
+        data    = msg.get("payload", {}).get("data", {})
+        level   = str(data.get("risk_level") or data.get("level") or data.get("status") or "?")
+        score   = str(data.get("score") or data.get("risk_score") or msg.get("confidence", 0))
+        summary = str(
+            data.get("summary") or msg.get("payload", {}).get("recommendation", "")
+        )[:200]
+        self.set_state({
+            f"{sender_id}_level":   level,
+            f"{sender_id}_score":   score,
+            f"{sender_id}_summary": summary,
+            f"{sender_id}_ts":      msg.get("timestamp", ""),
+        })
+        logger.info("[InvestmentBusAdapter] stored context from %s", sender_id)
+
+    def _handle_conflict_report(self, msg: dict) -> None:
+        """
+        Risk has detected cross-agent conflicts.
+
+        Investment stores the conflict signal and, if severity is high and
+        the current investment rating is optimistic, downgrades its confidence
+        and publishes an updated recommendation note so all agents are aware.
+        """
+        data     = msg.get("payload", {}).get("data", {})
+        severity = str(data.get("severity", "none")).lower()
+        count    = int(data.get("conflict_count") or 0)
+        summary  = str(data.get("summary", ""))[:200]
+        agents   = data.get("agents_compared", [])
+
+        self.set_state({
+            "conflict_severity":  severity,
+            "conflict_count":     str(count),
+            "conflict_summary":   summary,
+            "conflict_agents":    json.dumps(agents),
+            "conflict_ts":        msg.get("timestamp", ""),
+        })
+
+        if severity not in ("high", "medium") or count == 0:
+            logger.info("[InvestmentBusAdapter] conflict report stored (low/none severity)")
+            return
+
+        # Publish a reactive note downgrading confidence when conflicts are significant
+        _emit(
+            "CONFLICT DETECTED — adjusting investment stance",
+            severity=severity,
+            conflicts=count,
+            agents=agents,
+        )
+        note = (
+            f"{count} cross-agent conflict(s) detected (severity: {severity}) "
+            f"across {agents}. Investment recommendation confidence is reduced until "
+            f"conflicts are resolved. Summary: {summary}"
+        )
+        self.publish({
+            "message_id": str(uuid.uuid4()),
+            "type":       "investment.conflict_stance",
+            "from":       "investment_agent",
+            "to":         ["finance_agent", "risk_agent", "marketing_agent", "legal_agent"],
+            "timestamp":  datetime.now(timezone.utc).isoformat(),
+            "context":    msg.get("context", {}),
+            "payload": {
+                "data": {
+                    "conflict_severity":  severity,
+                    "conflict_count":     count,
+                    "confidence_reduced": True,
+                    "note":               note,
+                },
+                "recommendation": note,
+            },
+            "confidence": 0.40,   # deliberately lower — conflicts present
+            "metadata": {
+                "priority":          "high",
+                "requires_response": False,
+                "tags":              ["investment", "conflict-stance", severity],
+            },
+        })
+        logger.info(
+            "[InvestmentBusAdapter] conflict_stance published (severity=%s, count=%d)",
+            severity, count,
+        )
 
     def _should_engage(self, msg: dict) -> tuple[bool, str]:
         """
@@ -117,13 +264,21 @@ class InvestmentBusAdapter(CommAgent):
 
         # Hard filter: no financial data at all
         # Use 'is not None' (not truthiness) so 0-valued KPIs (no revenue, profitable) still engage
-        has_any_financials = any(
-            kpis.get(k) is not None for k in ["mrr", "arr", "runway_months", "burn_net", "burn_rate_raw"]
+        _kpi_keys = (
+            "mrr", "arr", "runway_months", "burn_net", "burn_rate_raw",
+            "cac", "ltv", "ltv_cac_ratio", "gross_margin_pct", "cash_out_alert",
         )
+        has_kpi = any(kpis.get(k) is not None for k in _kpi_keys)
+        has_mc = mc.get("proba_survie_12m") is not None
+        has_any_financials = has_kpi or has_mc
         if not has_any_financials:
             return False, "no financial KPIs present — cannot make investment assessment"
 
-        # LLM-driven decision: agent reasons about its own relevance
+        # Résumé des champs réellement fournis (évite que le LLM exige MRR/marge/LTV-CAC tous remplis)
+        kpi_parts = [f"{k}={kpis.get(k)}" for k in _kpi_keys if kpis.get(k) is not None]
+        if has_mc:
+            kpi_parts.append(f"proba_survie_12m={mc.get('proba_survie_12m')}")
+        kpi_snapshot = ", ".join(kpi_parts)
         runway      = kpis.get("runway_months", "?")
         mrr         = kpis.get("mrr", "?")
         proba       = mc.get("proba_survie_12m", "?")
@@ -134,39 +289,82 @@ class InvestmentBusAdapter(CommAgent):
         ltv_cac     = kpis.get("ltv_cac_ratio", "?")
 
         try:
-            prompt = ChatPromptTemplate.from_messages([
-                ("system",
-                 "Tu es un agent d'investissement autonome spécialisé dans l'analyse "
-                 "de startups. Tu reçois des analyses financières diffusées à tous les agents. "
-                 "Décide si TU dois t'engager et fournir une recommandation d'investissement, "
-                 "ou rester silencieux.\n\n"
-                 "IMPORTANT : runway_months=null/None signifie que la startup est CASH-FLOW POSITIF "
-                 "(revenus > dépenses) — ce n'est PAS une donnée manquante, c'est un signal POSITIF. "
-                 "De même, cash_out_alert='RENTABLE' confirme la rentabilité.\n\n"
-                 "Engage-toi si : les données financières sont suffisantes pour évaluer "
-                 "le potentiel d'investissement (MRR, survie, secteur, rentabilité).\n"
-                 "Reste silencieux UNIQUEMENT si : le payload est vide ou totalement inexploitable.\n\n"
+            response = _call_llm([
+                {"role": "system", "content":
+                 "Tu es un agent d'investissement. Tu reçois une analyse financière déjà produite "
+                 "par l'agent finance.\n\n"
+                 "RÈGLE ABSOLUE : engage=true dès qu'AU MOINS UN indicateur financier utile est présent "
+                 "(burn, runway, MRR, ARR, CAC, LTV, marge, ratio LTV/CAC, alerte cash, ou proba survie). "
+                 "Tu ne dois PAS exiger MRR ET marge ET LTV/CAC en même temps — les startups en phase "
+                 "early n'ont souvent qu'une partie de ces métriques.\n\n"
+                 "IMPORTANT : runway_months=null ou absent avec cash_out_alert=RENTABLE ou burn négatif "
+                 "signale souvent une structure cash-flow positive — ce n'est PAS 'données insuffisantes'.\n\n"
+                 "engage=false UNIQUEMENT si le message est vide, hors sujet, ou sans aucun chiffre exploitable.\n\n"
                  "Réponds UNIQUEMENT avec ce JSON : "
-                 "{{\"engage\": true/false, \"reason\": \"explication courte en français\"}}"),
-                ("user",
+                 "{\"engage\": true/false, \"reason\": \"explication courte en français\"}"},
+                {"role": "user", "content":
                  f"Secteur: {secteur} | Phase: {phase}\n"
+                 f"KPI renseignés: {kpi_snapshot or '(aucun détail)'}\n"
                  f"MRR: {mrr} | Runway: {runway} mois | cash_out_alert: {cash_alert}\n"
-                 f"Gross Margin: {gross_margin}% | LTV/CAC: {ltv_cac}x | Survie 12m: {proba}"),
+                 f"Gross Margin: {gross_margin}% | LTV/CAC: {ltv_cac}x | Survie 12m: {proba}"},
             ])
-            response = (prompt | self._llm).invoke({})
-            raw = response.content.strip()
+            raw = response.strip()
             start = raw.find("{")
             end   = raw.rfind("}") + 1
             if start >= 0 and end > start:
                 parsed = json.loads(raw[start:end])
                 engage = bool(parsed.get("engage", True))
                 reason = str(parsed.get("reason", ""))
+                # Ne jamais laisser le LLM refuser une analyse alors que des KPIs sont déjà là
+                if not engage and has_any_financials:
+                    logger.info(
+                        "[InvestmentBusAdapter] LLM engage=false ignoré (KPIs présents): %s",
+                        reason[:200],
+                    )
+                    return True, "KPI financiers présents — analyse lancée"
                 return engage, reason
         except Exception as exc:
             logger.debug("[InvestmentBusAdapter] LLM engagement decision failed: %s", exc)
 
         # Safe fallback: engage (never miss a real analysis due to LLM failure)
         return True, "LLM unavailable — engaging by default"
+
+    def _notify_no_engagement(self, msg: dict, reason: str) -> None:
+        """
+        When the autonomous agent chooses not to analyse, still notify finance
+        (Redis state + bus) and complete the A2A task so the UI does not hang.
+        """
+        ctx = msg.get("context") or {}
+        project_id = ctx.get("project_id", "default")
+        session_id = ctx.get("session_id", "")
+        a2a_task_id = ctx.get("a2a_task_id") or project_id
+        note = (
+            f"L'agent d'investissement n'a pas traité ce message : {reason}"
+        )
+        self.publish({
+            "message_id": str(uuid.uuid4()),
+            "type":       "investment.recommendation",
+            "from":       "investment_agent",
+            "to":         ["finance_agent", "risk_agent", "marketing_agent", "legal_agent"],
+            "timestamp":  datetime.now(timezone.utc).isoformat(),
+            "context":    msg.get("context", {"project_id": project_id, "session_id": session_id}),
+            "payload": {
+                "data": {
+                    "rating":      "PASS",
+                    "skipped":     True,
+                    "skip_reason": reason[:500],
+                },
+                "recommendation": note,
+            },
+            "confidence": 0.0,
+            "metadata": {
+                "priority":          "low",
+                "requires_response": False,
+                "tags":              ["investment", "skipped"],
+            },
+        })
+        if a2a_task_id:
+            self._update_a2a_task_state(str(a2a_task_id), "completed")
 
     # ── Round 1 → 2 (or straight to 4) ──────────────────────────────────────
 
@@ -237,13 +435,23 @@ class InvestmentBusAdapter(CommAgent):
 
     def _run_analysis_and_publish(self, finance_data, marketing_data,
                                    project_id, session_id, original_msg):
+        _emit("RUNNING INVESTMENT ANALYSIS", project_id=project_id)
         result = self._agent.analyze(
             finance_data=finance_data,
             marketing_data=marketing_data,
             project_id=project_id,
         )
+        rating  = result.get("investment_rating", "—")
+        summary = str(result.get("summary", ""))[:100]
+        _emit(
+            "ANALYSIS COMPLETE — publishing recommendation",
+            project_id=project_id,
+            investment_rating=rating,
+            summary_preview=summary,
+            to="finance_agent (→ session state)",
+        )
         a2a_msg = result.get("a2a_message") or self._build_a2a(result, project_id, session_id)
-        a2a_msg["to"]        = ["finance_agent"]
+        a2a_msg["to"]        = ["finance_agent", "risk_agent", "marketing_agent", "legal_agent"]
         a2a_msg["timestamp"] = datetime.now(timezone.utc).isoformat()  # always fresh
         self.publish(a2a_msg)
         logger.info("[InvestmentBusAdapter] Round 4: sent investment.recommendation")
@@ -281,20 +489,19 @@ class InvestmentBusAdapter(CommAgent):
                 f"Secteur : {marketing_data.get('industry', '?')}\n"
                 + (f"Burn/revenu annuel ratio : {(burn * 12) / max(rev, 1):.1%}" if rev > 0 else "Pas de revenu")
             )
-            prompt = ChatPromptTemplate.from_messages([
-                ("system",
+            response = _call_llm([
+                {"role": "system", "content":
                  "Tu es un analyste d'investissement expérimenté. "
                  "Examine les données financières d'une startup et détermine "
                  "si tu as besoin de clarifications avant de faire une recommandation.\n\n"
                  "Si les données sont claires, réponds avec ce JSON exactement : "
-                 "{{\"questions\": [], \"message\": \"\"}}\n\n"
+                 "{\"questions\": [], \"message\": \"\"}\n\n"
                  "Sinon, génère 1-2 questions précises et un message professionnel en français. "
                  "Réponds UNIQUEMENT avec un JSON valide :\n"
-                 "{{\"questions\": [\"question1\"], \"message\": \"message naturel pour le fondateur\"}}"),
-                ("user", summary),
+                 "{\"questions\": [\"question1\"], \"message\": \"message naturel pour le fondateur\"}"},
+                {"role": "user", "content": summary},
             ])
-            response = (prompt | self._llm).invoke({})
-            raw = response.content.strip()
+            raw = response.strip()
             start = raw.find("{")
             end   = raw.rfind("}") + 1
             if start >= 0 and end > start:

@@ -10,10 +10,9 @@ delegate investment analysis via HTTP JSON-RPC instead of the Redis bus:
   POST /                         → JSON-RPC 2.0 (tasks/send, tasks/get, tasks/cancel)
   GET  /health                   → health check
 
-The server is a thin wrapper around the existing InvestmentBusAdapter:
 - tasks/send  → publishes financial_analysis to the Redis bus (non-blocking)
               → returns a "working" task immediately
-- The investment agent processes asynchronously via the bus
+- InvestmentBusAdapter runs in-process (lifespan) and consumes Redis inbox
 - tasks/get   → returns current task state (polling-friendly)
 
 Run standalone:
@@ -26,6 +25,7 @@ import json
 import logging
 import os
 import uuid
+from contextlib import asynccontextmanager
 from typing import Any, Dict, Optional
 
 from fastapi import FastAPI, Request
@@ -33,6 +33,28 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 
 logger = logging.getLogger(__name__)
+
+# ── Terminal logging setup ────────────────────────────────────────────────────
+_root = logging.getLogger()
+if not _root.handlers:
+    _h = logging.StreamHandler()
+    _h.setFormatter(logging.Formatter("%(asctime)s  %(levelname)-8s  %(name)s  %(message)s", "%H:%M:%S"))
+    _root.addHandler(_h)
+    _root.setLevel(logging.INFO)
+for _ns in ("finagents", "a2a_bus"):
+    logging.getLogger(_ns).setLevel(logging.DEBUG)
+
+_SEP = "═" * 68
+
+
+def _inv_emit(label: str, **fields) -> None:
+    """Print a clearly visible Investment Agent thought block."""
+    print(f"\n{_SEP}", flush=True)
+    print(f"[InvestmentAgent]  {label}", flush=True)
+    for k, v in fields.items():
+        print(f"  {k:<26} {v}", flush=True)
+    print(_SEP, flush=True)
+
 
 # ── In-process task store ──────────────────────────────────────────────────────
 
@@ -65,15 +87,12 @@ def update_task_state(task_id: str, state: str, artifacts: Optional[list] = None
     logger.info("[InvA2AServer] task %s → %s", task_id, state)
 
 
-# ── Bus publish (direct HTTP to bus server — no competing adapter) ─────────────
+# ── Bus publish (HTTP /publish + optional Redis LPUSH fallback) ──────────────
 #
-# The a2a_server deliberately does NOT create an InvestmentBusAdapter thread.
-# That thread is managed exclusively by `python -m a2a_bus.run_mocks --real-investment`.
-# Creating a second adapter here would cause two threads to compete on the same
-# Redis BRPOP inbox, leading to duplicate error messages when the investment agent fails.
-#
-# Instead we publish directly to the bus server's HTTP /publish endpoint,
-# falling back to Redis LPUSH if the bus server is down.
+# tasks/send LPUSHes via the bus server.  The embedded InvestmentBusAdapter
+# (FastAPI lifespan) BRPOPs the same inbox in this process.  Set
+# INVESTMENT_EMBED_BUS_ADAPTER=0 if another process already runs the adapter
+# (e.g. duplicate Django + standalone 8002 — avoid two BRPOP consumers).
 
 import httpx as _httpx
 import redis as _redis
@@ -152,10 +171,48 @@ _AGENT_CARD = {
 
 # ── FastAPI app ───────────────────────────────────────────────────────────────
 
+_embedded_adapter = None
+
+
+@asynccontextmanager
+async def _lifespan(app: FastAPI):
+    global _embedded_adapter
+    _embedded_adapter = None
+    if os.getenv("INVESTMENT_EMBED_BUS_ADAPTER", "1").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    ):
+        try:
+            from finagents.investment.bus_adapter import get_investment_bus_adapter
+
+            _embedded_adapter = get_investment_bus_adapter()
+            logger.info(
+                "[InvA2AServer] InvestmentBusAdapter embedded (inbox consumer started)",
+            )
+        except Exception as exc:
+            logger.exception(
+                "[InvA2AServer] could not start embedded InvestmentBusAdapter: %s",
+                exc,
+            )
+    else:
+        logger.info("[InvA2AServer] embedded InvestmentBusAdapter disabled (env)")
+
+    yield
+
+    if _embedded_adapter is not None:
+        try:
+            _embedded_adapter.stop()
+        except Exception as exc:
+            logger.debug("[InvA2AServer] adapter stop: %s", exc)
+        _embedded_adapter = None
+
+
 app = FastAPI(
     title="StartWise Investment Agent",
     description="A2A-compliant investment analysis agent",
     version="1.0.0",
+    lifespan=_lifespan,
 )
 
 app.add_middleware(
@@ -268,11 +325,24 @@ def _tasks_send(req_id: Any, params: Dict) -> JSONResponse:
     _tasks[task_id] = task
     task["status"]["state"] = "working"
 
+    kpis = financial_data.get("kpis") or {}
+    recipients = bus_msg.get("to", [])
+    _inv_emit(
+        "TASK RECEIVED — forwarding to bus",
+        task_id=task_id,
+        msg_type=bus_msg.get("type", "?"),
+        from_agent=bus_msg.get("from", "?"),
+        recipients=recipients,
+        kpis_keys=list(kpis.keys())[:6] if kpis else "—",
+    )
+
     # Publish to the investment agent via the bus server (non-blocking)
     delivered = _publish_to_bus(bus_msg)
     if delivered:
+        _inv_emit("→ BUS PUBLISH OK", task_id=task_id, bus_url=_BUS_URL)
         logger.info("[InvA2AServer] task %s → bus (financial_analysis)", task_id)
     else:
+        _inv_emit("✗ BUS PUBLISH FAILED", task_id=task_id, bus_url=_BUS_URL)
         logger.error("[InvA2AServer] could not deliver task %s to bus", task_id)
         task["status"]["state"] = "failed"
 

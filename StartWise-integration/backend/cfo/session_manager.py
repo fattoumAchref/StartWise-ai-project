@@ -45,10 +45,14 @@ _COMM_AGENT = None
 _FINANCE_AGENT = None
 _A2A_CLASSES: dict = {}
 _INVESTMENT_ADAPTER = None
+_RISK_ADAPTER = None
+_MARKETING_ADAPTER = None
+_LEGAL_ADAPTER = None
 
 
 def startup_singletons() -> None:
-    global _COMM_AGENT, _FINANCE_AGENT, _A2A_CLASSES, _INVESTMENT_ADAPTER
+    global _COMM_AGENT, _FINANCE_AGENT, _A2A_CLASSES, _INVESTMENT_ADAPTER, _RISK_ADAPTER, \
+           _MARKETING_ADAPTER, _LEGAL_ADAPTER
     try:
         from finagents.finance.bus_publisher import get_finance_bus_publisher
         _COMM_AGENT = get_finance_bus_publisher()
@@ -70,12 +74,45 @@ def startup_singletons() -> None:
     except Exception as e:
         logger.warning("[Django] FinanceAgent unavailable: %s", e)
 
+    # InvestmentBusAdapter runs inside the Investment A2A service (uvicorn :8002)
+    # lifespan by default — avoids a second BRPOP consumer racing the same Redis inbox.
+    # Legacy: set INVESTMENT_BUS_ADAPTER_IN_DJANGO=1 to start it here as well.
+    if os.getenv("INVESTMENT_BUS_ADAPTER_IN_DJANGO", "").strip().lower() in (
+        "1", "true", "yes",
+    ):
+        try:
+            from finagents.investment.bus_adapter import get_investment_bus_adapter
+
+            _INVESTMENT_ADAPTER = get_investment_bus_adapter()
+            logger.info("[Django] InvestmentBusAdapter started (legacy env flag)")
+        except Exception as e:
+            logger.warning("[Django] InvestmentBusAdapter unavailable: %s", e)
+    else:
+        logger.info(
+            "[Django] InvestmentBusAdapter skipped — runs in Investment A2A process "
+            "(set INVESTMENT_BUS_ADAPTER_IN_DJANGO=1 to embed in Django)"
+        )
+
     try:
-        from finagents.investment.bus_adapter import get_investment_bus_adapter
-        _INVESTMENT_ADAPTER = get_investment_bus_adapter()
-        logger.info("[Django] InvestmentBusAdapter started")
+        from finagents.risk.bus_adapter import get_risk_bus_adapter
+        _RISK_ADAPTER = get_risk_bus_adapter()
+        logger.info("[Django] RiskBusAdapter started")
     except Exception as e:
-        logger.warning("[Django] InvestmentBusAdapter unavailable: %s", e)
+        logger.warning("[Django] RiskBusAdapter unavailable: %s", e)
+
+    try:
+        from agents.bus_adapter import get_marketing_bus_adapter
+        _MARKETING_ADAPTER = get_marketing_bus_adapter()
+        logger.info("[Django] MarketingBusAdapter started")
+    except Exception as e:
+        logger.warning("[Django] MarketingBusAdapter unavailable: %s", e)
+
+    try:
+        from legal_advisor.bus_adapter import get_legal_bus_adapter
+        _LEGAL_ADAPTER = get_legal_bus_adapter()
+        logger.info("[Django] LegalBusAdapter started")
+    except Exception as e:
+        logger.warning("[Django] LegalBusAdapter unavailable: %s", e)
 
 
 def get_comm_agent():
@@ -88,6 +125,14 @@ def get_finance_agent():
 
 def get_a2a_classes() -> dict:
     return _A2A_CLASSES
+
+
+def get_marketing_adapter():
+    return _MARKETING_ADAPTER
+
+
+def get_legal_adapter():
+    return _LEGAL_ADAPTER
 
 
 # ── Session helpers ─────────────────────────────────────────────────────────

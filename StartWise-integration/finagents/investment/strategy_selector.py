@@ -2,10 +2,8 @@
 Strategy selector - scores scenarios and explains the optimal choice with LLM.
 """
 
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
 from finagents.investment.models import FundingScenario
-from finagents.investment.config import TOKENFACTORY_API_KEY, BASE_URL, MODEL_NAME
+from finagents.investment.llm_client import chat_completion
 
 
 class StrategySelector:
@@ -21,13 +19,7 @@ class StrategySelector:
     }
 
     def __init__(self):
-        self.llm = ChatOpenAI(
-            model=MODEL_NAME,
-            base_url=BASE_URL,
-            api_key=TOKENFACTORY_API_KEY,
-            temperature=0.3,
-            max_tokens=250,
-        )
+        pass
 
     def select_optimal(self, scenarios: list, stage: str = "seed") -> FundingScenario:
         """
@@ -81,30 +73,30 @@ class StrategySelector:
                 f"{s.name}: raise={s.raise_amount:,.0f} TND, dilution={s.dilution_pct:.1f}%, score={s.score}"
                 for s in others
             )
-            prompt = ChatPromptTemplate.from_messages([
-                ("system",
-                 "Tu es un conseiller en investissement spécialisé dans les startups tunisiennes. "
-                 "Explique en 2-3 phrases pourquoi le scénario de financement sélectionné est optimal "
-                 "pour ce stade de startup. Sois précis sur la dilution, les subventions et le risque. "
-                 "La devise est le TND. Sois concis."),
-                ("user",
-                 "Stade: {stage}\n"
-                 "Sélectionné: {name} — levée {raise_amt} TND, subventions {grants} TND, "
-                 "equity {equity} TND, dette {debt} TND, dilution {dilution}%, score {score}\n"
-                 "Alternatives: {others}")
-            ])
-            chain = prompt | self.llm
-            response = chain.invoke({
-                "stage":     stage,
-                "name":      best.name,
-                "raise_amt": f"{best.raise_amount:,.0f}",
-                "grants":    f"{best.grants:,.0f}",
-                "equity":    f"{best.equity:,.0f}",
-                "debt":      f"{best.debt:,.0f}",
-                "dilution":  f"{best.dilution_pct:.1f}",
-                "score":     best.score,
-                "others":    others_text,
-            })
-            return response.content.strip()
+            user = (
+                f"Stade: {stage}\n"
+                f"Sélectionné: {best.name} — levée {best.raise_amount:,.0f} TND, subventions {best.grants:,.0f} TND, "
+                f"equity {best.equity:,.0f} TND, dette {best.debt:,.0f} TND, dilution {best.dilution_pct:.1f}%, score {best.score}\n"
+                f"Alternatives: {others_text}"
+            )
+            text = chat_completion(
+                [
+                    {
+                        "role": "system",
+                        "content": (
+                            "Tu es un conseiller en investissement spécialisé dans les startups tunisiennes. "
+                            "Explique en 2-3 phrases pourquoi le scénario de financement sélectionné est optimal "
+                            "pour ce stade de startup. Sois précis sur la dilution, les subventions et le risque. "
+                            "La devise est le TND. Sois concis."
+                        ),
+                    },
+                    {"role": "user", "content": user},
+                ],
+                temperature=0.3,
+                max_tokens=250,
+            )
+            if not text:
+                return "(rationale unavailable: empty LLM response)"
+            return text
         except Exception as e:
             return f"(rationale unavailable: {e})"

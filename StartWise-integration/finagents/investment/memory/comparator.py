@@ -4,9 +4,8 @@ Generates LLM-powered progress narrative when history exists.
 """
 
 from typing import Optional
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from finagents.investment.config import TOKENFACTORY_API_KEY, BASE_URL, MODEL_NAME
+
+from finagents.investment.llm_client import chat_completion
 from finagents.investment.memory.store import get_project_history
 
 
@@ -14,13 +13,7 @@ class ProgressComparator:
     """Compares current analysis to previous sessions for the same project."""
 
     def __init__(self):
-        self.llm = ChatOpenAI(
-            model=MODEL_NAME,
-            base_url=BASE_URL,
-            api_key=TOKENFACTORY_API_KEY,
-            temperature=0.3,
-            max_tokens=350,
-        )
+        pass
 
     def compare(self, project_id: str, current: dict) -> Optional[str]:
         """
@@ -57,37 +50,34 @@ class ProgressComparator:
             def fmt(v):
                 return f"{v:,.0f}" if isinstance(v, (int, float)) and v else "N/A"
 
-            prompt = ChatPromptTemplate.from_messages([
-                ("system",
-                 "You are a startup investment advisor tracking a startup's progress over time. "
-                 "Compare the two analysis sessions and write a 3-sentence progress report. "
-                 "Highlight what improved, what worsened, and what the key milestone is next. "
-                 "Be specific with numbers. Currency is TND."),
-                ("user",
-                 "PREVIOUS SESSION ({prev_date}):\n"
-                 "  Stage: {prev_stage} | Revenue: {prev_rev} TND | "
-                 "Valuation: {prev_val} TND | Dilution: {prev_dil}% | "
-                 "Funding asked: {prev_fund} TND\n\n"
-                 "CURRENT SESSION ({curr_date}):\n"
-                 "  Stage: {curr_stage} | Revenue: {curr_rev} TND | "
-                 "Valuation: {curr_val} TND | Dilution: {curr_dil}% | "
-                 "Funding asked: {curr_fund} TND")
-            ])
-            chain = prompt | self.llm
-            response = chain.invoke({
-                "prev_date":  previous.get("timestamp", "")[:10],
-                "prev_stage": previous.get("stage", "N/A"),
-                "prev_rev":   fmt(previous.get("annual_revenue")),
-                "prev_val":   fmt(previous.get("valuation")),
-                "prev_dil":   previous.get("dilution", "N/A"),
-                "prev_fund":  fmt(previous.get("funding_asked")),
-                "curr_date":  (current.get("timestamp") or "")[:10],
-                "curr_stage": current.get("stage", "N/A"),
-                "curr_rev":   fmt(current.get("annual_revenue")),
-                "curr_val":   fmt(current.get("valuation")),
-                "curr_dil":   current.get("dilution", "N/A"),
-                "curr_fund":  fmt(current.get("funding_asked")),
-            })
-            return response.content.strip()
+            user = (
+                f"PREVIOUS SESSION ({previous.get('timestamp', '')[:10]}):\n"
+                f"  Stage: {previous.get('stage', 'N/A')} | Revenue: {fmt(previous.get('annual_revenue'))} TND | "
+                f"Valuation: {fmt(previous.get('valuation'))} TND | Dilution: {previous.get('dilution', 'N/A')}% | "
+                f"Funding asked: {fmt(previous.get('funding_asked'))} TND\n\n"
+                f"CURRENT SESSION ({(current.get('timestamp') or '')[:10]}):\n"
+                f"  Stage: {current.get('stage', 'N/A')} | Revenue: {fmt(current.get('annual_revenue'))} TND | "
+                f"Valuation: {fmt(current.get('valuation'))} TND | Dilution: {current.get('dilution', 'N/A')}% | "
+                f"Funding asked: {fmt(current.get('funding_asked'))} TND"
+            )
+            text = chat_completion(
+                [
+                    {
+                        "role": "system",
+                        "content": (
+                            "You are a startup investment advisor tracking a startup's progress over time. "
+                            "Compare the two analysis sessions and write a 3-sentence progress report. "
+                            "Highlight what improved, what worsened, and what the key milestone is next. "
+                            "Be specific with numbers. Currency is TND."
+                        ),
+                    },
+                    {"role": "user", "content": user},
+                ],
+                temperature=0.3,
+                max_tokens=350,
+            )
+            if not text:
+                return "(progress report unavailable: empty LLM response)"
+            return text
         except Exception as e:
             return f"(progress report unavailable: {e})"

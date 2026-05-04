@@ -153,11 +153,13 @@ class FinanceCommAgent(CommAgent):
         t = msg_type.lower()
 
         # Fast path — type string is unambiguous for all known agent message types
-        if any(x in t for x in ("recommendation", "scoring", "rating")):
+        if any(x in t for x in ("recommendation", "scoring", "rating", "stance",
+                                 "alignment", "investment_note")):
             return "recommendation"
         if "clarification_request" in t:
             return "clarification_request"
-        if any(x in t for x in ("assessment", "risk", "legal", "compliance", "marketing")):
+        if any(x in t for x in ("assessment", "risk", "legal", "compliance",
+                                 "marketing", "conflict", "regulatory", "strategy_note")):
             return "assessment"
         if "error" in t:
             return "error"

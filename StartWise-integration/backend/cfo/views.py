@@ -95,7 +95,20 @@ def _chat_view_inner(request):
     if _has_numbers or _financial_kw:
         try:
             from finagents.finance.tools.parser import parse_founder_input
-            new_ctx = parse_founder_input(prompt)
+            # Pass accumulated context so the LLM can resolve relative answers
+            # e.g. "j'ai perdu 3 clients" when n_clients is already known.
+            _existing_ctx = state.get("financial_context")
+            _known: dict = {}
+            if _existing_ctx is not None:
+                _FIELDS = ("burn_rate", "cash_balance", "monthly_revenue", "n_clients",
+                           "prix_client", "churn_rate", "secteur", "pays",
+                           "marketing_budget", "cogs", "new_clients_month")
+                _known = {f: getattr(_existing_ctx, f) for f in _FIELDS
+                          if getattr(_existing_ctx, f, None) is not None}
+            # Inject ideation sector if not yet in known context
+            if not _known.get("secteur") and state.get("ideation_sector"):
+                _known["secteur"] = state["ideation_sector"]
+            new_ctx = parse_founder_input(prompt, known_context=_known or None)
         except Exception as exc:
             logger.warning("parse_founder_input: %s", exc)
 
@@ -108,8 +121,13 @@ def _chat_view_inner(request):
         save_state(session_id, state)
         return JsonResponse({"type": "whatif", "reply": reply, "messages": messages})
 
-    # Financial data detected → full pipeline
-    if has_financial_data(new_ctx):
+    # Financial data detected → full pipeline.
+    # Also proceed when we already have financial data in state and the user is
+    # providing additional context (e.g. answering a follow-up question like
+    # "j'ai perdu 3 clients" — new_ctx may only carry churn_rate but the merged
+    # context in process_ctx will produce a valid updated analysis).
+    _existing_ctx = state.get("financial_context")
+    if has_financial_data(new_ctx) or (has_financial_data(_existing_ctx) and new_ctx is not None):
         data_text, questions, bench = process_ctx(state, new_ctx, raw_text=prompt)
         bench_text = state.get("last_bench_text", "")
         reply = data_text
@@ -139,6 +157,14 @@ def _chat_view_inner(request):
 
     # Ideation message (no real financial data yet)
     if is_ideation_message(prompt):
+        # Extract and persist sector to state so subsequent financial Q&A turns
+        # use the correct benchmark sector instead of defaulting to SaaS.
+        _sector = extract_ideation_sector(prompt)
+        if _sector:
+            state["ideation_sector"] = _sector
+            _fc = state.get("financial_context")
+            if _fc is not None and not getattr(_fc, "secteur", None):
+                _fc.secteur = _sector
         reply = build_ideation_preanalysis(prompt)
         # Do not append this bootstrap answer to chat history to avoid polluting
         # the free-chat panel with auto-triggered ideation context messages.
@@ -197,6 +223,57 @@ def a2a_state_view(request):
         return safe_json({"available": True, **comm.get_state()})
     except Exception as exc:
         return JsonResponse({"available": False, "error": str(exc)})
+
+
+# ── /api/a2a/network ─────────────────────────────────────────────────────────
+
+@csrf_exempt
+@require_http_methods(["GET"])
+def a2a_network_view(request):
+    """
+    Full A2A network snapshot — all agent states + conversation log.
+    Used by CrossAgentPanel on every page.
+    """
+    import redis as _redis_mod
+    from a2a_bus.comm_agent import CommAgent as _CommAgent
+
+    _AGENT_IDS = ["finance_agent", "investment_agent", "risk_agent",
+                  "marketing_agent", "legal_agent"]
+    result = {
+        "available":        False,
+        "agents":           {},
+        "conversation_log": [],
+        "agent_ids":        _AGENT_IDS,
+    }
+
+    try:
+        r = _redis_mod.Redis(
+            host=os.getenv("REDIS_HOST", "localhost"),
+            port=int(os.getenv("REDIS_PORT", "6379")),
+            db=0,
+            decode_responses=True,
+            socket_connect_timeout=2,
+        )
+        r.ping()
+        result["available"] = True
+
+        for agent_id in _AGENT_IDS:
+            try:
+                result["agents"][agent_id] = r.hgetall(f"a2a:{agent_id}:state") or {}
+            except Exception:
+                result["agents"][agent_id] = {}
+
+        try:
+            result["conversation_log"] = _CommAgent.get_conversation_log(
+                redis_client=r, limit=50
+            )
+        except Exception:
+            pass
+
+    except Exception as exc:
+        result["error"] = str(exc)
+
+    return safe_json(result)
 
 
 # ── /api/a2a-clarification ────────────────────────────────────────────────────

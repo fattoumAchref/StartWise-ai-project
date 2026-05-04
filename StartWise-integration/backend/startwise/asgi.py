@@ -15,3 +15,11 @@ application = ProtocolTypeRouter({
         agents.routing.websocket_urlpatterns + cfo_ws
     ),
 })
+
+# Démarrage des singletons agents au boot de Django
+try:
+    from cfo.session_manager import startup_singletons
+    startup_singletons()
+except Exception as _e:
+    import logging
+    logging.getLogger(__name__).warning("[asgi] startup_singletons failed: %s", _e)

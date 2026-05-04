@@ -2,10 +2,8 @@
 Output formatter - structured data + LLM narrative recommendation.
 """
 
-from langchain_openai import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
 from finagents.investment.models import InvestmentRecommendation
-from finagents.investment.config import TOKENFACTORY_API_KEY, BASE_URL, MODEL_NAME
+from finagents.investment.llm_client import chat_completion
 
 
 class OutputFormatter:
@@ -45,13 +43,7 @@ class OutputFormatter:
     }
 
     def __init__(self):
-        self.llm = ChatOpenAI(
-            model=MODEL_NAME,
-            base_url=BASE_URL,
-            api_key=TOKENFACTORY_API_KEY,
-            temperature=0.4,
-            max_tokens=400,
-        )
+        pass
 
     def format(self, valuation, optimal_scenario, all_scenarios, dilution, data) -> InvestmentRecommendation:
         structured = self._build_structured(valuation, optimal_scenario, dilution, data)
@@ -80,40 +72,36 @@ class OutputFormatter:
             warnings = data.get("data_warnings", "")
             rationale = getattr(scenario, "rationale", "")
 
-            prompt = ChatPromptTemplate.from_messages([
-                ("system",
-                 "Tu es un conseiller en investissement senior spécialisé dans les startups tunisiennes. "
-                 "Rédige une analyse d'investissement concise et professionnelle en 3-4 phrases. "
-                 "Mentionne la valorisation, le montant recommandé, l'impact sur la dilution et l'opportunité clé. "
-                 "Sois direct et actionnable. La devise est le TND (Dinar Tunisien). "
-                 "Écris en prose fluide, sans listes ni puces."),
-                ("user",
-                 "Stade: {stage} | Secteur: {sector}\n"
-                 "Valorisation pre-money: {valuation} TND ({method})\n"
-                 "Levée recommandée: {raise_amt} TND "
-                 "(subventions: {grants} TND, equity: {equity} TND, dette: {debt} TND)\n"
-                 "Dilution fondateurs: {dilution}% (ownership post-tour: {after}%)\n"
-                 "Subventions disponibles: {grants_total} TND\n"
-                 "Justification stratégie: {rationale}\n"
-                 "Notes données: {warnings}")
-            ])
-            chain = prompt | self.llm
-            response = chain.invoke({
-                "stage":        stage,
-                "sector":       sector,
-                "valuation":    f"{valuation.final_valuation:,.0f}",
-                "method":       valuation.method_used,
-                "raise_amt":    f"{scenario.raise_amount:,.0f}",
-                "grants":       f"{scenario.grants:,.0f}",
-                "equity":       f"{scenario.equity:,.0f}",
-                "debt":         f"{scenario.debt:,.0f}",
-                "dilution":     f"{dilution.founder_dilution_pct:.1f}",
-                "after":        f"{dilution.founder_after_pct:.1f}",
-                "grants_total": f"{grants_total:,.0f}",
-                "rationale":    rationale or "N/A",
-                "warnings":     warnings or "None",
-            })
-            return "ANALYSIS\n" + "-"*55 + "\n" + response.content.strip()
+            user = (
+                f"Stade: {stage} | Secteur: {sector}\n"
+                f"Valorisation pre-money: {valuation.final_valuation:,.0f} TND ({valuation.method_used})\n"
+                f"Levée recommandée: {scenario.raise_amount:,.0f} TND "
+                f"(subventions: {scenario.grants:,.0f} TND, equity: {scenario.equity:,.0f} TND, dette: {scenario.debt:,.0f} TND)\n"
+                f"Dilution fondateurs: {dilution.founder_dilution_pct:.1f}% (ownership post-tour: {dilution.founder_after_pct:.1f}%)\n"
+                f"Subventions disponibles: {grants_total:,.0f} TND\n"
+                f"Justification stratégie: {rationale or 'N/A'}\n"
+                f"Notes données: {warnings or 'None'}"
+            )
+            body = chat_completion(
+                [
+                    {
+                        "role": "system",
+                        "content": (
+                            "Tu es un conseiller en investissement senior spécialisé dans les startups tunisiennes. "
+                            "Rédige une analyse d'investissement concise et professionnelle en 3-4 phrases. "
+                            "Mentionne la valorisation, le montant recommandé, l'impact sur la dilution et l'opportunité clé. "
+                            "Sois direct et actionnable. La devise est le TND (Dinar Tunisien). "
+                            "Écris en prose fluide, sans listes ni puces."
+                        ),
+                    },
+                    {"role": "user", "content": user},
+                ],
+                temperature=0.4,
+                max_tokens=400,
+            )
+            if not body:
+                return "(narrative unavailable: empty LLM response)"
+            return "ANALYSIS\n" + "-" * 55 + "\n" + body
         except Exception as e:
             return f"(narrative unavailable: {e})"
 

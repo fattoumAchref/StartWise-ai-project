@@ -501,6 +501,38 @@ updateInfo();
 
 # ── Views ─────────────────────────────────────────────────────────────────────
 
+def agent_card(request):
+    """A2A Agent Card — /.well-known/agent.json for the Legal Agent."""
+    return JsonResponse({
+        "name":        "legal_agent",
+        "displayName": "StartWise Legal Advisor",
+        "description": "RAG-based legal advisor for Tunisian startup law: JORT, DGI, CNSS, INNORPI, Startup Act, SPDX licenses, 1093 startups database.",
+        "version":     "1.0.0",
+        "capabilities": {
+            "streaming": False,
+            "push_notifications": False,
+            "state_transition_history": False,
+        },
+        "defaultInputModes":  ["text"],
+        "defaultOutputModes": ["text"],
+        "skills": [
+            {
+                "id":          "legal_qa",
+                "name":        "Legal Q&A",
+                "description": "Réponses juridiques basées sur les sources scrappées (JORT, DGI, CNSS, INNORPI, SPDX).",
+                "inputModes":  ["text"],
+                "outputModes": ["text"],
+            }
+        ],
+        "a2a": {
+            "agent_id":    "legal_agent",
+            "bus_enabled": True,
+            "publishes":   ["legal.assessment"],
+            "subscribes":  ["financial_analysis", "risk.assessment", "investment.recommendation", "marketing.analysis"],
+        },
+    })
+
+
 async def index(request):
     return HttpResponse(HTML, content_type="text/html; charset=utf-8")
 
@@ -885,6 +917,21 @@ async def ask(request):
         } - {None, "?"})
         web_sources = [w.get("url") or w.get("title") or "Web" for w in web_results]
         sources = rag_sources + web_sources
+
+        # A2A: broadcast legal assessment to all specialist agents on the bus
+        try:
+            from cfo.session_manager import get_legal_adapter
+            _legal_adapter = get_legal_adapter()
+            if _legal_adapter:
+                _legal_adapter.publish_assessment(
+                    answer=answer,
+                    question=question,
+                    sources=sources,
+                    intents=_intents,
+                )
+        except Exception:
+            pass
+
         return JsonResponse({
             "error": False,
             "answer": answer,

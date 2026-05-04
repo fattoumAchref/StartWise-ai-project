@@ -143,25 +143,28 @@ export default function OnboardingPage() {
           await generateSummary();
           setShowLoadingScreen(false);
           
-          // Store completion data in localStorage
-          if (sessionId && finalSummary && businessIdea) {
+          // generateSummary() met à jour l'état React de façon async : `finalSummary`
+          // dans cette closure reste souvent vide. Lire le résumé depuis localStorage
+          // (generateSummary y écrit déjà) pour ne pas sauter sw_fresh_session ni le pont sw_ideation_*.
+          const summaryStored =
+            localStorage.getItem('startwise_summary') || '';
+          const ideaStored =
+            localStorage.getItem('startwise_business_idea') || businessIdea;
+
+          if (sessionId && summaryStored.trim() && ideaStored.trim()) {
             localStorage.setItem('startwise_session_id', sessionId);
-            localStorage.setItem('startwise_summary', finalSummary);
-            localStorage.setItem('startwise_business_idea', businessIdea);
+            localStorage.setItem('startwise_summary', summaryStored);
+            localStorage.setItem('startwise_business_idea', ideaStored);
             localStorage.setItem('startwise_dashboard_timestamp', new Date().toISOString());
             // ── Pont vers StartWise (ProjectContext + AppContext) ──────────
-            // Ces clés sont lues par AppContext pour pré-remplir projectDesc
-            // et document_text (RAG) dès l'ouverture du Dashboard StartWise.
-            localStorage.setItem('sw_ideation_summary', finalSummary);
-            localStorage.setItem('sw_ideation_business_idea', businessIdea);
+            localStorage.setItem('sw_ideation_summary', summaryStored);
+            localStorage.setItem('sw_ideation_business_idea', ideaStored);
             localStorage.setItem('sw_ideation_data', JSON.stringify({
-              summary: finalSummary,
-              businessIdea,
+              summary: summaryStored,
+              businessIdea: ideaStored,
               sessionId,
-              shortTitle: businessIdea.slice(0, 40),
+              shortTitle: ideaStored.slice(0, 40),
             }));
-            // Flag de session : indique que l'onboarding vient d'être complété
-            // dans cet onglet/session (sessionStorage est effacé à la fermeture)
             sessionStorage.setItem('sw_fresh_session', '1');
           }
           
@@ -173,7 +176,7 @@ export default function OnboardingPage() {
         }
       }, 2000);
     }
-  }, [isComplete, showLoadingScreen, showDashboard, sessionId, generateSummary, finalSummary, businessIdea]);
+  }, [isComplete, showLoadingScreen, showDashboard, sessionId, generateSummary, businessIdea]);
 
   // Handle initial business idea submission - now uses API
   const handleBusinessIdeaSubmit = async () => {

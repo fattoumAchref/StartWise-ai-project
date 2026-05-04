@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('.well-known/agent.json', views.agent_card, name='marketing_agent_card'),
     path('upload-document/', views.upload_document, name='upload_document'),
     path('send-email/',      views.send_email,       name='send_email'),
     path('schedule-post/',   views.schedule_post,    name='schedule_post'),

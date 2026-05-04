@@ -25,7 +25,7 @@ import json
 import os
 import uuid
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import redis
 from fastapi import FastAPI, HTTPException
@@ -41,9 +41,6 @@ INBOX_TTL  = int(os.getenv("A2A_INBOX_TTL", "3600"))   # secondes avant expiry
 BUS_LOG_KEY = "a2a:bus:log"                              # historique global
 BUS_LOG_MAX = 500                                        # max entrées log
 
-# ─────────────────────────────────────────────────────────────────────────────
-# REDIS CONNECTION
-# ─────────────────────────────────────────────────────────────────────────────
 def _get_redis() -> redis.Redis:
     return redis.Redis(
         host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB,
